@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,6 +22,16 @@ public class RecipeController {
 
     @Autowired
     private RecipeService recipeService;
+
+    @PostMapping
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "201", description = "Recipe created successfully"),
+        @ApiResponse(responseCode = "400", description = "Invalid input data")
+    })
+    public ResponseEntity<Void> createRecipe(@RequestBody RecipeDTO recipeDTO) {
+        recipeService.createRecipe(recipeDTO);
+        return ResponseEntity.status(201).build();
+    }
 
     @GetMapping
     @ApiResponses(value = {

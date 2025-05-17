@@ -1,5 +1,6 @@
 package com.ufscar.pooa.backend.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -8,6 +9,9 @@ import org.springframework.stereotype.Service;
 
 import com.ufscar.pooa.backend.dto.RecipeDTO;
 import com.ufscar.pooa.backend.dto.RecipeIngredientsDTO;
+import com.ufscar.pooa.backend.dto.UserDTO;
+import com.ufscar.pooa.backend.model.Recipe;
+import com.ufscar.pooa.backend.model.User;
 import com.ufscar.pooa.backend.repository.RecipeRepository;
 
 @Service
@@ -17,36 +21,95 @@ public class RecipeService implements IRecipeService {
 
     @Override
    public RecipeDTO createRecipe(RecipeDTO recipeDTO){
-        return null;
+        Recipe recipe = new Recipe();
+
+        recipe.setName(recipeDTO.name());
+        recipe.setPreparationMethods(recipeDTO.preparationMethods());
+        recipe.setIngredients(recipeDTO.ingredients());
+        recipe.setCategories(recipeDTO.categories());
+        recipe.setComments(recipeDTO.comments());
+
+        recipeRepository.save(recipe);
+        return new RecipeDTO(recipe.getName(), recipe.getPreparationMethods(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments());
    }
 
    @Override
     public RecipeDTO updateRecipe(UUID recipeId, RecipeDTO recipeDTO){
-        return null;
+        Recipe recipe = recipeRepository.findById(recipeId).orElse(null);
+
+        if (recipe == null) {
+            throw new RuntimeException("Recipe not found");
+        }
+
+        recipe.setName(recipeDTO.name());
+        recipe.setPreparationMethods(recipeDTO.preparationMethods());
+        recipe.setIngredients(recipeDTO.ingredients());
+        recipe.setCategories(recipeDTO.categories());
+        recipe.setComments(recipeDTO.comments());
+        recipeRepository.save(recipe);
+
+        return new RecipeDTO(recipe.getName(), recipe.getPreparationMethods(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments());
     }
 
     @Override
     public void deleteRecipe(UUID recipeId){
-       ;
+        Recipe recipe = recipeRepository.findById(recipeId).orElse(null);
+
+        if (recipe == null) {
+            throw new RuntimeException("User not found");
+        }
+
+        recipeRepository.deleteRecipe(recipeId);
     }
 
     @Override
     public RecipeDTO getRecipeByName(String name){
-        return null;
+         Recipe recipe = recipeRepository.findByRecipename(name);
+
+        if (recipe == null) {
+            throw new RuntimeException("Recipe not found");
+        }
+
+        return new RecipeDTO(recipe.getName(), recipe.getPreparationMethods(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments());
     }
 
     @Override
     public List<RecipeDTO> getRecipesByCategory(String category){
-        return null;
+         List<Recipe> recipes = recipeRepository.findByCategory(category);
+
+        if (recipes.isEmpty()) {
+            throw new RuntimeException("No recipes found");
+        }
+
+        return new ArrayList<>(recipes.stream()
+                .map(recipe -> new RecipeDTO(recipe.getName(), recipe.getPreparationMethods(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments()))
+                .toList());
     }
+
 
     @Override
     public List<RecipeDTO> getRecipesByIngredients(List<RecipeIngredientsDTO> ingredients){
-        return null;
+        List<Recipe> recipes = recipeRepository.findByIngredients(ingredients);
+
+        if (recipes.isEmpty()) {
+            throw new RuntimeException("No recipes found");
+        }
+
+        return new ArrayList<>(recipes.stream()
+                .map(recipe -> new RecipeDTO(recipe.getName(), recipe.getPreparationMethods(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments()))
+                .toList());
     }
 
     @Override
     public List<RecipeDTO> getAllRecipes(){
-        return null;
+         List<Recipe> recipes = recipeRepository.findAll();
+
+        if (recipes.isEmpty()) {
+            throw new RuntimeException("No recipes found");
+        }
+
+        return new ArrayList<>(recipes.stream()
+                .map(recipe -> new RecipeDTO(recipe.getName(), recipe.getPreparationMethods(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments()))
+                .toList());
     }
 }

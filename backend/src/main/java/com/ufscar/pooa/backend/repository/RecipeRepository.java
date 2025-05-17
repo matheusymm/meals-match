@@ -23,5 +23,9 @@ public interface RecipeRepository extends JpaRepository<Recipe, UUID> {
 
     Recipe findByRecipename(String name);
 
+    List<Recipe> findByCategory(String category);
+
+    List<Recipe> findByIngredients(List<RecipeIngredientsDTO> ingredients);
+
     List<Recipe> findAll();
 }
