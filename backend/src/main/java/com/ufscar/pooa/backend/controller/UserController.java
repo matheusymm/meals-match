@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,6 +21,16 @@ import com.ufscar.pooa.backend.dto.UserDTO;
 public class UserController {
     @Autowired
     private UserService userService;
+
+    @PostMapping
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "User created successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data")
+    })
+    public ResponseEntity<Void> createUser(UserDTO userDTO) {
+        userService.createUser(userDTO);
+        return ResponseEntity.status(201).build();
+    }
 
     @GetMapping
     @ApiResponses(value = {

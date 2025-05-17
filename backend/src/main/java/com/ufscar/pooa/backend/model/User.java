@@ -3,6 +3,8 @@ package com.ufscar.pooa.backend.model;
 import java.util.Date;
 import java.util.UUID;
 
+import com.ufscar.pooa.backend.enums.UserEnum;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -39,12 +41,12 @@ public class User {
     private Date createdAt;
 
     @Column(nullable = false)
-    private String role;
+    private UserEnum role;
 
     public User() {
     }
 
-    public User(String username, String password, String email, String name, String phone, String role) {
+    public User(String username, String password, String email, String name, String phone, UserEnum role) {
         this.username = username;
         this.password = password;
         this.email = email;
@@ -110,11 +112,11 @@ public class User {
         this.createdAt = createdAt;
     }
 
-    public String getRole() {
+    public UserEnum getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(UserEnum role) {
         this.role = role;
     }
 }
