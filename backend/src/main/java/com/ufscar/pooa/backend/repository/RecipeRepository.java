@@ -1,0 +1,13 @@
+package com.ufscar.pooa.backend.repository;
+
+import java.util.UUID;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import com.ufscar.pooa.backend.model.Recipe;
+
+@Repository
+public interface RecipeRepository extends JpaRepository<Recipe, UUID> {
+    Recipe findByRecipename(String name);
+}
