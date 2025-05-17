@@ -1,16 +1,17 @@
 package com.ufscar.pooa.backend.service;
 
 import java.util.List;
+import java.util.UUID;
 
 import com.ufscar.pooa.backend.dto.RecipeDTO;
 import com.ufscar.pooa.backend.dto.RecipeIngredientsDTO;
 
 public interface IRecipeService {
-    void registerRecipe(String name, String preparationMethods, List<RecipeIngredientsDTO> ingredients, List<String> categories);
+    RecipeDTO createRecipe(RecipeDTO recipeDTO);
 
-    void updateRecipe(String recipeId, String name, String preparationMethods, List<RecipeIngredientsDTO> ingredients, List<String> categories);
+    RecipeDTO updateRecipe(UUID recipeId, RecipeDTO recipeDTO);
 
-    void deleteRecipe(String recipeId);
+    void deleteRecipe(UUID recipeId);
 
     RecipeDTO getRecipeByName(String name);
 

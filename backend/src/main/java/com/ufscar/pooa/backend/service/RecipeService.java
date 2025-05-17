@@ -1,6 +1,7 @@
 package com.ufscar.pooa.backend.service;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,41 +16,37 @@ public class RecipeService implements IRecipeService {
     private RecipeRepository recipeRepository;
 
     @Override
-    public  void registerRecipe(String name, String preparationMethods, List<RecipeIngredientsDTO> ingredients, List<String> categories) {
-        // Implement the logic to register a recipe
-    }
+   public RecipeDTO createRecipe(RecipeDTO recipeDTO){
+        return null;
+   }
 
-    @Override
-    public void updateRecipe(String recipeId, String name, String preparationMethods, List<RecipeIngredientsDTO> ingredients, List<String> categories) {
-        // Implement the logic to update a recipe
-    }
-
-    @Override
-    public void deleteRecipe(String recipeId) {
-        // Implement the logic to delete a recipe
-    }
-
-    @Override
-    public RecipeDTO getRecipeByName(String name) {
-        // Implement the logic to get a recipe by recipename
+   @Override
+    public RecipeDTO updateRecipe(UUID recipeId, RecipeDTO recipeDTO){
         return null;
     }
 
     @Override
-    public List<RecipeDTO> getRecipesByCategory(String category) {
-        // Implement the logic to get the recipes that fit a specific category
+    public void deleteRecipe(UUID recipeId){
+       ;
+    }
+
+    @Override
+    public RecipeDTO getRecipeByName(String name){
         return null;
     }
 
     @Override
-    public List<RecipeDTO> getRecipesByIngredients(List<RecipeIngredientsDTO> ingredients) {
-        // Implement the logic to get the recipes that use some specific ingredients
+    public List<RecipeDTO> getRecipesByCategory(String category){
         return null;
     }
 
     @Override
-    public  List<RecipeDTO> getAllRecipes() {
-        // Implement the logic to get all recipes
+    public List<RecipeDTO> getRecipesByIngredients(List<RecipeIngredientsDTO> ingredients){
+        return null;
+    }
+
+    @Override
+    public List<RecipeDTO> getAllRecipes(){
         return null;
     }
 }
