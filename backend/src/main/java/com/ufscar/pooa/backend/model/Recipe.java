@@ -1,9 +1,10 @@
 package com.ufscar.pooa.backend.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import com.ufscar.pooa.backend.dto.CommentsDTO;
+import com.ufscar.pooa.backend.dto.CommentDTO;
 import com.ufscar.pooa.backend.dto.RecipeIngredientsDTO;
 
 import jakarta.persistence.*;
@@ -26,13 +27,13 @@ public class Recipe {
     private Date createdAt;
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RecipeIngredientsDTO> ingredients;
+    private List<RecipeIngredients> ingredients;
 
     @ElementCollection
     private List<String> categories;
 
     @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CommentsDTO> comments;
+    private List<Comment> comments;
 
     public Recipe() {
     }
@@ -41,6 +42,9 @@ public class Recipe {
         this.name = name;
         this.preparationMethods = preparationMethods;
         this.createdAt = new Date();
+        this.ingredients = new ArrayList<>();
+        this.categories = new ArrayList<>();
+        this.comments = new ArrayList<>();
     }
 
     // Getters e Setters
@@ -77,11 +81,11 @@ public class Recipe {
         this.createdAt = createdAt;
     }
 
-    public List<RecipeIngredientsDTO> getIngredients() {
+    public List<RecipeIngredients> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(List<RecipeIngredientsDTO> ingredients) {
+    public void setIngredients(List<RecipeIngredients> ingredients) {
         this.ingredients = ingredients;
     }
 
@@ -93,11 +97,11 @@ public class Recipe {
         this.categories = categories;
     }
 
-    public List<CommentsDTO> getComments() {
+    public List<Comment> getComments() {
         return comments;
     }
 
-    public void setComments(List<CommentsDTO> comments) {
+    public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
 }

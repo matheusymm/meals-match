@@ -1,5 +1,7 @@
 package com.ufscar.pooa.backend.dto;
 
+import com.ufscar.pooa.backend.model.User;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 
@@ -13,5 +15,14 @@ public record UserDTO(
         this.email = email;
         this.name = name;
         this.phone = phone;
+    }
+
+    public static UserDTO fromEntity(User entity) {
+        return new UserDTO(
+                entity.getUsername(),
+                entity.getEmail(),
+                entity.getName(),
+                entity.getPhone()
+        );
     }
 }
