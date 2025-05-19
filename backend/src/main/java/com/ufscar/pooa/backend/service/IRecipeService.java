@@ -4,9 +4,9 @@ import java.util.List;
 import java.util.UUID;
 
 import com.ufscar.pooa.backend.dto.RecipeDTO;
-import com.ufscar.pooa.backend.dto.RecipeIngredientsDTO;
 
 public interface IRecipeService {
+    
     RecipeDTO createRecipe(RecipeDTO recipeDTO);
 
     RecipeDTO updateRecipe(UUID recipeId, RecipeDTO recipeDTO);
@@ -17,7 +17,7 @@ public interface IRecipeService {
 
     List<RecipeDTO> getRecipesByCategory(String category);
 
-    List<RecipeDTO> getRecipesByIngredients(List<RecipeIngredientsDTO> ingredients);
+    List<RecipeDTO> getRecipesByIngredients(List<String> ingredients);
 
     List<RecipeDTO> getAllRecipes();
 }

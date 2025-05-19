@@ -6,10 +6,10 @@ import jakarta.validation.constraints.NotBlank;
 public record RecipeDTO (
     @NotBlank String name,
     @NotBlank String preparationMethods,
-    @NotBlank List<RecipeIngredientsDTO> ingredients,
+    @NotBlank List<String> ingredients,
     @NotBlank List<String> categories,
-    @NotBlank List<CommentsDTO> comments) {
-      public RecipeDTO(String name, String preparationMethods, List<RecipeIngredientsDTO> ingredients, List<String> categories, List<CommentsDTO> comments) {
+    @NotBlank List<String> comments) {
+      public RecipeDTO(String name, String preparationMethods, List<String> ingredients, List<String> categories, List<String> comments) {
         this.name = name;
         this.preparationMethods = preparationMethods;
         this.ingredients = ingredients;

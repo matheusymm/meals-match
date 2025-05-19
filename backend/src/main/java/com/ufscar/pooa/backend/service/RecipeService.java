@@ -8,14 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ufscar.pooa.backend.dto.RecipeDTO;
-import com.ufscar.pooa.backend.dto.RecipeIngredientsDTO;
-import com.ufscar.pooa.backend.dto.UserDTO;
 import com.ufscar.pooa.backend.model.Recipe;
-import com.ufscar.pooa.backend.model.User;
 import com.ufscar.pooa.backend.repository.RecipeRepository;
 
 @Service
 public class RecipeService implements IRecipeService {
+
     @Autowired
     private RecipeRepository recipeRepository;
 
@@ -59,12 +57,12 @@ public class RecipeService implements IRecipeService {
             throw new RuntimeException("User not found");
         }
 
-        recipeRepository.deleteRecipe(recipeId);
+        recipeRepository.deleteById(recipeId);
     }
 
     @Override
     public RecipeDTO getRecipeByName(String name){
-         Recipe recipe = recipeRepository.findByRecipename(name);
+         Recipe recipe = recipeRepository.findByName(name);
 
         if (recipe == null) {
             throw new RuntimeException("Recipe not found");
@@ -75,7 +73,7 @@ public class RecipeService implements IRecipeService {
 
     @Override
     public List<RecipeDTO> getRecipesByCategory(String category){
-         List<Recipe> recipes = recipeRepository.findByCategory(category);
+         List<Recipe> recipes = recipeRepository.findByCategoriesContaining(category);
 
         if (recipes.isEmpty()) {
             throw new RuntimeException("No recipes found");
@@ -88,8 +86,8 @@ public class RecipeService implements IRecipeService {
 
 
     @Override
-    public List<RecipeDTO> getRecipesByIngredients(List<RecipeIngredientsDTO> ingredients){
-        List<Recipe> recipes = recipeRepository.findByIngredients(ingredients);
+    public List<RecipeDTO> getRecipesByIngredients(List<String> ingredients){
+        List<Recipe> recipes = recipeRepository.findByIngredientsIn(ingredients);
 
         if (recipes.isEmpty()) {
             throw new RuntimeException("No recipes found");

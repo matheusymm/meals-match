@@ -3,8 +3,6 @@ package com.ufscar.pooa.backend.model;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import com.ufscar.pooa.backend.dto.CommentsDTO;
-import com.ufscar.pooa.backend.dto.RecipeIngredientsDTO;
 
 import jakarta.persistence.*;
 
@@ -25,14 +23,14 @@ public class Recipe {
     @Column(nullable = false)
     private Date createdAt;
 
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RecipeIngredientsDTO> ingredients;
-
     @ElementCollection
     private List<String> categories;
 
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CommentsDTO> comments;
+    @ElementCollection
+    private List<String> ingredients;
+
+    @ElementCollection
+    private List<String> comments;
 
     public Recipe() {
     }
@@ -77,11 +75,11 @@ public class Recipe {
         this.createdAt = createdAt;
     }
 
-    public List<RecipeIngredientsDTO> getIngredients() {
+    public List<String> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(List<RecipeIngredientsDTO> ingredients) {
+    public void setIngredients(List<String> ingredients) {
         this.ingredients = ingredients;
     }
 
@@ -93,11 +91,11 @@ public class Recipe {
         this.categories = categories;
     }
 
-    public List<CommentsDTO> getComments() {
+    public List<String> getComments() {
         return comments;
     }
 
-    public void setComments(List<CommentsDTO> comments) {
+    public void setComments(List<String> comments) {
         this.comments = comments;
     }
 }
