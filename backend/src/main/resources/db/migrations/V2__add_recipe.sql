@@ -1,4 +1,4 @@
-CREATE TABLE "recipe_ingredients" (
+CREATE IF NOT EXISTS TABLE "recipe_ingredients" (
     id UUID PRIMARY KEY,
     ingredient_id UUID NOT NULL,
     recipe_id UUID NOT NULL,
@@ -9,12 +9,12 @@ CREATE TABLE "recipe_ingredients" (
     FOREIGN KEY (recipe_id) REFERENCES recipes(id) ON DELETE CASCADE
 );
 
-CREATE TABLE "ingredients" (
+CREATE IF NOT EXISTS TABLE "ingredients" (
     id UUID PRIMARY KEY,
     name VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE "recipes" (
+CREATE IF NOT EXISTS TABLE "recipes" (
     id UUID PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     preparation_methods TEXT NOT NULL,
