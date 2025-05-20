@@ -17,6 +17,10 @@ public class Recipe {
     @Column(nullable = false)
     private String name;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "author_id")
+    private User author;
+
     @Column(nullable = false, columnDefinition = "TEXT")
     private String preparationMethods;
 
@@ -38,8 +42,9 @@ public class Recipe {
     public Recipe() {
     }
 
-    public Recipe(String name, String preparationMethods) {
+    public Recipe(String name, User author, String preparationMethods) {
         this.name = name;
+        this.author = author;
         this.preparationMethods = preparationMethods;
         this.createdAt = new Date();
     }
@@ -60,6 +65,14 @@ public class Recipe {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
     }
 
     public String getPreparationMethods() {

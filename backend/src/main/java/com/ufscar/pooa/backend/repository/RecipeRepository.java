@@ -13,6 +13,8 @@ public interface RecipeRepository extends JpaRepository<Recipe, UUID> {
 
     Recipe findByName(String name);
 
+    List<Recipe> findByAuthorId(UUID authorId);
+
     List<Recipe> findByCategoriesContaining(String category);
 
     List<Recipe> findByIngredientsIn(List<String> ingredients);

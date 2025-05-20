@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.UUID;
 
 import com.ufscar.pooa.backend.dto.RecipeDTO;
-import com.ufscar.pooa.backend.model.Recipe;
 
 public interface IRecipeService {
     
@@ -21,6 +20,8 @@ public interface IRecipeService {
     List<RecipeDTO> getRecipesByCategory(String category);
 
     List<RecipeDTO> getRecipesByIngredients(List<String> ingredients);
+
+    List<RecipeDTO> getRecipesByUserId(UUID authorId);
 
     List<RecipeDTO> getAllRecipes();
 }
