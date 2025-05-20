@@ -2,9 +2,6 @@ package com.ufscar.pooa.backend.dto;
 
 import java.util.List;
 
-import com.ufscar.pooa.backend.model.Comment;
-import com.ufscar.pooa.backend.model.RecipeIngredients;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -22,16 +19,5 @@ public record RecipeDTO (
         this.ingredients = ingredients;
         this.categories = categories;
         this.comments = comments;
-    }
-
-    public List<RecipeIngredients> getRecipeIngredients() {
-        return ingredients.stream()
-            .map(RecipeIngredientsDTO::toEntity)
-            .toList();
-    }  
-    public List<Comment> getComments() {
-        return comments.stream()
-            .map(CommentDTO::toEntity)
-            .toList();
     }
   }
