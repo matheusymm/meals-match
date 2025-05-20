@@ -1,5 +1,6 @@
 package com.ufscar.pooa.backend.model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -47,6 +48,9 @@ public class Recipe {
         this.author = author;
         this.preparationMethods = preparationMethods;
         this.createdAt = new Date();
+        this.ingredients = new ArrayList<>();
+        this.categories = new ArrayList<>();
+        this.comments = new ArrayList<>();
     }
 
     // Getters e Setters
@@ -91,7 +95,7 @@ public class Recipe {
         this.createdAt = createdAt;
     }
 
-     public Double getRating() {
+    public Double getRating() {
         return rating;
     }
 
