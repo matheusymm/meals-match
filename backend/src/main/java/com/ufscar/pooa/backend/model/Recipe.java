@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import com.ufscar.pooa.backend.dto.CommentDTO;
-import com.ufscar.pooa.backend.dto.RecipeIngredientsDTO;
 
 import jakarta.persistence.*;
 
@@ -24,16 +22,19 @@ public class Recipe {
     private String preparationMethods;
 
     @Column(nullable = false)
-    private Date createdAt;
+    private Float rating;
 
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RecipeIngredients> ingredients;
+    @Column(nullable = false)
+    private Date createdAt;
 
     @ElementCollection
     private List<String> categories;
 
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments;
+    @ElementCollection
+    private List<String> ingredients;
+
+    @ElementCollection
+    private List<String> comments;
 
     public Recipe() {
     }
@@ -81,11 +82,19 @@ public class Recipe {
         this.createdAt = createdAt;
     }
 
-    public List<RecipeIngredients> getIngredients() {
+     public Float getRating() {
+        return rating;
+    }
+
+    public void setRating(Float rating) {
+        this.rating = rating;
+    }
+
+    public List<String> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(List<RecipeIngredients> ingredients) {
+    public void setIngredients(List<String> ingredients) {
         this.ingredients = ingredients;
     }
 
@@ -97,11 +106,11 @@ public class Recipe {
         this.categories = categories;
     }
 
-    public List<Comment> getComments() {
+    public List<String> getComments() {
         return comments;
     }
 
-    public void setComments(List<Comment> comments) {
+    public void setComments(List<String> comments) {
         this.comments = comments;
     }
 }

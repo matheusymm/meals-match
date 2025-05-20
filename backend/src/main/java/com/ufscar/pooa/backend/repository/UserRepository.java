@@ -11,17 +11,9 @@ import com.ufscar.pooa.backend.model.User;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
-    void createUser(String username, String password, String email, String name, String phone);
-
-    void updateUser(UUID userId, String username, String password, String email, String name, String phone);
-
-    void deleteUser(UUID userId);
-
-    Optional<User> findById(UUID id);
 
     User findByUsername(String username);
 
     User findByEmail(String email);
 
-    List<User> findAll();
 }
