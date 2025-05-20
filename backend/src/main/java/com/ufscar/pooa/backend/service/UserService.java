@@ -33,10 +33,6 @@ public class UserService implements IUserService {
     public UserDTO updateUser(UUID userId, UserDTO userDTO) {
         User user = userRepository.findById(userId).orElse(null);
 
-        if (user == null) {
-            throw new RuntimeException("User not found");
-        }
-
         user.setUsername(userDTO.username());
         user.setEmail(userDTO.email());
         user.setName(userDTO.name());
@@ -48,22 +44,14 @@ public class UserService implements IUserService {
 
     @Override
     public void deleteUser(UUID userId) {
-        User user = userRepository.findById(userId).orElse(null);
+        userRepository.findById(userId).orElse(null);
 
-        if (user == null) {
-            throw new RuntimeException("User not found");
-        }
-
-        userRepository.deleteUser(userId);
+        userRepository.deleteById(userId);
     }
 
     @Override
     public UserDTO getUserByUsername(String username) {
         User user = userRepository.findByUsername(username);
-
-        if (user == null) {
-            throw new RuntimeException("User not found");
-        }
 
         return new UserDTO(user.getUsername(), user.getEmail(), user.getName(), user.getPhone());
     }
@@ -72,20 +60,12 @@ public class UserService implements IUserService {
     public UserDTO getUserByEmail(String email) {
         User user = userRepository.findByEmail(email);
 
-        if (user == null) {
-            throw new RuntimeException("User not found");
-        }
-
         return new UserDTO(user.getUsername(), user.getEmail(), user.getName(), user.getPhone());
     }
 
     @Override
     public List<UserDTO> getAllUsers() {
         List<User> users = userRepository.findAll();
-
-        if (users.isEmpty()) {
-            throw new RuntimeException("No users found");
-        }
 
         return new ArrayList<>(users.stream()
                 .map(user -> new UserDTO(user.getUsername(), user.getEmail(), user.getName(), user.getPhone()))
