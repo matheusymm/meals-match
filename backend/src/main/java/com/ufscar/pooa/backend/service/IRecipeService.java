@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.ufscar.pooa.backend.dto.RecipeDTO;
+import com.ufscar.pooa.backend.model.Recipe;
 
 public interface IRecipeService {
     
@@ -14,6 +15,8 @@ public interface IRecipeService {
     void deleteRecipe(UUID recipeId);
 
     RecipeDTO getRecipeByName(String name);
+
+    RecipeDTO getRecipeById(UUID id);
 
     List<RecipeDTO> getRecipesByCategory(String category);
 

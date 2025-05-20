@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.ufscar.pooa.backend.dto.RecipeDTO;
 import com.ufscar.pooa.backend.model.Recipe;
+import com.ufscar.pooa.backend.repository.RatingRepository;
 import com.ufscar.pooa.backend.repository.RecipeRepository;
 
 @Service
@@ -16,6 +17,9 @@ public class RecipeService implements IRecipeService {
 
     @Autowired
     private RecipeRepository recipeRepository;
+
+    @Autowired
+    private RatingRepository ratingRepository;
 
     @Override
    public RecipeDTO createRecipe(RecipeDTO recipeDTO){
@@ -68,8 +72,24 @@ public class RecipeService implements IRecipeService {
             throw new RuntimeException("Recipe not found");
         }
 
+        Double avg = ratingRepository.findAverageGradeByRecipeId(recipe.getId());
+        recipe.setRating(avg != null ? avg : 0.0);
+
         return new RecipeDTO(recipe.getName(), recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments());
     }
+
+    @Override
+    public RecipeDTO getRecipeById(UUID id) {
+        Recipe recipe = recipeRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Recipe not found"));
+
+        Double avg = ratingRepository.findAverageGradeByRecipeId(recipe.getId());
+        recipe.setRating(avg != null ? avg : 0.0);
+
+        return new RecipeDTO(recipe.getName(), recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments());
+
+    }
+
 
     @Override
     public List<RecipeDTO> getRecipesByCategory(String category){

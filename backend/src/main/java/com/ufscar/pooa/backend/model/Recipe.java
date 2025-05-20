@@ -20,8 +20,8 @@ public class Recipe {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String preparationMethods;
 
-    @Column(nullable = false)
-    private Float rating;
+    @Transient
+    private Double rating;
 
     @Column(nullable = false)
     private Date createdAt;
@@ -78,11 +78,11 @@ public class Recipe {
         this.createdAt = createdAt;
     }
 
-     public Float getRating() {
+     public Double getRating() {
         return rating;
     }
 
-    public void setRating(Float rating) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 
