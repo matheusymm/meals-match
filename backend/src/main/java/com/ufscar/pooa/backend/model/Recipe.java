@@ -21,6 +21,9 @@ public class Recipe {
     private String preparationMethods;
 
     @Column(nullable = false)
+    private Float rating;
+
+    @Column(nullable = false)
     private Date createdAt;
 
     @ElementCollection
@@ -73,6 +76,14 @@ public class Recipe {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+     public Float getRating() {
+        return rating;
+    }
+
+    public void setRating(Float rating) {
+        this.rating = rating;
     }
 
     public List<String> getIngredients() {

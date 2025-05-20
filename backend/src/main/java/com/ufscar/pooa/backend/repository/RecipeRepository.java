@@ -12,7 +12,6 @@ import com.ufscar.pooa.backend.model.Recipe;
 @Repository
 public interface RecipeRepository extends JpaRepository<Recipe, UUID> {
 
-
     Recipe findByName(String name);
 
     List<Recipe> findByCategoriesContaining(String category);

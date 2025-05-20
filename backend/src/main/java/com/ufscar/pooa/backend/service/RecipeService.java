@@ -28,7 +28,7 @@ public class RecipeService implements IRecipeService {
         recipe.setComments(recipeDTO.comments());
 
         recipeRepository.save(recipe);
-        return new RecipeDTO(recipe.getName(), recipe.getPreparationMethods(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments());
+        return new RecipeDTO(recipe.getName(), recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments());
    }
 
    @Override
@@ -46,7 +46,7 @@ public class RecipeService implements IRecipeService {
         recipe.setComments(recipeDTO.comments());
         recipeRepository.save(recipe);
 
-        return new RecipeDTO(recipe.getName(), recipe.getPreparationMethods(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments());
+        return new RecipeDTO(recipe.getName(), recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments());
     }
 
     @Override
@@ -68,7 +68,7 @@ public class RecipeService implements IRecipeService {
             throw new RuntimeException("Recipe not found");
         }
 
-        return new RecipeDTO(recipe.getName(), recipe.getPreparationMethods(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments());
+        return new RecipeDTO(recipe.getName(), recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments());
     }
 
     @Override
@@ -80,7 +80,7 @@ public class RecipeService implements IRecipeService {
         }
 
         return new ArrayList<>(recipes.stream()
-                .map(recipe -> new RecipeDTO(recipe.getName(), recipe.getPreparationMethods(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments()))
+                .map(recipe -> new RecipeDTO(recipe.getName(), recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments()))
                 .toList());
     }
 
@@ -94,7 +94,7 @@ public class RecipeService implements IRecipeService {
         }
 
         return new ArrayList<>(recipes.stream()
-                .map(recipe -> new RecipeDTO(recipe.getName(), recipe.getPreparationMethods(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments()))
+               .map(recipe -> new RecipeDTO(recipe.getName(), recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments()))
                 .toList());
     }
 
@@ -107,7 +107,7 @@ public class RecipeService implements IRecipeService {
         }
 
         return new ArrayList<>(recipes.stream()
-                .map(recipe -> new RecipeDTO(recipe.getName(), recipe.getPreparationMethods(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments()))
+                 .map(recipe -> new RecipeDTO(recipe.getName(), recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments()))
                 .toList());
     }
 }
