@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.UUID;
 
 import com.ufscar.pooa.backend.dto.UserDTO;
+import com.ufscar.pooa.backend.model.User;
 
 public interface IUserService {
     UserDTO createUser(UserDTO userDTO);
@@ -16,5 +17,5 @@ public interface IUserService {
 
     UserDTO getUserByEmail(String email);
 
-    List<UserDTO> getAllUsers();
+    List<User> getAllUsers();
 }

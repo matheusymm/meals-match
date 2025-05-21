@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import com.ufscar.pooa.backend.dto.UserDTO;
+import com.ufscar.pooa.backend.model.User;
 
 @RestController
 @RequestMapping("/users")
@@ -37,8 +38,8 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Users retrieved successfully"),
             @ApiResponse(responseCode = "204", description = "No users found")
     })
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
-        List<UserDTO> users = userService.getAllUsers();
+    public ResponseEntity<List<User>> getAllUsers() {
+        List<User> users = userService.getAllUsers();
 
         if (users.isEmpty()) {
             return ResponseEntity.noContent().build();
