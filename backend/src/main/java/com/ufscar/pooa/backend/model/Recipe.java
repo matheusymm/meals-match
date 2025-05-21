@@ -18,11 +18,15 @@ public class Recipe {
     @Column(nullable = false)
     private String name;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "author_id")
+    private User author;
+
     @Column(nullable = false, columnDefinition = "TEXT")
     private String preparationMethods;
 
-    @Column(nullable = false)
-    private Float rating;
+    @Transient
+    private Double rating;
 
     @Column(nullable = false)
     private Date createdAt;
@@ -39,8 +43,9 @@ public class Recipe {
     public Recipe() {
     }
 
-    public Recipe(String name, String preparationMethods) {
+    public Recipe(String name, User author, String preparationMethods) {
         this.name = name;
+        this.author = author;
         this.preparationMethods = preparationMethods;
         this.createdAt = new Date();
         this.ingredients = new ArrayList<>();
@@ -66,6 +71,14 @@ public class Recipe {
         this.name = name;
     }
 
+    public User getAuthor() {
+        return author;
+    }
+
+    public void setAuthor(User author) {
+        this.author = author;
+    }
+
     public String getPreparationMethods() {
         return preparationMethods;
     }
@@ -82,11 +95,11 @@ public class Recipe {
         this.createdAt = createdAt;
     }
 
-     public Float getRating() {
+    public Double getRating() {
         return rating;
     }
 
-    public void setRating(Float rating) {
+    public void setRating(Double rating) {
         this.rating = rating;
     }
 
