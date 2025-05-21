@@ -15,9 +15,13 @@ public interface IRecipeService {
 
     RecipeDTO getRecipeByName(String name);
 
+    RecipeDTO getRecipeById(UUID id);
+
     List<RecipeDTO> getRecipesByCategory(String category);
 
     List<RecipeDTO> getRecipesByIngredients(List<String> ingredients);
+
+    List<RecipeDTO> getRecipesByUserId(UUID authorId);
 
     List<RecipeDTO> getAllRecipes();
 }
