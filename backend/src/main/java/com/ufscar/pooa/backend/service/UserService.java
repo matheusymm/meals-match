@@ -31,7 +31,7 @@ public class UserService implements IUserService {
         user.setCreatedAt(new Date());
 
         userRepository.save(user);
-        return new UserDTO(user.getUsername(), null, user.getEmail(), user.getName(), user.getPhone(), user.getRole());
+        return new UserDTO(user.getId(), user.getUsername(), null, user.getEmail(), user.getName(), user.getPhone(), user.getRole());
     }
 
     @Override
@@ -44,7 +44,7 @@ public class UserService implements IUserService {
         user.setPhone(userDTO.phone());
         userRepository.save(user);
 
-        return new UserDTO(user.getUsername(), null, user.getEmail(), user.getName(), user.getPhone(), user.getRole());
+        return new UserDTO(user.getId(), user.getUsername(), null, user.getEmail(), user.getName(), user.getPhone(), user.getRole());
     }
 
     @Override
@@ -58,14 +58,14 @@ public class UserService implements IUserService {
     public UserDTO getUserByUsername(String username) {
         User user = userRepository.findByUsername(username);
 
-        return new UserDTO(user.getUsername(), null, user.getEmail(), user.getName(), user.getPhone(), user.getRole());
+        return new UserDTO(user.getId(), user.getUsername(), null, user.getEmail(), user.getName(), user.getPhone(), user.getRole());
     }
 
     @Override
     public UserDTO getUserByEmail(String email) {
         User user = userRepository.findByEmail(email);
 
-        return new UserDTO(user.getUsername(), null, user.getEmail(), user.getName(), user.getPhone(), user.getRole());
+        return new UserDTO(user.getId(), user.getUsername(), null, user.getEmail(), user.getName(), user.getPhone(), user.getRole());
     }
 
     @Override

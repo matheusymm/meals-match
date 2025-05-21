@@ -45,7 +45,7 @@ public class RatingService implements IRatingService {
 
         Rating savedRating = ratingRepository.save(rating);
 
-        return new RatingDTO(savedRating.getRecipe().getId(), savedRating.getAuthor().getId(), savedRating.getGrade(), savedRating.getContent());
+        return new RatingDTO(savedRating.getId(), savedRating.getRecipe().getId(), savedRating.getAuthor().getId(), savedRating.getGrade(), savedRating.getContent());
     }
 
     @Override
@@ -66,7 +66,7 @@ public class RatingService implements IRatingService {
 
         Rating savedRating = ratingRepository.save(rating);
 
-        return new RatingDTO(savedRating.getRecipe().getId(), savedRating.getAuthor().getId(), savedRating.getGrade(), savedRating.getContent());
+        return new RatingDTO(savedRating.getId(), savedRating.getRecipe().getId(), savedRating.getAuthor().getId(), savedRating.getGrade(), savedRating.getContent());
     }
 
     @Override
@@ -86,6 +86,7 @@ public class RatingService implements IRatingService {
     
         return ratings.stream()
             .map(rating -> new RatingDTO(
+                rating.getId(),
                 rating.getRecipe().getId(),
                 rating.getAuthor().getId(),
                 rating.getGrade(),
@@ -100,6 +101,7 @@ public class RatingService implements IRatingService {
     
         return ratings.stream()
             .map(rating -> new RatingDTO(
+                rating.getId(),
                 rating.getRecipe().getId(),
                 rating.getAuthor().getId(),
                 rating.getGrade(),
