@@ -1,5 +1,6 @@
 package com.ufscar.pooa.backend.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,6 +41,7 @@ public class RatingService implements IRatingService {
         rating.setAuthor(author);
         rating.setGrade(ratingDTO.grade());
         rating.setContent(ratingDTO.content());
+        rating.setCreatedAt(new Date());
 
         Rating savedRating = ratingRepository.save(rating);
 

@@ -1,6 +1,7 @@
 package com.ufscar.pooa.backend.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,6 +41,7 @@ public class RecipeService implements IRecipeService {
         recipe.setIngredients(recipeDTO.ingredients());
         recipe.setCategories(recipeDTO.categories());
         recipe.setComments(recipeDTO.comments());
+        recipe.setCreatedAt(new Date());
 
         recipeRepository.save(recipe);
 
@@ -156,8 +158,21 @@ public class RecipeService implements IRecipeService {
             throw new RuntimeException("No recipes found");
         }
 
-        return new ArrayList<>(recipes.stream()
-                 .map(recipe -> new RecipeDTO(recipe.getName(), recipe.getAuthor().getId(), recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments()))
-                .toList());
+              return recipes.stream()
+        .map(recipe -> {
+            Double avg = ratingRepository.findAverageGradeByRecipeId(recipe.getId());
+            recipe.setRating(avg != null ? avg : 0.0);
+            
+            return new RecipeDTO(
+                recipe.getName(), 
+                recipe.getAuthor().getId(), 
+                recipe.getPreparationMethods(), 
+                recipe.getRating(),
+                recipe.getIngredients(), 
+                recipe.getCategories(), 
+                recipe.getComments()
+            );
+        })
+        .toList();
     }
 }

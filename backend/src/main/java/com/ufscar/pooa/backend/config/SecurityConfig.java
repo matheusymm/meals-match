@@ -25,7 +25,7 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/webjars/**")
                         .permitAll()
-                        .anyRequest().authenticated());
+                        .anyRequest().permitAll());
 
         return http.build();
     }
