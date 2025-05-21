@@ -11,7 +11,7 @@ public record RecipeDTO(
         @NotBlank String name,
         @NotNull UUID authorId,
         @NotBlank String preparationMethods,
-        @NotNull Double rating,
+        Double rating,
         @NotBlank List<String> ingredients,
         @NotBlank List<String> categories,
         List<String> comments) {

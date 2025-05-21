@@ -1,5 +1,6 @@
 package com.ufscar.pooa.backend.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -37,7 +38,7 @@ public class CommentService implements ICommentService {
         newComment.setAuthor(author);
         newComment.setContent(commentDTO.content());
         newComment.setRecipe(recipe);
-        newComment.setCreatedAt(commentDTO.createdAt());
+        newComment.setCreatedAt(new Date());
 
         Comment saved = commentRepository.save(newComment);
         return CommentDTO.fromEntity(saved);

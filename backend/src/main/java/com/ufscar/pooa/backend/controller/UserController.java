@@ -15,7 +15,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import com.ufscar.pooa.backend.dto.UserDTO;
-import com.ufscar.pooa.backend.model.User;
 
 @RestController
 @RequestMapping("/users")

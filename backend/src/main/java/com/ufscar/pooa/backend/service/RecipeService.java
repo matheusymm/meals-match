@@ -38,6 +38,7 @@ public class RecipeService implements IRecipeService {
         recipe.setName(recipeDTO.name());
         recipe.setAuthor(author);
         recipe.setPreparationMethods(recipeDTO.preparationMethods());
+        recipe.setRating(0.0);
         recipe.setIngredients(recipeDTO.ingredients());
         recipe.setCategories(recipeDTO.categories());
         recipe.setComments(recipeDTO.comments());

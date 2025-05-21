@@ -1,7 +1,6 @@
 package com.ufscar.pooa.backend.controller;
 
 import com.ufscar.pooa.backend.dto.CommentDTO;
-import com.ufscar.pooa.backend.dto.RatingDTO;
 import com.ufscar.pooa.backend.service.CommentService;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
