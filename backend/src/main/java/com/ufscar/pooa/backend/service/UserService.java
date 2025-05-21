@@ -69,11 +69,11 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public List<UserDTO> getAllUsers() {
         List<User> users = userRepository.findAll();
 
         return new ArrayList<>(users.stream()
-                .map(user -> new User(user.getUsername(), null, user.getEmail(), user.getName(), user.getPhone(),
+                .map(user -> new UserDTO(user.getId(), user.getUsername(), null, user.getEmail(), user.getName(), user.getPhone(),
                         user.getRole()))
                 .toList());
     }

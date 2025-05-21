@@ -17,5 +17,5 @@ public interface IUserService {
 
     UserDTO getUserByEmail(String email);
 
-    List<User> getAllUsers();
+    List<UserDTO> getAllUsers();
 }
