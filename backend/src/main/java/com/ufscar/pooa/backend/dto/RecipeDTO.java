@@ -2,6 +2,7 @@ package com.ufscar.pooa.backend.dto;
 
 import java.util.List;
 import java.util.UUID;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
