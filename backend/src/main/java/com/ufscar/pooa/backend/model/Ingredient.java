@@ -1,4 +1,4 @@
-package com.ufscar.pooa.backend.model;
+/*package com.ufscar.pooa.backend.model;
 
 
 import java.util.ArrayList;
@@ -47,3 +47,4 @@ public class Ingredient {
 
     
 }
+*/

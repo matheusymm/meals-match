@@ -1,5 +1,6 @@
 package com.ufscar.pooa.backend.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,10 +41,11 @@ public class RatingService implements IRatingService {
         rating.setAuthor(author);
         rating.setGrade(ratingDTO.grade());
         rating.setContent(ratingDTO.content());
+        rating.setCreatedAt(new Date());
 
         Rating savedRating = ratingRepository.save(rating);
 
-        return new RatingDTO(savedRating.getRecipe().getId(), savedRating.getAuthor().getId(), savedRating.getGrade(), savedRating.getContent());
+        return new RatingDTO(savedRating.getId(), savedRating.getRecipe().getId(), savedRating.getAuthor().getId(), savedRating.getGrade(), savedRating.getContent());
     }
 
     @Override
@@ -64,7 +66,7 @@ public class RatingService implements IRatingService {
 
         Rating savedRating = ratingRepository.save(rating);
 
-        return new RatingDTO(savedRating.getRecipe().getId(), savedRating.getAuthor().getId(), savedRating.getGrade(), savedRating.getContent());
+        return new RatingDTO(savedRating.getId(), savedRating.getRecipe().getId(), savedRating.getAuthor().getId(), savedRating.getGrade(), savedRating.getContent());
     }
 
     @Override
@@ -84,6 +86,7 @@ public class RatingService implements IRatingService {
     
         return ratings.stream()
             .map(rating -> new RatingDTO(
+                rating.getId(), 
                 rating.getRecipe().getId(),
                 rating.getAuthor().getId(),
                 rating.getGrade(),
@@ -98,6 +101,7 @@ public class RatingService implements IRatingService {
     
         return ratings.stream()
             .map(rating -> new RatingDTO(
+                rating.getId(), 
                 rating.getRecipe().getId(),
                 rating.getAuthor().getId(),
                 rating.getGrade(),

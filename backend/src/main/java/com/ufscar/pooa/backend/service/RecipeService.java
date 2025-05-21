@@ -1,6 +1,7 @@
 package com.ufscar.pooa.backend.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,10 +41,11 @@ public class RecipeService implements IRecipeService {
         recipe.setIngredients(recipeDTO.ingredients());
         recipe.setCategories(recipeDTO.categories());
         recipe.setComments(recipeDTO.comments());
+        recipe.setCreatedAt(new Date());
 
         recipeRepository.save(recipe);
 
-        return new RecipeDTO(recipe.getName(), recipe.getAuthor().getId(), recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments());
+        return new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getAuthor().getId(), recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments());
    }
 
    @Override
@@ -66,7 +68,7 @@ public class RecipeService implements IRecipeService {
         recipe.setComments(recipeDTO.comments());
         recipeRepository.save(recipe);
 
-        return new RecipeDTO(recipe.getName(), recipe.getAuthor().getId(), recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments());
+        return new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getAuthor().getId(), recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments());
     }
 
     @Override
@@ -91,7 +93,7 @@ public class RecipeService implements IRecipeService {
         Double avg = ratingRepository.findAverageGradeByRecipeId(recipe.getId());
         recipe.setRating(avg != null ? avg : 0.0);
 
-        return new RecipeDTO(recipe.getName(), recipe.getAuthor().getId(), recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments());
+        return new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getAuthor().getId(), recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments());
     }
 
     @Override
@@ -102,7 +104,7 @@ public class RecipeService implements IRecipeService {
         Double avg = ratingRepository.findAverageGradeByRecipeId(recipe.getId());
         recipe.setRating(avg != null ? avg : 0.0);
 
-        return new RecipeDTO(recipe.getName(), recipe.getAuthor().getId(), recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments());
+        return new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getAuthor().getId(), recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments());
 
     }
 
@@ -116,7 +118,7 @@ public class RecipeService implements IRecipeService {
         }
 
         return new ArrayList<>(recipes.stream()
-                .map(recipe -> new RecipeDTO(recipe.getName(), recipe.getAuthor().getId(), recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments()))
+                .map(recipe -> new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getAuthor().getId(), recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments()))
                 .toList());
     }
 
@@ -130,7 +132,7 @@ public class RecipeService implements IRecipeService {
         }
 
         return new ArrayList<>(recipes.stream()
-               .map(recipe -> new RecipeDTO(recipe.getName(),  recipe.getAuthor().getId(), recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments()))
+               .map(recipe -> new RecipeDTO(recipe.getId(), recipe.getName(),  recipe.getAuthor().getId(), recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments()))
                 .toList());
     }
 
@@ -143,7 +145,7 @@ public class RecipeService implements IRecipeService {
         }
 
         return new ArrayList<>(recipes.stream()
-               .map(recipe -> new RecipeDTO(recipe.getName(),  recipe.getAuthor().getId(), recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments()))
+               .map(recipe -> new RecipeDTO(recipe.getId(), recipe.getName(),  recipe.getAuthor().getId(), recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments()))
                 .toList());
     }
 
@@ -157,7 +159,7 @@ public class RecipeService implements IRecipeService {
         }
 
         return new ArrayList<>(recipes.stream()
-                 .map(recipe -> new RecipeDTO(recipe.getName(), recipe.getAuthor().getId(), recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments()))
+                 .map(recipe -> new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getAuthor().getId(), recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getCategories(), recipe.getComments()))
                 .toList());
     }
 }
