@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ufscar.pooa.backend.service.UserService;
+import com.ufscar.pooa.backend.service.interfaces.IUserService;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -20,7 +20,7 @@ import com.ufscar.pooa.backend.dto.UserDTO;
 @RequestMapping("/users")
 public class UserController {
     @Autowired
-    private UserService userService;
+    private IUserService userService;
 
     @PostMapping
     @ApiResponses(value = {

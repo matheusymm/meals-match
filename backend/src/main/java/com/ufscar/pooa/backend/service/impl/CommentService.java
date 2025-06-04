@@ -1,9 +1,10 @@
-package com.ufscar.pooa.backend.service;
+package com.ufscar.pooa.backend.service.impl;
 
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import com.ufscar.pooa.backend.service.interfaces.ICommentService;
 import com.ufscar.pooa.backend.model.Comment;
 import com.ufscar.pooa.backend.model.Recipe;
 import com.ufscar.pooa.backend.model.User;
@@ -92,5 +93,5 @@ public class CommentService implements ICommentService {
                 .orElseThrow(() -> new RuntimeException("Comment not found"));
         return CommentDTO.fromEntity(comment);
     }
-    
+
 }

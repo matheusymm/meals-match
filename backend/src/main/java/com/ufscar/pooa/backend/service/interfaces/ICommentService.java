@@ -1,4 +1,4 @@
-package com.ufscar.pooa.backend.service;
+package com.ufscar.pooa.backend.service.interfaces;
 
 import java.util.List;
 import java.util.UUID;
@@ -17,5 +17,5 @@ public interface ICommentService {
     List<CommentDTO> getCommentsByUserId(UUID authorId);
 
     CommentDTO getCommentById(UUID commentId);
-    
-} 
+
+}
