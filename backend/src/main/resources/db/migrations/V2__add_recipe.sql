@@ -1,6 +1,0 @@
-CREATE IF NOT EXISTS TABLE "recipes" (
-    id UUID PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    preparation_methods TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-);
