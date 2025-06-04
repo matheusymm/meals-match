@@ -1,4 +1,4 @@
-package com.ufscar.pooa.backend.service;
+package com.ufscar.pooa.backend.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +12,7 @@ import com.ufscar.pooa.backend.dto.UserDTO;
 import com.ufscar.pooa.backend.enums.UserEnum;
 import com.ufscar.pooa.backend.model.User;
 import com.ufscar.pooa.backend.repository.UserRepository;
+import com.ufscar.pooa.backend.service.interfaces.IUserService;
 
 @Service
 public class UserService implements IUserService {
@@ -31,7 +32,8 @@ public class UserService implements IUserService {
         user.setCreatedAt(new Date());
 
         userRepository.save(user);
-        return new UserDTO(user.getId(), user.getUsername(), null, user.getEmail(), user.getName(), user.getPhone(), user.getRole());
+        return new UserDTO(user.getId(), user.getUsername(), null, user.getEmail(), user.getName(), user.getPhone(),
+                user.getRole());
     }
 
     @Override
@@ -44,7 +46,8 @@ public class UserService implements IUserService {
         user.setPhone(userDTO.phone());
         userRepository.save(user);
 
-        return new UserDTO(user.getId(), user.getUsername(), null, user.getEmail(), user.getName(), user.getPhone(), user.getRole());
+        return new UserDTO(user.getId(), user.getUsername(), null, user.getEmail(), user.getName(), user.getPhone(),
+                user.getRole());
     }
 
     @Override
@@ -58,14 +61,16 @@ public class UserService implements IUserService {
     public UserDTO getUserByUsername(String username) {
         User user = userRepository.findByUsername(username);
 
-        return new UserDTO(user.getId(), user.getUsername(), null, user.getEmail(), user.getName(), user.getPhone(), user.getRole());
+        return new UserDTO(user.getId(), user.getUsername(), null, user.getEmail(), user.getName(), user.getPhone(),
+                user.getRole());
     }
 
     @Override
     public UserDTO getUserByEmail(String email) {
         User user = userRepository.findByEmail(email);
 
-        return new UserDTO(user.getId(), user.getUsername(), null, user.getEmail(), user.getName(), user.getPhone(), user.getRole());
+        return new UserDTO(user.getId(), user.getUsername(), null, user.getEmail(), user.getName(), user.getPhone(),
+                user.getRole());
     }
 
     @Override
@@ -73,7 +78,8 @@ public class UserService implements IUserService {
         List<User> users = userRepository.findAll();
 
         return new ArrayList<>(users.stream()
-                .map(user -> new UserDTO(user.getId(), user.getUsername(), null, user.getEmail(), user.getName(), user.getPhone(),
+                .map(user -> new UserDTO(user.getId(), user.getUsername(), null, user.getEmail(), user.getName(),
+                        user.getPhone(),
                         user.getRole()))
                 .toList());
     }

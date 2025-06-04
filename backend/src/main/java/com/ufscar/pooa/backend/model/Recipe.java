@@ -7,6 +7,8 @@ import java.util.UUID;
 
 import jakarta.persistence.*;
 
+import com.ufscar.pooa.backend.model.Comment;
+
 @Entity
 @Table(name = "recipes")
 public class Recipe {
@@ -31,14 +33,14 @@ public class Recipe {
     @Column(nullable = false)
     private Date createdAt;
 
-    @ElementCollection
-    private List<String> categories;
+    // @ElementCollection
+    // private List<String> categories;
 
-    @ElementCollection
-    private List<String> ingredients;
+    // @ElementCollection
+    // private List<String> ingredients;
 
-    @ElementCollection
-    private List<String> comments;
+    @OneToMany
+    private List<Comment> comments;
 
     public Recipe() {
     }
@@ -48,9 +50,9 @@ public class Recipe {
         this.author = author;
         this.preparationMethods = preparationMethods;
         this.createdAt = new Date();
-        this.ingredients = new ArrayList<>();
-        this.categories = new ArrayList<>();
-        this.comments = new ArrayList<>();
+        // this.ingredients = new ArrayList<>();
+        // this.categories = new ArrayList<>();
+        this.comments = new ArrayList<Comment>();
     }
 
     // Getters e Setters
@@ -103,27 +105,27 @@ public class Recipe {
         this.rating = rating;
     }
 
-    public List<String> getIngredients() {
-        return ingredients;
-    }
+    // public List<String> getIngredients() {
+    // return ingredients;
+    // }
 
-    public void setIngredients(List<String> ingredients) {
-        this.ingredients = ingredients;
-    }
+    // public void setIngredients(List<String> ingredients) {
+    // this.ingredients = ingredients;
+    // }
 
-    public List<String> getCategories() {
-        return categories;
-    }
+    // public List<String> getCategories() {
+    // return categories;
+    // }
 
-    public void setCategories(List<String> categories) {
-        this.categories = categories;
-    }
+    // public void setCategories(List<String> categories) {
+    // this.categories = categories;
+    // }
 
-    public List<String> getComments() {
+    public List<Comment> getComments() {
         return comments;
     }
 
-    public void setComments(List<String> comments) {
+    public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
 }

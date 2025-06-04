@@ -1,49 +1,47 @@
-package com.ufscar.pooa.backend.model;
+// package com.ufscar.pooa.backend.model;
 
+// import java.util.ArrayList;
+// import java.util.List;
+// import java.util.UUID;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+// import jakarta.persistence.*;
 
-import jakarta.persistence.*;
+// @Entity
+// @Table(name = "ingredients")
+// public class Ingredient {
+// @Id
+// @GeneratedValue(strategy = GenerationType.UUID)
+// private UUID id;
 
+// @Column(nullable = false)
+// private String name;
 
-@Entity
-@Table(name = "ingredients")
-public class Ingredient {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
+// /*@OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL,
+// orphanRemoval = true)
+// private List<RecipeIngredient> recipeIngredients = new ArrayList<>();*/
 
-    @Column(nullable = false)
-    private String name;
+// public Ingredient() {
+// }
 
-    /*@OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RecipeIngredient> recipeIngredients = new ArrayList<>();*/
+// public Ingredient(UUID id, String name) {
+// this.id = id;
+// this.name = name;
+// }
 
-    public Ingredient() {
-    }
+// public UUID getId() {
+// return id;
+// }
 
-    public Ingredient(UUID id, String name) {
-        this.id = id;
-        this.name = name;
-    }
+// public void setId(UUID id) {
+// this.id = id;
+// }
 
-    public UUID getId() {
-        return id;
-    }
+// public String getName() {
+// return name;
+// }
 
-    public void setId(UUID id) {
-        this.id = id;
-    }
+// public void setName(String name) {
+// this.name = name;
+// }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    
-}
+// }

@@ -1,7 +1,7 @@
 package com.ufscar.pooa.backend.controller;
 
 import com.ufscar.pooa.backend.dto.RecipeIngredientDTO;
-import com.ufscar.pooa.backend.service.RecipeIngredientService;
+import com.ufscar.pooa.backend.service.interfaces.IRecipeIngredientService;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -11,19 +11,18 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/recipeIngredient")
 public class RecipeIngredientController {
 
     @Autowired
-    private RecipeIngredientService recipeIngredientService;
+    private IRecipeIngredientService recipeIngredientService;
 
     @PostMapping
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "RecipeIngredients created successfully"),
-        @ApiResponse(responseCode = "400", description = "Invalid input data")
+            @ApiResponse(responseCode = "201", description = "RecipeIngredients created successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
     public ResponseEntity<Void> createRecipeIngredients(@RequestBody RecipeIngredientDTO recipeIngredientDTO) {
         recipeIngredientService.createRecipeIngredient(recipeIngredientDTO);
@@ -32,8 +31,8 @@ public class RecipeIngredientController {
 
     @GetMapping("/")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "RecipeIngredientss retrieved successfully for the recipe"),
-        @ApiResponse(responseCode = "204", description = "No recipe ingredients found for this recipe")
+            @ApiResponse(responseCode = "200", description = "RecipeIngredientss retrieved successfully for the recipe"),
+            @ApiResponse(responseCode = "204", description = "No recipe ingredients found for this recipe")
     })
     public ResponseEntity<List<RecipeIngredientDTO>> getAllRecipeIngredients() {
         List<RecipeIngredientDTO> recipeIngredient = recipeIngredientService.getAllRecipeIngredients();

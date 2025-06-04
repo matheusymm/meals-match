@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ufscar.pooa.backend.service.RecipeService;
+import com.ufscar.pooa.backend.service.interfaces.IRecipeService;
 import com.ufscar.pooa.backend.dto.RecipeDTO;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -21,12 +21,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 public class RecipeController {
 
     @Autowired
-    private RecipeService recipeService;
+    private IRecipeService recipeService;
 
     @PostMapping
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Recipe created successfully"),
-        @ApiResponse(responseCode = "400", description = "Invalid input data")
+            @ApiResponse(responseCode = "201", description = "Recipe created successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
     public ResponseEntity<Void> createRecipe(@RequestBody RecipeDTO recipeDTO) {
         recipeService.createRecipe(recipeDTO);
@@ -35,8 +35,8 @@ public class RecipeController {
 
     @GetMapping
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Recipes retrieved successfully"),
-        @ApiResponse(responseCode = "204", description = "No recipes found")
+            @ApiResponse(responseCode = "200", description = "Recipes retrieved successfully"),
+            @ApiResponse(responseCode = "204", description = "No recipes found")
     })
     public ResponseEntity<List<RecipeDTO>> getAllRecipes() {
         List<RecipeDTO> recipes = recipeService.getAllRecipes();

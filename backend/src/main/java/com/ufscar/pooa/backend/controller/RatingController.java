@@ -1,7 +1,7 @@
 package com.ufscar.pooa.backend.controller;
 
 import com.ufscar.pooa.backend.dto.RatingDTO;
-import com.ufscar.pooa.backend.service.RatingService;
+import com.ufscar.pooa.backend.service.interfaces.IRatingService;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -18,12 +18,12 @@ import java.util.UUID;
 public class RatingController {
 
     @Autowired
-    private RatingService ratingService;
+    private IRatingService ratingService;
 
     @PostMapping
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "201", description = "Rating created successfully"),
-        @ApiResponse(responseCode = "400", description = "Invalid input data")
+            @ApiResponse(responseCode = "201", description = "Rating created successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
     public ResponseEntity<Void> createRating(@RequestBody RatingDTO ratingDTO) {
         ratingService.createRating(ratingDTO);
@@ -32,8 +32,8 @@ public class RatingController {
 
     @GetMapping("/recipe/{recipeId}")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Ratings retrieved successfully for the recipe"),
-        @ApiResponse(responseCode = "204", description = "No ratings found for this recipe")
+            @ApiResponse(responseCode = "200", description = "Ratings retrieved successfully for the recipe"),
+            @ApiResponse(responseCode = "204", description = "No ratings found for this recipe")
     })
     public ResponseEntity<List<RatingDTO>> getRatingsByRecipeId(@PathVariable UUID recipeId) {
         List<RatingDTO> ratings = ratingService.getRatingsByRecipeId(recipeId);

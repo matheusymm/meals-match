@@ -1,4 +1,4 @@
-package com.ufscar.pooa.backend.service;
+package com.ufscar.pooa.backend.service.impl;
 
 import java.util.Date;
 import java.util.List;
@@ -14,6 +14,7 @@ import com.ufscar.pooa.backend.model.User;
 import com.ufscar.pooa.backend.repository.RatingRepository;
 import com.ufscar.pooa.backend.repository.RecipeRepository;
 import com.ufscar.pooa.backend.repository.UserRepository;
+import com.ufscar.pooa.backend.service.interfaces.IRatingService;
 
 @Service
 public class RatingService implements IRatingService {
@@ -28,12 +29,12 @@ public class RatingService implements IRatingService {
     private UserRepository userRepository;
 
     @Override
-    public RatingDTO createRating(RatingDTO ratingDTO){
+    public RatingDTO createRating(RatingDTO ratingDTO) {
 
         Recipe recipe = recipeRepository.findById(ratingDTO.recipeId())
-            .orElseThrow(() -> new RuntimeException("Recipe not found"));
+                .orElseThrow(() -> new RuntimeException("Recipe not found"));
         User author = userRepository.findById(ratingDTO.authorId())
-            .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         Rating rating = new Rating();
 
@@ -45,19 +46,20 @@ public class RatingService implements IRatingService {
 
         Rating savedRating = ratingRepository.save(rating);
 
-        return new RatingDTO(savedRating.getId(), savedRating.getRecipe().getId(), savedRating.getAuthor().getId(), savedRating.getGrade(), savedRating.getContent());
+        return new RatingDTO(savedRating.getId(), savedRating.getRecipe().getId(), savedRating.getAuthor().getId(),
+                savedRating.getGrade(), savedRating.getContent());
     }
 
     @Override
     public RatingDTO updateRating(UUID ratingId, RatingDTO ratingDTO) {
         Rating rating = ratingRepository.findById(ratingId)
-            .orElseThrow(() -> new RuntimeException("Rating not found"));
+                .orElseThrow(() -> new RuntimeException("Rating not found"));
 
         Recipe recipe = recipeRepository.findById(ratingDTO.recipeId())
-            .orElseThrow(() -> new RuntimeException("Recipe not found"));
+                .orElseThrow(() -> new RuntimeException("Recipe not found"));
 
         User author = userRepository.findById(ratingDTO.authorId())
-            .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         rating.setRecipe(recipe);
         rating.setAuthor(author);
@@ -66,7 +68,8 @@ public class RatingService implements IRatingService {
 
         Rating savedRating = ratingRepository.save(rating);
 
-        return new RatingDTO(savedRating.getId(), savedRating.getRecipe().getId(), savedRating.getAuthor().getId(), savedRating.getGrade(), savedRating.getContent());
+        return new RatingDTO(savedRating.getId(), savedRating.getRecipe().getId(), savedRating.getAuthor().getId(),
+                savedRating.getGrade(), savedRating.getContent());
     }
 
     @Override
@@ -83,31 +86,29 @@ public class RatingService implements IRatingService {
     @Override
     public List<RatingDTO> getRatingsByRecipeId(UUID recipeId) {
         List<Rating> ratings = ratingRepository.findByRecipeId(recipeId);
-    
+
         return ratings.stream()
-            .map(rating -> new RatingDTO(
-                rating.getId(),
-                rating.getRecipe().getId(),
-                rating.getAuthor().getId(),
-                rating.getGrade(),
-                rating.getContent()
-            ))
-            .toList();
+                .map(rating -> new RatingDTO(
+                        rating.getId(),
+                        rating.getRecipe().getId(),
+                        rating.getAuthor().getId(),
+                        rating.getGrade(),
+                        rating.getContent()))
+                .toList();
     }
 
     @Override
     public List<RatingDTO> getRatingsByUserId(UUID authorId) {
         List<Rating> ratings = ratingRepository.findByAuthorId(authorId);
-    
+
         return ratings.stream()
-            .map(rating -> new RatingDTO(
-                rating.getId(),
-                rating.getRecipe().getId(),
-                rating.getAuthor().getId(),
-                rating.getGrade(),
-                rating.getContent()
-            ))
-            .toList();
+                .map(rating -> new RatingDTO(
+                        rating.getId(),
+                        rating.getRecipe().getId(),
+                        rating.getAuthor().getId(),
+                        rating.getGrade(),
+                        rating.getContent()))
+                .toList();
     }
 
     @Override
@@ -115,11 +116,10 @@ public class RatingService implements IRatingService {
         Double averageRating = ratingRepository.findAverageGradeByRecipeId(recipeId);
 
         if (averageRating == null) {
-            return null; 
+            return null;
         }
-    
+
         return Math.floor(averageRating * 100) / 100;
     }
 
-    
 }

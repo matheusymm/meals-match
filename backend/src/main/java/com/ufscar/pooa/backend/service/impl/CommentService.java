@@ -1,4 +1,4 @@
-package com.ufscar.pooa.backend.service;
+package com.ufscar.pooa.backend.service.impl;
 
 import java.util.Date;
 import java.util.List;
@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.ufscar.pooa.backend.dto.CommentDTO;
 import com.ufscar.pooa.backend.repository.CommentRepository;
 import com.ufscar.pooa.backend.repository.UserRepository;
+import com.ufscar.pooa.backend.service.interfaces.ICommentService;
 import com.ufscar.pooa.backend.repository.RecipeRepository;
 
 @Service
@@ -92,5 +93,5 @@ public class CommentService implements ICommentService {
                 .orElseThrow(() -> new RuntimeException("Comment not found"));
         return CommentDTO.fromEntity(comment);
     }
-    
+
 }

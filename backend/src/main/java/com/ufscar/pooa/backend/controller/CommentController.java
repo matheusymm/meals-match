@@ -1,7 +1,7 @@
 package com.ufscar.pooa.backend.controller;
 
 import com.ufscar.pooa.backend.dto.CommentDTO;
-import com.ufscar.pooa.backend.service.CommentService;
+import com.ufscar.pooa.backend.service.interfaces.ICommentService;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -18,7 +18,7 @@ import java.util.UUID;
 public class CommentController {
 
     @Autowired
-    private CommentService commentService;
+    private ICommentService commentService;
 
     @PostMapping
     @ApiResponses(value = {

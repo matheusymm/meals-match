@@ -1,4 +1,4 @@
-package com.ufscar.pooa.backend.service;
+package com.ufscar.pooa.backend.service.impl;
 
 import java.util.List;
 import java.util.UUID;
@@ -12,6 +12,7 @@ import com.ufscar.pooa.backend.model.RecipeIngredient;
 import com.ufscar.pooa.backend.model.Recipe;
 import com.ufscar.pooa.backend.repository.RecipeIngredientRepository;
 import com.ufscar.pooa.backend.repository.RecipeRepository;
+import com.ufscar.pooa.backend.service.interfaces.IRecipeIngredientService;
 
 @Service
 public class RecipeIngredientService implements IRecipeIngredientService {
@@ -23,10 +24,10 @@ public class RecipeIngredientService implements IRecipeIngredientService {
     private RecipeIngredientRepository recipeIngredientRepository;
 
     @Override
-   public RecipeIngredientDTO createRecipeIngredient(RecipeIngredientDTO recipeIngredientDTO){
+    public RecipeIngredientDTO createRecipeIngredient(RecipeIngredientDTO recipeIngredientDTO) {
 
         Recipe recipe = recipeRepository.findById(recipeIngredientDTO.recipeId())
-            .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         RecipeIngredient recipeIngredient = new RecipeIngredient();
 
@@ -37,21 +38,22 @@ public class RecipeIngredientService implements IRecipeIngredientService {
 
         recipeIngredientRepository.save(recipeIngredient);
 
-        return new RecipeIngredientDTO(recipeIngredient.getId(), recipeIngredient.getRecipe().getId(), recipeIngredient.getIngredient(), recipeIngredient.getQuantity(), recipeIngredient.getUnit());
-   }
+        return new RecipeIngredientDTO(recipeIngredient.getId(), recipeIngredient.getRecipe().getId(),
+                recipeIngredient.getIngredient(), recipeIngredient.getQuantity(), recipeIngredient.getUnit());
+    }
 
-   @Override
-    public RecipeIngredientDTO updateRecipeIngredient(UUID recipeIngredientId, RecipeIngredientDTO recipeIngredientDTO){
+    @Override
+    public RecipeIngredientDTO updateRecipeIngredient(UUID recipeIngredientId,
+            RecipeIngredientDTO recipeIngredientDTO) {
 
         RecipeIngredient recipeIngredient = recipeIngredientRepository.findById(recipeIngredientId).orElse(null);
-        
+
         if (recipeIngredient == null) {
             throw new RuntimeException("Recipe not found");
         }
 
-        
         Recipe recipe = recipeRepository.findById(recipeIngredientDTO.recipeId())
-            .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
         recipeIngredient.setRecipe(recipe);
         recipeIngredient.setIngredient(recipeIngredientDTO.ingredientId());
@@ -60,14 +62,15 @@ public class RecipeIngredientService implements IRecipeIngredientService {
 
         recipeIngredientRepository.save(recipeIngredient);
 
-        return new RecipeIngredientDTO(recipeIngredient.getId(), recipeIngredient.getRecipe().getId(), recipeIngredient.getIngredient(), recipeIngredient.getQuantity(), recipeIngredient.getUnit());
+        return new RecipeIngredientDTO(recipeIngredient.getId(), recipeIngredient.getRecipe().getId(),
+                recipeIngredient.getIngredient(), recipeIngredient.getQuantity(), recipeIngredient.getUnit());
 
-        }
+    }
 
     @Override
-    public void deleteRecipeIngredient(UUID recipeIngredientId){
+    public void deleteRecipeIngredient(UUID recipeIngredientId) {
         RecipeIngredient recipeIngredient = recipeIngredientRepository.findById(recipeIngredientId).orElse(null);
-        
+
         if (recipeIngredient == null) {
             throw new RuntimeException("Recipe not found");
         }
@@ -77,23 +80,25 @@ public class RecipeIngredientService implements IRecipeIngredientService {
     @Override
     public RecipeIngredientDTO getRecipeIngredientById(UUID id) {
         RecipeIngredient recipeIngredient = recipeIngredientRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Recipe Ingredient not found"));
+                .orElseThrow(() -> new RuntimeException("Recipe Ingredient not found"));
 
-        return new RecipeIngredientDTO(recipeIngredient.getId(), recipeIngredient.getRecipe().getId(), recipeIngredient.getIngredient(), recipeIngredient.getQuantity(), recipeIngredient.getUnit());
+        return new RecipeIngredientDTO(recipeIngredient.getId(), recipeIngredient.getRecipe().getId(),
+                recipeIngredient.getIngredient(), recipeIngredient.getQuantity(), recipeIngredient.getUnit());
 
     }
 
-     @Override
-    public List<RecipeIngredientDTO> getAllRecipeIngredients(){
-         List<RecipeIngredient> recipeIngredients = recipeIngredientRepository.findAll();
+    @Override
+    public List<RecipeIngredientDTO> getAllRecipeIngredients() {
+        List<RecipeIngredient> recipeIngredients = recipeIngredientRepository.findAll();
 
         if (recipeIngredients.isEmpty()) {
             throw new RuntimeException("No recipe ingredients found");
         }
 
         return recipeIngredients.stream().map(recipeIngredient -> {
-            
-           return new RecipeIngredientDTO(recipeIngredient.getId(), recipeIngredient.getRecipe().getId(), recipeIngredient.getIngredient(), recipeIngredient.getQuantity(), recipeIngredient.getUnit());
+
+            return new RecipeIngredientDTO(recipeIngredient.getId(), recipeIngredient.getRecipe().getId(),
+                    recipeIngredient.getIngredient(), recipeIngredient.getQuantity(), recipeIngredient.getUnit());
 
         }).toList();
     }

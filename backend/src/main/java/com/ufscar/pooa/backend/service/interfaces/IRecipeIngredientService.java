@@ -1,4 +1,4 @@
-package com.ufscar.pooa.backend.service;
+package com.ufscar.pooa.backend.service.interfaces;
 
 import java.util.List;
 import java.util.UUID;
@@ -14,6 +14,6 @@ public interface IRecipeIngredientService {
     void deleteRecipeIngredient(UUID recipeIngredientId);
 
     RecipeIngredientDTO getRecipeIngredientById(UUID id);
-    
+
     List<RecipeIngredientDTO> getAllRecipeIngredients();
 }
