@@ -159,8 +159,7 @@ public class RecipeService implements IRecipeService {
             throw new RuntimeException("No recipes found");
         }
 
-              return recipes.stream()
-        .map(recipe -> {
+        return recipes.stream().map(recipe -> {
             Double avg = ratingRepository.findAverageGradeByRecipeId(recipe.getId());
             recipe.setRating(avg != null ? avg : 0.0);
             
@@ -174,7 +173,6 @@ public class RecipeService implements IRecipeService {
                 recipe.getCategories(), 
                 recipe.getComments()
             );
-        })
-        .toList();
+        }).toList();
     }
 }

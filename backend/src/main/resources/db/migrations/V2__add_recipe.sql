@@ -4,3 +4,10 @@ CREATE IF NOT EXISTS TABLE "recipes" (
     preparation_methods TEXT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 );
+
+CREATE IF NOT EXISTS TABLE "recipe_ingredients" (
+    id UUID PRIMARY KEY,
+    ingredient VARCHAR(50) NOT NULL, 
+    unit VARCHAR(20) NOT NULL,
+    quantity FLOAT NOT NULL,
+);
