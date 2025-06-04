@@ -14,6 +14,7 @@ import com.ufscar.pooa.backend.model.User;
 import com.ufscar.pooa.backend.repository.RatingRepository;
 import com.ufscar.pooa.backend.repository.RecipeRepository;
 import com.ufscar.pooa.backend.repository.UserRepository;
+import com.ufscar.pooa.backend.service.interfaces.ICategoryService;
 import com.ufscar.pooa.backend.service.interfaces.IRecipeService;
 
 @Service
@@ -28,6 +29,9 @@ public class RecipeService implements IRecipeService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ICategoryService categoryService;
+
     @Override
     public RecipeDTO createRecipe(RecipeDTO recipeDTO) {
 
@@ -41,14 +45,13 @@ public class RecipeService implements IRecipeService {
         recipe.setPreparationMethods(recipeDTO.preparationMethods());
         recipe.setRating(0.0);
         // recipe.setIngredients(recipeDTO.ingredients());
-        // recipe.setCategories(recipeDTO.categories());
+        recipe.setCategories(categoryService.getCategoriesByNameOrCreate(recipeDTO.categories()));
         recipe.setComments(recipeDTO.comments());
         recipe.setCreatedAt(new Date());
 
         recipeRepository.save(recipe);
 
-        return new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getAuthor().getId(),
-                recipe.getPreparationMethods(), recipe.getRating(), recipe.getComments());
+        return RecipeDTO.fromRecipe(recipe);
     }
 
     @Override
@@ -71,8 +74,7 @@ public class RecipeService implements IRecipeService {
         recipe.setComments(recipeDTO.comments());
         recipeRepository.save(recipe);
 
-        return new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getAuthor().getId(),
-                recipe.getPreparationMethods(), recipe.getRating(), recipe.getComments());
+        return RecipeDTO.fromRecipe(recipe);
     }
 
     @Override
@@ -97,9 +99,7 @@ public class RecipeService implements IRecipeService {
         Double avg = ratingRepository.findAverageGradeByRecipeId(recipe.getId());
         recipe.setRating(avg != null ? avg : 0.0);
 
-        return new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getAuthor().getId(),
-                recipe.getPreparationMethods(), recipe.getRating(),
-                recipe.getComments());
+        return RecipeDTO.fromRecipe(recipe);
     }
 
     @Override
@@ -110,9 +110,7 @@ public class RecipeService implements IRecipeService {
         Double avg = ratingRepository.findAverageGradeByRecipeId(recipe.getId());
         recipe.setRating(avg != null ? avg : 0.0);
 
-        return new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getAuthor().getId(),
-                recipe.getPreparationMethods(), recipe.getRating(),
-                recipe.getComments());
+        return RecipeDTO.fromRecipe(recipe);
 
     }
 
@@ -155,8 +153,7 @@ public class RecipeService implements IRecipeService {
         }
 
         return new ArrayList<>(recipes.stream()
-                .map(recipe -> new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getAuthor().getId(),
-                        recipe.getPreparationMethods(), recipe.getRating(), recipe.getComments()))
+                .map(RecipeDTO::fromRecipe)
                 .toList());
     }
 
@@ -172,13 +169,7 @@ public class RecipeService implements IRecipeService {
             Double avg = ratingRepository.findAverageGradeByRecipeId(recipe.getId());
             recipe.setRating(avg != null ? avg : 0.0);
 
-            return new RecipeDTO(
-                    recipe.getId(),
-                    recipe.getName(),
-                    recipe.getAuthor().getId(),
-                    recipe.getPreparationMethods(),
-                    recipe.getRating(),
-                    recipe.getComments());
+            return RecipeDTO.fromRecipe(recipe);
         }).toList();
     }
 }
