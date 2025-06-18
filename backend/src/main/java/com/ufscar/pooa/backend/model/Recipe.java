@@ -8,6 +8,7 @@ import java.util.UUID;
 import jakarta.persistence.*;
 
 import com.ufscar.pooa.backend.model.Comment;
+import com.ufscar.pooa.backend.model.Ingredient;
 
 @Entity
 @Table(name = "recipes")
@@ -36,8 +37,8 @@ public class Recipe {
     // @ElementCollection
     // private List<String> categories;
 
-    // @ElementCollection
-    // private List<String> ingredients;
+    @OneToMany
+    private List<Ingredient> ingredients;
 
     @OneToMany
     private List<Comment> comments;
@@ -45,12 +46,12 @@ public class Recipe {
     public Recipe() {
     }
 
-    public Recipe(String name, User author, String preparationMethods) {
+    public Recipe(String name, User author, String preparationMethods, List<Ingredient> ingredients) {
         this.name = name;
         this.author = author;
         this.preparationMethods = preparationMethods;
         this.createdAt = new Date();
-        // this.ingredients = new ArrayList<>();
+        this.ingredients = ingredients;
         // this.categories = new ArrayList<>();
         this.comments = new ArrayList<Comment>();
     }
@@ -105,13 +106,13 @@ public class Recipe {
         this.rating = rating;
     }
 
-    // public List<String> getIngredients() {
-    // return ingredients;
-    // }
+    public List<Ingredient> getIngredients() {
+    return ingredients;
+    }
 
-    // public void setIngredients(List<String> ingredients) {
-    // this.ingredients = ingredients;
-    // }
+    public void setIngredients(List<Ingredient> ingredients) {
+    this.ingredients = ingredients;
+    }
 
     // public List<String> getCategories() {
     // return categories;

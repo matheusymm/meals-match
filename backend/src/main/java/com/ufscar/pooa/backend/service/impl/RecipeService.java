@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ufscar.pooa.backend.dto.RecipeDTO;
+import com.ufscar.pooa.backend.model.Ingredient;
 import com.ufscar.pooa.backend.model.Recipe;
 import com.ufscar.pooa.backend.model.User;
+import com.ufscar.pooa.backend.repository.IngredientRepository;
 import com.ufscar.pooa.backend.repository.RatingRepository;
 import com.ufscar.pooa.backend.repository.RecipeRepository;
 import com.ufscar.pooa.backend.repository.UserRepository;
@@ -28,6 +30,9 @@ public class RecipeService implements IRecipeService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private IngredientRepository ingredientRepository;
+
     @Override
     public RecipeDTO createRecipe(RecipeDTO recipeDTO) {
 
@@ -35,12 +40,26 @@ public class RecipeService implements IRecipeService {
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Recipe recipe = new Recipe();
+        List<Ingredient> persistentIngredients = new ArrayList<>();
+        
+        for (Ingredient ingredientFromDto : recipeDTO.ingredients()) {
+            // Busca o ingrediente pelo nome
+            Ingredient foundIngredient = ingredientRepository.findByName(ingredientFromDto.getName());
+
+            if (foundIngredient != null) {
+                // Se encontrou, adiciona a instância gerenciada pelo Hibernate na lista
+                persistentIngredients.add(foundIngredient);
+            } else {
+                // Se não encontrou, lança uma exceção. O ingrediente DEVE existir.
+                throw new RuntimeException("Ingredient not found in database: " + ingredientFromDto.getName());
+            }
+        }
 
         recipe.setName(recipeDTO.name());
         recipe.setAuthor(author);
         recipe.setPreparationMethods(recipeDTO.preparationMethods());
         recipe.setRating(0.0);
-        // recipe.setIngredients(recipeDTO.ingredients());
+        recipe.setIngredients(persistentIngredients);
         // recipe.setCategories(recipeDTO.categories());
         recipe.setComments(recipeDTO.comments());
         recipe.setCreatedAt(new Date());
@@ -48,7 +67,7 @@ public class RecipeService implements IRecipeService {
         recipeRepository.save(recipe);
 
         return new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getAuthor().getId(),
-                recipe.getPreparationMethods(), recipe.getRating(), recipe.getComments());
+                recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getComments());
     }
 
     @Override
@@ -66,13 +85,13 @@ public class RecipeService implements IRecipeService {
         recipe.setName(recipeDTO.name());
         recipe.setAuthor(author);
         recipe.setPreparationMethods(recipeDTO.preparationMethods());
-        // recipe.setIngredients(recipeDTO.ingredients());
+        recipe.setIngredients(recipeDTO.ingredients());
         // recipe.setCategories(recipeDTO.categories());
         recipe.setComments(recipeDTO.comments());
         recipeRepository.save(recipe);
 
-        return new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getAuthor().getId(),
-                recipe.getPreparationMethods(), recipe.getRating(), recipe.getComments());
+         return new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getAuthor().getId(),
+                recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getComments());
     }
 
     @Override
@@ -97,9 +116,8 @@ public class RecipeService implements IRecipeService {
         Double avg = ratingRepository.findAverageGradeByRecipeId(recipe.getId());
         recipe.setRating(avg != null ? avg : 0.0);
 
-        return new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getAuthor().getId(),
-                recipe.getPreparationMethods(), recipe.getRating(),
-                recipe.getComments());
+         return new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getAuthor().getId(),
+                recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getComments());
     }
 
     @Override
@@ -110,9 +128,8 @@ public class RecipeService implements IRecipeService {
         Double avg = ratingRepository.findAverageGradeByRecipeId(recipe.getId());
         recipe.setRating(avg != null ? avg : 0.0);
 
-        return new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getAuthor().getId(),
-                recipe.getPreparationMethods(), recipe.getRating(),
-                recipe.getComments());
+          return new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getAuthor().getId(),
+                recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getComments());
 
     }
 
@@ -132,18 +149,17 @@ public class RecipeService implements IRecipeService {
     // }
 
     // @Override
-    // public List<RecipeDTO> getRecipesByIngredients(List<String> ingredients) {
-    // List<Recipe> recipes = recipeRepository.findByIngredientsIn(ingredients);
+    // public List<RecipeDTO> getRecipesByIngredients(List<Ingredient> ingredients) {
+    //     List<Recipe> recipes = recipeRepository.findByIngredientsIn(ingredients);
 
-    // if (recipes.isEmpty()) {
-    // throw new RuntimeException("No recipes found");
-    // }
+    //     if (recipes.isEmpty()) {
+    //         throw new RuntimeException("No recipes found");
+    //     }
 
-    // return new ArrayList<>(recipes.stream()
-    // .map(recipe -> new RecipeDTO(recipe.getId(), recipe.getName(),
-    // recipe.getAuthor().getId(),
-    // recipe.getPreparationMethods(), recipe.getRating(), recipe.getComments()))
-    // .toList());
+    //     return new ArrayList<>(recipes.stream()
+    //         .map(recipe -> new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getAuthor().getId(),
+    //         recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getComments()))
+    //         .toList());
     // }
 
     @Override
@@ -154,10 +170,10 @@ public class RecipeService implements IRecipeService {
             throw new RuntimeException("No recipes found");
         }
 
-        return new ArrayList<>(recipes.stream()
-                .map(recipe -> new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getAuthor().getId(),
-                        recipe.getPreparationMethods(), recipe.getRating(), recipe.getComments()))
-                .toList());
+         return new ArrayList<>(recipes.stream()
+            .map(recipe -> new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getAuthor().getId(),
+            recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getComments()))
+            .toList());
     }
 
     @Override
@@ -178,6 +194,7 @@ public class RecipeService implements IRecipeService {
                     recipe.getAuthor().getId(),
                     recipe.getPreparationMethods(),
                     recipe.getRating(),
+                    recipe.getIngredients(),
                     recipe.getComments());
         }).toList();
     }
