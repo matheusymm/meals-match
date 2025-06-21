@@ -4,7 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class DbConnection {
-    private static final String db_url = "jdbc:postgresql://localhost:5432/framework_db";
+    private static final String db_url = "jdbc:postgresql://localhost:5432/meals_db";
     private static final String db_user = "user";
     private static final String db_password = "pass";
     private static DbConnection instance;
