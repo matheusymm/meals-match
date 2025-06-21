@@ -6,7 +6,6 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ufscar.pooa.backend.dto.RecipeDTO;
 import com.ufscar.pooa.backend.dto.RecipeIngredientDTO;
 import com.ufscar.pooa.backend.model.RecipeIngredient;
 import com.ufscar.pooa.backend.model.Recipe;
