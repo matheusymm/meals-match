@@ -18,8 +18,8 @@ public class Notification {
     @Column(name = "recipient_id")
     private UUID recipientId;
 
-    @Column(name = "created_at")
-    private Date createdAt;
+  //  @Column(name = "created_at")
+   // private Date createdAt;
 
     @Column(name = "is_read")
     private boolean isRead;
@@ -48,13 +48,13 @@ public class Notification {
         this.recipientId = recipientId;
     }
 
-    public Date getCreatedAt() {
+  /*   public Date getCreatedAt() {
         return createdAt;
     }
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
-    }
+    }*/
 
     public boolean isRead() {
         return isRead;

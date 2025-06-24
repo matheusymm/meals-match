@@ -34,10 +34,10 @@ public class Recipe {
     // @ElementCollection
     // private List<String> categories;
 
-    @OneToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Ingredient> ingredients;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     private List<Comment> comments;
 
     public Recipe() {

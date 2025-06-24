@@ -33,7 +33,7 @@ public class NotificationService implements INotificationService {
 
             notification.setId(UUID.randomUUID());
             notification.setRecipientId(notifiedUser.getId());
-            notification.setCreatedAt(new Date());
+         //   notification.setCreatedAt(new Date());
             notification.setRead(false);
 
             String message = String.format(
@@ -55,12 +55,32 @@ public class NotificationService implements INotificationService {
     @Override
     @EventListener
     public void handleNewComment(NewCommentEvent commentEvent) {
+        
         Recipe recipe = commentEvent.getComment().getRecipe();
         User notifiedUser = recipe.getAuthor();
         User madeComment = commentEvent.getComment().getAuthor();
+
         if (!madeComment.getId().equals(notifiedUser.getId())) {
-            System.out.println("Usuário " + notifiedUser.getName() + ", o usuário " + madeComment.getName()
-                    + " publicou um novo comentário na sua receita " + recipe.getName());
+            Notification notification = new Notification();
+
+            notification.setId(UUID.randomUUID());
+            notification.setRecipientId(notifiedUser.getId());
+         //   notification.setCreatedAt(new Date());
+            notification.setRead(false);
+
+            String message = String.format(
+                    "Usuário " + notifiedUser.getName() + ", o usuário " + madeComment.getName()
+                            + " fez uma nova postagem na sua receita " + recipe.getName());
+            notification.setMessage(message);
+
+            try {
+                System.out.println("--- Usando o Framework de Persistência Customizado ---");
+                notificationPersistence.insert(notification);
+                System.out.println("Notificação salva no banco! ID: " + notification.getId());
+            } catch (Exception e) {
+                System.err.println("Falha ao salvar notificação com o framework customizado.");
+                e.printStackTrace();
+            }
         }
     }
 }
