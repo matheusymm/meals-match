@@ -2,7 +2,9 @@ package com.ufscar.pooa.backend.model;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import jakarta.persistence.*;
@@ -31,8 +33,13 @@ public class Recipe {
     @Column(nullable = false)
     private Date createdAt;
 
-    // @ElementCollection
-    // private List<String> categories;
+    @ManyToMany
+    @JoinTable(
+        name = "recipe_categories",
+        joinColumns = @JoinColumn(name = "recipe_id"),
+        inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private List<Category> categories;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Ingredient> ingredients;
@@ -49,7 +56,7 @@ public class Recipe {
         this.preparationMethods = preparationMethods;
         this.createdAt = new Date();
         this.ingredients = ingredients;
-        // this.categories = new ArrayList<>();
+        this.categories = new ArrayList<>();
         this.comments = new ArrayList<Comment>();
     }
 
@@ -125,5 +132,20 @@ public class Recipe {
 
     public void setComments(List<Comment> comments) {
         this.comments = comments;
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
+    }
+
+    public void addCategory(Category category) {
+        if (this.categories == null) {
+            this.categories = new ArrayList<>();
+        }
+        this.categories.add(category);
     }
 }
