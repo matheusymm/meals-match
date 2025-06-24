@@ -3,11 +3,11 @@ package com.ufscar.pooa.backend.service.impl;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
-import com.ufscar.pooa.backend.events.INotificationService;
 import com.ufscar.pooa.backend.events.NewCommentEvent;
 import com.ufscar.pooa.backend.events.NewRatingEvent;
 import com.ufscar.pooa.backend.model.Recipe;
 import com.ufscar.pooa.backend.model.User;
+import com.ufscar.pooa.backend.service.interfaces.INotificationService;
 
 @Service
 public class NotificationService implements INotificationService {
