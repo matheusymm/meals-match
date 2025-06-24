@@ -5,9 +5,11 @@ import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import com.ufscar.pooa.backend.dto.RatingDTO;
+import com.ufscar.pooa.backend.events.NewRatingEvent;
 import com.ufscar.pooa.backend.model.Rating;
 import com.ufscar.pooa.backend.model.Recipe;
 import com.ufscar.pooa.backend.model.User;
@@ -28,6 +30,9 @@ public class RatingService implements IRatingService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
+
     @Override
     public RatingDTO createRating(RatingDTO ratingDTO) {
 
@@ -46,6 +51,7 @@ public class RatingService implements IRatingService {
 
         Rating savedRating = ratingRepository.save(rating);
 
+        eventPublisher.publishEvent(new NewRatingEvent(this, savedRating));
         return new RatingDTO(savedRating.getId(), savedRating.getRecipe().getId(), savedRating.getAuthor().getId(),
                 savedRating.getGrade(), savedRating.getContent());
     }

@@ -8,9 +8,11 @@ import com.ufscar.pooa.backend.model.Comment;
 import com.ufscar.pooa.backend.model.Recipe;
 import com.ufscar.pooa.backend.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import com.ufscar.pooa.backend.dto.CommentDTO;
+import com.ufscar.pooa.backend.events.NewCommentEvent;
 import com.ufscar.pooa.backend.repository.CommentRepository;
 import com.ufscar.pooa.backend.repository.UserRepository;
 import com.ufscar.pooa.backend.service.interfaces.ICommentService;
@@ -20,13 +22,16 @@ import com.ufscar.pooa.backend.repository.RecipeRepository;
 public class CommentService implements ICommentService {
 
     @Autowired
-    CommentRepository commentRepository;
+    private CommentRepository commentRepository;
 
     @Autowired
-    RecipeRepository recipeRepository;
+    private RecipeRepository recipeRepository;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+
+    @Autowired
+    private ApplicationEventPublisher eventPublisher;
 
     @Override
     public CommentDTO createComment(CommentDTO commentDTO) {
@@ -42,6 +47,9 @@ public class CommentService implements ICommentService {
         newComment.setCreatedAt(new Date());
 
         Comment saved = commentRepository.save(newComment);
+
+        eventPublisher.publishEvent(new NewCommentEvent(this, saved));
+
         return CommentDTO.fromEntity(saved);
     }
 
