@@ -14,38 +14,40 @@ import com.ufscar.pooa.backend.service.interfaces.INotificationService;
 
 @Service
 public class NotificationService implements INotificationService {
+    private final PersistenceFramework notificationPersistence;
 
-private final PersistenceFramework persistence = new PersistenceFramework(Notification.class);
+    public NotificationService(PersistenceFramework notificationPersistenceFramework) {
+        this.notificationPersistence = notificationPersistenceFramework;
+    }
 
-@Override
-@EventListener
-public void handleNewRating(NewRatingEvent ratingEvent) {
+    @Override
+    @EventListener
+    public void handleNewRating(NewRatingEvent ratingEvent) {
 
-    Recipe recipe = ratingEvent.getRating().getRecipe();
-    User notifiedUser = recipe.getAuthor();
-    User madeRating = ratingEvent.getRating().getAuthor();
+        Recipe recipe = ratingEvent.getRating().getRecipe();
+        User notifiedUser = recipe.getAuthor();
+        User madeRating = ratingEvent.getRating().getAuthor();
 
-    if (!madeRating.getId().equals(notifiedUser.getId())) {
-        Notification notification = new Notification();
+        if (!madeRating.getId().equals(notifiedUser.getId())) {
+            Notification notification = new Notification();
 
-        notification.setId(UUID.randomUUID());
-        notification.setRecipientId(notifiedUser.getId());
-      //  notification.setCreatedAt(new Date());
-        notification.setRead(false);
+            notification.setId(UUID.randomUUID());
+            notification.setRecipientId(notifiedUser.getId());
+            notification.setCreatedAt(new Date());
+            notification.setRead(false);
 
-        String message = String.format(
-        "Usuário " + notifiedUser.getName() + ", o usuário " + madeRating.getName()
-        + " fez uma nova avaliação na sua receita " + recipe.getName()
-        );
-        notification.setMessage(message);
+            String message = String.format(
+                    "Usuário " + notifiedUser.getName() + ", o usuário " + madeRating.getName()
+                            + " fez uma nova avaliação na sua receita " + recipe.getName());
+            notification.setMessage(message);
 
-        try {
-            System.out.println("--- Usando o Framework de Persistência Customizado ---");
-            persistence.insert(notification);
-            System.out.println("Notificação salva no banco! ID: " + notification.getId());
-        } catch (Exception e) {
-            System.err.println("Falha ao salvar notificação com o framework customizado.");
-            e.printStackTrace();
+            try {
+                System.out.println("--- Usando o Framework de Persistência Customizado ---");
+                notificationPersistence.insert(notification);
+                System.out.println("Notificação salva no banco! ID: " + notification.getId());
+            } catch (Exception e) {
+                System.err.println("Falha ao salvar notificação com o framework customizado.");
+                e.printStackTrace();
             }
         }
     }

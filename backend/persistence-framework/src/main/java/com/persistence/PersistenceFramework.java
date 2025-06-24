@@ -29,6 +29,7 @@ public class PersistenceFramework {
         this.columnHelper = new ColumnHelper();
         this.dbConnection = DbConnection.getDbConnection();
         initializeEntityMetadata();
+        initializeSchema();
     }
 
     private void initializeEntityMetadata() {
