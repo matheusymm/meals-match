@@ -1,35 +1,38 @@
 package com.ufscar.pooa.backend.service.impl;
 
-
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
+
+import com.ufscar.pooa.backend.events.INotificationService;
 import com.ufscar.pooa.backend.events.NewCommentEvent;
 import com.ufscar.pooa.backend.events.NewRatingEvent;
 import com.ufscar.pooa.backend.model.Recipe;
 import com.ufscar.pooa.backend.model.User;
-import com.ufscar.pooa.backend.service.interfaces.INotificationService;
 
 @Service
 public class NotificationService implements INotificationService {
-   
+
     @Override
     @EventListener
-    public void handleNewRating(NewRatingEvent ratingEvent){
+    public void handleNewRating(NewRatingEvent ratingEvent) {
         Recipe recipe = ratingEvent.getRating().getRecipe();
         User notifiedUser = recipe.getAuthor();
         User madeRating = ratingEvent.getRating().getAuthor();
-        if(!madeRating.getId().equals(notifiedUser.getId())){
-            System.out.println("Usuário " + notifiedUser.getName() + ", o usuário " + madeRating.getName() + " fez uma nova avaliação na sua receita " + recipe.getName() );
+        if (!madeRating.getId().equals(notifiedUser.getId())) {
+            System.out.println("Usuário " + notifiedUser.getName() + ", o usuário " + madeRating.getName()
+                    + " fez uma nova avaliação na sua receita " + recipe.getName());
         }
     }
+
     @Override
     @EventListener
-    public void handleNewComment(NewCommentEvent commentEvent){
+    public void handleNewComment(NewCommentEvent commentEvent) {
         Recipe recipe = commentEvent.getComment().getRecipe();
         User notifiedUser = recipe.getAuthor();
         User madeComment = commentEvent.getComment().getAuthor();
-        if(!madeComment.getId().equals(notifiedUser.getId())){
-            System.out.println("Usuário " + notifiedUser.getName() + ", o usuário " + madeComment.getName() + " publicou um novo comentário na sua receita " + recipe.getName() );
+        if (!madeComment.getId().equals(notifiedUser.getId())) {
+            System.out.println("Usuário " + notifiedUser.getName() + ", o usuário " + madeComment.getName()
+                    + " publicou um novo comentário na sua receita " + recipe.getName());
         }
     }
 }
