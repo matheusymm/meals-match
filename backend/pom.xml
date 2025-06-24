@@ -12,7 +12,8 @@
   <groupId>com.ufscar.pooa</groupId>
   <artifactId>backend</artifactId>
   <version>1.0.0-SNAPSHOT</version>
-  <packaging>pom</packaging> <modules>
+  <packaging>pom</packaging> 
+  <modules>
     <module>persistence-framework</module>
     <module>api</module>
   </modules>

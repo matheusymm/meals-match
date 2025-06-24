@@ -7,9 +7,6 @@ import java.util.UUID;
 
 import jakarta.persistence.*;
 
-import com.ufscar.pooa.backend.model.Comment;
-import com.ufscar.pooa.backend.model.Ingredient;
-
 @Entity
 @Table(name = "recipes")
 public class Recipe {
@@ -107,11 +104,11 @@ public class Recipe {
     }
 
     public List<Ingredient> getIngredients() {
-    return ingredients;
+        return ingredients;
     }
 
     public void setIngredients(List<Ingredient> ingredients) {
-    this.ingredients = ingredients;
+        this.ingredients = ingredients;
     }
 
     // public List<String> getCategories() {
