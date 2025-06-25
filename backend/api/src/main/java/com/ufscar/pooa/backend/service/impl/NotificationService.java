@@ -1,6 +1,5 @@
 package com.ufscar.pooa.backend.service.impl;
 
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -14,7 +13,6 @@ import com.ufscar.pooa.backend.events.NewCommentEvent;
 import com.ufscar.pooa.backend.events.NewRatingEvent;
 import com.ufscar.pooa.backend.model.Notification;
 import com.ufscar.pooa.backend.model.Recipe;
-import com.ufscar.pooa.backend.model.Notification;
 import com.ufscar.pooa.backend.model.User;
 import com.ufscar.pooa.backend.service.interfaces.INotificationService;
 
@@ -40,7 +38,6 @@ public class NotificationService implements INotificationService {
 
             notification.setId(UUID.randomUUID());
             notification.setRecipientId(notifiedUser.getId());
-         //   notification.setCreatedAt(new Date());
             notification.setRead(false);
 
             String message = String.format(
@@ -62,7 +59,7 @@ public class NotificationService implements INotificationService {
     @Override
     @EventListener
     public void handleNewComment(NewCommentEvent commentEvent) {
-        
+
         Recipe recipe = commentEvent.getComment().getRecipe();
         User notifiedUser = recipe.getAuthor();
         User madeComment = commentEvent.getComment().getAuthor();
@@ -72,7 +69,6 @@ public class NotificationService implements INotificationService {
 
             notification.setId(UUID.randomUUID());
             notification.setRecipientId(notifiedUser.getId());
-         //   notification.setCreatedAt(new Date());
             notification.setRead(false);
 
             String message = String.format(
@@ -93,11 +89,10 @@ public class NotificationService implements INotificationService {
 
     @Override
     public List<NotificationDTO> getAllNotifications() {
-          List<Object> objectList = notificationPersistence.findAll();
+        List<Object> objectList = notificationPersistence.findAll();
 
-   
         List<Notification> notifications = objectList.stream()
-                .map(obj -> (Notification) obj) // Para cada Object, converta-o para Notification
+                .map(obj -> (Notification) obj)
                 .collect(Collectors.toList());
 
         return notifications.stream()
@@ -105,8 +100,7 @@ public class NotificationService implements INotificationService {
                         notification.getId(),
                         notification.getMessage(),
                         notification.getRecipientId(),
-                        notification.isRead()
-                ))
+                        notification.isRead()))
                 .toList();
-     }
+    }
 }

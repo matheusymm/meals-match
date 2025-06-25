@@ -2,9 +2,7 @@ package com.ufscar.pooa.backend.model;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 import jakarta.persistence.*;
@@ -34,11 +32,7 @@ public class Recipe {
     private Date createdAt;
 
     @ManyToMany
-    @JoinTable(
-        name = "recipe_categories",
-        joinColumns = @JoinColumn(name = "recipe_id"),
-        inverseJoinColumns = @JoinColumn(name = "category_id")
-    )
+    @JoinTable(name = "recipe_categories", joinColumns = @JoinColumn(name = "recipe_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
     private List<Category> categories;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -59,8 +53,6 @@ public class Recipe {
         this.categories = new ArrayList<>();
         this.comments = new ArrayList<Comment>();
     }
-
-    // Getters e Setters
 
     public UUID getId() {
         return id;
@@ -117,14 +109,6 @@ public class Recipe {
     public void setIngredients(List<Ingredient> ingredients) {
         this.ingredients = ingredients;
     }
-
-    // public List<String> getCategories() {
-    // return categories;
-    // }
-
-    // public void setCategories(List<String> categories) {
-    // this.categories = categories;
-    // }
 
     public List<Comment> getComments() {
         return comments;
