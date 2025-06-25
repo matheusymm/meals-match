@@ -44,22 +44,20 @@ public class SchemaGenerator {
         this.dbConnection = DbConnection.getDbConnection();
     }
 
-    public void generateSchema(Class<?>... entityClasses) {
+    public void generateSchema(Class<?> entityClass) {
         Connection conn = null;
         Statement stmt = null;
 
         try {
             conn = dbConnection.getConnection();
             stmt = conn.createStatement();
-            for (Class<?> entityClass : entityClasses) {
-                if (entityClass.isAnnotationPresent(Entity.class)) {
-                    String sql = createTableSql(entityClass);
-                    stmt.execute(sql);
-                    System.out.println("Generating schema for table: " + entityClass.getSimpleName());
-                } else {
-                    System.err.println("Warning: Class " + entityClass.getName()
-                            + " is not an @Entity and will be skipped for schema generation.");
-                }
+            if (entityClass.isAnnotationPresent(Entity.class)) {
+                String sql = createTableSql(entityClass);
+                stmt.execute(sql);
+                System.out.println("Generating schema for table: " + entityClass.getSimpleName());
+            } else {
+                System.err.println("Warning: Class " + entityClass.getName()
+                        + " is not an @Entity and will be skipped for schema generation.");
             }
         } catch (SQLException e) {
             System.err.println("Error generating schema: " + e.getMessage());
@@ -83,9 +81,7 @@ public class SchemaGenerator {
         StringBuilder sqlBuilder = new StringBuilder();
         sqlBuilder.append("CREATE TABLE IF NOT EXISTS ").append(tableName).append(" (");
 
-        List<Field> fields = Arrays.stream(entityClass.getDeclaredFields())
-                .filter(field -> field.isAnnotationPresent(Column.class))
-                .collect(Collectors.toList());
+        List<Field> fields = columnHelper.getAnnotatedFields(entityClass);
 
         for (Field field : fields) {
             String columnName = columnHelper.getColumnName(field);

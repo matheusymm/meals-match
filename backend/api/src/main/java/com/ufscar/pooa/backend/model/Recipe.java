@@ -31,8 +31,7 @@ public class Recipe {
     @Column(nullable = false)
     private Date createdAt;
 
-    @ManyToMany
-    @JoinTable(name = "recipe_categories", joinColumns = @JoinColumn(name = "recipe_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
+    @ManyToMany(fetch = FetchType.EAGER)
     private List<Category> categories;
 
     @ManyToMany(fetch = FetchType.EAGER)
