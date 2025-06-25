@@ -8,7 +8,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.Collections;
 
@@ -90,50 +92,69 @@ public class PersistenceFramework {
         }
     }
 
-    public Object findById(Object id) {
-        Connection conn = null;
-        PreparedStatement pStmt = null;
-        ResultSet resultSet = null;
-        try {
-            conn = dbConnection.getConnection();
+public Object findById(Object id) {
+    Connection conn = null;
+    PreparedStatement pStmt = null;
+    ResultSet resultSet = null;
+    try {
+        conn = dbConnection.getConnection();
 
-            Field pkField = columnHelper.getPrimaryKeyField(entityClass);
-            String pkColumn = columnHelper.getColumnName(pkField);
+        Field pkField = columnHelper.getPrimaryKeyField(entityClass);
+        String pkColumn = columnHelper.getColumnName(pkField);
 
-            String sql = "SELECT * FROM " + tableName + " WHERE " + pkColumn + " = ?";
-            pStmt = conn.prepareStatement(sql);
-            pStmt.setObject(1, id);
+        String sql = "SELECT * FROM " + tableName + " WHERE " + pkColumn + " = ?";
+        pStmt = conn.prepareStatement(sql);
+        pStmt.setObject(1, id);
 
-            resultSet = pStmt.executeQuery();
-            if (resultSet.next()) {
-                Constructor<?> constructor = entityClass.getDeclaredConstructor();
-                constructor.setAccessible(true);
-                Object entityInstance = constructor.newInstance();
-                for (Field field : columnHelper.getAnnotatedFields(entityClass)) {
-                    field.setAccessible(true);
-                    field.set(entityInstance, resultSet.getObject(columnHelper.getColumnName(field)));
+        resultSet = pStmt.executeQuery();
+
+        if (resultSet.next()) {
+            Constructor<?> constructor = entityClass.getDeclaredConstructor();
+            constructor.setAccessible(true);
+            Object entityInstance = constructor.newInstance();
+
+            // --- LÓGICA DE CORREÇÃO APLICADA AQUI ---
+            for (Field field : columnHelper.getAnnotatedFields(entityClass)) {
+                field.setAccessible(true);
+                String columnName = columnHelper.getColumnName(field);
+                Object dbValue = resultSet.getObject(columnName);
+
+                if (dbValue == null) {
+                    field.set(entityInstance, null);
+                    continue;
                 }
-                return entityInstance;
-            } else {
-                System.out.println("No record found with id: " + id);
-                return null;
+
+                if (field.getType().equals(UUID.class)) {
+                    field.set(entityInstance, UUID.fromString(dbValue.toString()));
+                } else if (field.getType().equals(java.util.Date.class)) {
+                    Timestamp timestampValue = (Timestamp) dbValue;
+                    field.set(entityInstance, new java.util.Date(timestampValue.getTime()));
+                } else {
+                    field.set(entityInstance, dbValue);
+                }
             }
-        } catch (SQLException | IllegalAccessException | InstantiationException | NoSuchMethodException
-                | SecurityException | IllegalArgumentException | InvocationTargetException e) {
-            System.err.println("Error finding object by ID in " + tableName + ": " + e.getMessage());
-            e.printStackTrace();
+            // --- FIM DA LÓGICA DE CORREÇÃO ---
+
+            return entityInstance;
+        } else {
+            System.out.println("No record found with id: " + id);
             return null;
-        } finally {
-            try {
-                if (resultSet != null)
-                    resultSet.close();
-                if (pStmt != null)
-                    pStmt.close();
-            } catch (SQLException e) {
-                System.err.println("Error closing PreparedStatement or ResultSet: " + e.getMessage());
-            }
+        }
+    } catch (Exception e) { // Captura Exception genérica para simplificar
+        System.err.println("Error finding object by ID in " + tableName + ": " + e.getMessage());
+        e.printStackTrace();
+        return null;
+    } finally {
+        // Garanta que você está fechando a conexão aqui também!!
+        try {
+            if (resultSet != null) resultSet.close();
+            if (pStmt != null) pStmt.close();
+            if (conn != null) conn.close(); // ESSENCIAL
+        } catch (SQLException e) {
+            System.err.println("Error closing resources: " + e.getMessage());
         }
     }
+}
 
     public List<Object> findAll() {
         Connection conn = null;
@@ -153,7 +174,14 @@ public class PersistenceFramework {
                 Object entityInstance = constructor.newInstance();
                 for (Field field : columnHelper.getAnnotatedFields(entityClass)) {
                     field.setAccessible(true);
-                    field.set(entityInstance, resultSet.getObject(columnHelper.getColumnName(field)));
+                    if (field.getType().equals(UUID.class)) {
+                        field.set(entityInstance, UUID.fromString(resultSet.getObject(columnHelper.getColumnName(field)).toString()));
+                    } else if (field.getType().equals(java.util.Date.class)) {
+                        Timestamp timestampValue = (Timestamp) resultSet.getObject(columnHelper.getColumnName(field));
+                        field.set(entityInstance, new java.util.Date(timestampValue.getTime()));
+                    } else {
+                        field.set(entityInstance, resultSet.getObject(columnHelper.getColumnName(field)));
+                    }
                 }
                 entities.add(entityInstance);
             }
