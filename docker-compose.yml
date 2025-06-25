@@ -13,7 +13,6 @@ services:
       - meals_network
     volumes:
       - postgresql_data:/var/lib/postgresql/data
-    #   - ./backend/db/migrations/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
 
 networks:
   meals_network:
