@@ -19,6 +19,7 @@ public class SecurityConfig {
                         .requestMatchers("/ratings/**").permitAll()
                         .requestMatchers("/comments/**").permitAll()
                         .requestMatchers("/recipeIngredient/**").permitAll()
+                        .requestMatchers("/notifications/**").permitAll()
                         .requestMatchers(
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
