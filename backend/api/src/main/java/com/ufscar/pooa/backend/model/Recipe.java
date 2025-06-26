@@ -32,7 +32,7 @@ public class Recipe {
     private Date createdAt;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<Category> categories;
+    private List<Category> categories = new ArrayList<>();
 
     @OneToMany(
     mappedBy = "recipe",
@@ -54,7 +54,7 @@ public class Recipe {
         this.preparationMethods = preparationMethods;
         this.createdAt = new Date();
         this.ingredients = new ArrayList<RecipeIngredient>();
-        this.categories = new ArrayList<>();
+        this.categories = new ArrayList<Category>();
         this.comments = new ArrayList<Comment>();
     }
 
