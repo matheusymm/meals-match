@@ -9,7 +9,7 @@ public interface IRecipeService {
 
     RecipeDTO createRecipe(RecipeDTO recipeDTO);
 
-    RecipeDTO updateRecipe(UUID recipeId, RecipeDTO recipeDTO);
+    //RecipeDTO updateRecipe(UUID recipeId, RecipeDTO recipeDTO);
 
     void deleteRecipe(UUID recipeId);
 

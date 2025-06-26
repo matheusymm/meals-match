@@ -67,7 +67,8 @@ public class IngredientService implements IIngredientService {
 
     @Override
     public IngredientDTO getIngredientByName(String name){
-        Ingredient Ingredient = IngredientRepository.findByName(name);
+        Ingredient Ingredient = IngredientRepository.findByName(name)
+            .orElseThrow(() -> new RuntimeException("Ingredient not found: " + name));
 
         if (Ingredient == null) {
             throw new RuntimeException("Recipe not found");

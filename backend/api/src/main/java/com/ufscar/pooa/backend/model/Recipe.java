@@ -34,8 +34,13 @@ public class Recipe {
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Category> categories;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<Ingredient> ingredients;
+    @OneToMany(
+    mappedBy = "recipe",
+    cascade = CascadeType.ALL, 
+    orphanRemoval = true ,
+    fetch = FetchType.EAGER
+    )
+    private List<RecipeIngredient> ingredients = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.EAGER)
     private List<Comment> comments;
@@ -43,12 +48,12 @@ public class Recipe {
     public Recipe() {
     }
 
-    public Recipe(String name, User author, String preparationMethods, List<Ingredient> ingredients) {
+    public Recipe(String name, User author, String preparationMethods, List<RecipeIngredient> ingredients) {
         this.name = name;
         this.author = author;
         this.preparationMethods = preparationMethods;
         this.createdAt = new Date();
-        this.ingredients = ingredients;
+        this.ingredients = new ArrayList<RecipeIngredient>();
         this.categories = new ArrayList<>();
         this.comments = new ArrayList<Comment>();
     }
@@ -101,11 +106,11 @@ public class Recipe {
         this.rating = rating;
     }
 
-    public List<Ingredient> getIngredients() {
+    public List<RecipeIngredient> getIngredients() {
         return ingredients;
     }
 
-    public void setIngredients(List<Ingredient> ingredients) {
+    public void setIngredients(List<RecipeIngredient> ingredients) {
         this.ingredients = ingredients;
     }
 
