@@ -6,7 +6,6 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 import com.ufscar.pooa.backend.dto.IngredientDTO;
 import com.ufscar.pooa.backend.model.Ingredient;
 import com.ufscar.pooa.backend.repository.IngredientRepository;
@@ -58,22 +57,18 @@ public class IngredientService implements IIngredientService {
 
     @Override
     public IngredientDTO getIngredientById(UUID id) {
-        Ingredient Ingredient = IngredientRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException(" Ingredient not found"));
+        Ingredient Ingredient = IngredientRepository.findById(id).orElse(null);
 
-       return new IngredientDTO(Ingredient.getId(), Ingredient.getName());
+        return new IngredientDTO(Ingredient.getId(), Ingredient.getName());
 
     }
 
     @Override
-    public IngredientDTO getIngredientByName(String name){
-        Ingredient Ingredient = IngredientRepository.findByName(name);
+    public IngredientDTO getIngredientByName(String name) {
+        Ingredient Ingredient = IngredientRepository.findByName(name)
+                .orElse(null);
 
-        if (Ingredient == null) {
-            throw new RuntimeException("Recipe not found");
-        }
-
-       return new IngredientDTO(Ingredient.getId(), Ingredient.getName());
+        return new IngredientDTO(Ingredient.getId(), Ingredient.getName());
 
     }
 
@@ -82,13 +77,11 @@ public class IngredientService implements IIngredientService {
         List<Ingredient> Ingredients = IngredientRepository.findAll();
 
         if (Ingredients.isEmpty()) {
-            throw new RuntimeException("No  ingredients found");
+            return List.of();
         }
 
         return Ingredients.stream().map(Ingredient -> {
-
             return new IngredientDTO(Ingredient.getId(), Ingredient.getName());
-
         }).toList();
     }
 

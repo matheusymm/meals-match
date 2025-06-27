@@ -3,6 +3,7 @@ package com.ufscar.pooa.backend.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +15,7 @@ import com.ufscar.pooa.backend.service.interfaces.ICategoryService;
 
 @Service
 public class CategoryService implements ICategoryService {
-    
+
     @Autowired
     private CategoryRepository categoryRepository;
 
@@ -45,17 +46,17 @@ public class CategoryService implements ICategoryService {
     @Override
     public CategoryDTO getCategoryById(UUID id) {
         var category = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+                .orElse(null);
         return CategoryDTO.fromCategory(category);
     }
 
     @Override
     public CategoryDTO getCategoryByName(String name) {
-        var category = categoryRepository.findByName(name);
-        if (category == null) {
-            throw new RuntimeException("Category not found");
-        }
-        return CategoryDTO.fromCategory(category);
+        Optional<Category> categoryOptional = categoryRepository.findByName(name);
+
+        return categoryOptional
+                .map(category -> CategoryDTO.fromCategory(category))
+                .orElse(null);
     }
 
     @Override
@@ -69,7 +70,8 @@ public class CategoryService implements ICategoryService {
     public List<Category> getCategoriesByNameOrCreate(List<String> names) {
         List<Category> categories = new ArrayList<>();
         for (String name : names) {
-            Category category = categoryRepository.findByName(name);
+            Category category = categoryRepository.findByName(name)
+                    .orElse(null);
             if (category == null) {
                 category = new Category();
                 category.setName(name);
