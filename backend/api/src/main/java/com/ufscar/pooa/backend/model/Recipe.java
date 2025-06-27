@@ -34,19 +34,11 @@ public class Recipe {
     @ManyToMany(fetch = FetchType.EAGER)
     private List<Category> categories = new ArrayList<>();
 
-    @OneToMany(
-    mappedBy = "recipe",
-    cascade = CascadeType.ALL, 
-    orphanRemoval = true ,
-    fetch = FetchType.EAGER
-    )
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<RecipeIngredient> ingredients = new ArrayList<>();
 
-    @OneToMany(
-    mappedBy = "recipe",
-    fetch = FetchType.EAGER
-    )
-     private List<Comment> comments = new ArrayList<>();
+    @OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER)
+    private List<Comment> comments = new ArrayList<>();
 
     public Recipe() {
     }
