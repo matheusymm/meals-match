@@ -8,16 +8,28 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ufscar.pooa.backend.dto.CategoryDTO;
+import com.ufscar.pooa.backend.dto.CommentDTO;
+import com.ufscar.pooa.backend.dto.RatingDTO;
 import com.ufscar.pooa.backend.dto.Recipe.RecipeDTO;
+import com.ufscar.pooa.backend.dto.RecipeIngredientDTO;
+import com.ufscar.pooa.backend.events.NewRatingEvent;
 import com.ufscar.pooa.backend.model.Ingredient;
+import com.ufscar.pooa.backend.model.Rating;
 import com.ufscar.pooa.backend.model.Recipe;
+import com.ufscar.pooa.backend.model.Category;
+import com.ufscar.pooa.backend.model.Comment;
+import com.ufscar.pooa.backend.model.RecipeIngredient;
 import com.ufscar.pooa.backend.model.User;
+import com.ufscar.pooa.backend.repository.CategoryRepository;
 import com.ufscar.pooa.backend.repository.IngredientRepository;
 import com.ufscar.pooa.backend.repository.RatingRepository;
 import com.ufscar.pooa.backend.repository.RecipeRepository;
 import com.ufscar.pooa.backend.repository.UserRepository;
 import com.ufscar.pooa.backend.service.interfaces.ICategoryService;
 import com.ufscar.pooa.backend.service.interfaces.IRecipeService;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class RecipeService implements IRecipeService {
@@ -35,7 +47,7 @@ public class RecipeService implements IRecipeService {
     private IngredientRepository ingredientRepository;
 
     @Autowired
-    private ICategoryService categoryService;
+    private CategoryRepository categoryRepository;
 
     @Override
     public RecipeDetailDTO createRecipe(RecipeCreateDTO recipeCreateDTO) {
@@ -44,33 +56,52 @@ public class RecipeService implements IRecipeService {
 
         Recipe recipe = new Recipe();
 
-        List<Ingredient> persistentIngredients = recipeCreateDTO.ingredientIds().stream()
-                .map(ingredientId -> ingredientRepository.findById(UUID.fromString(ingredientId))
-                        .orElseThrow(() -> new RuntimeException("Ingredient not found: " + ingredientId)))
-                .toList();
-
-        List<Category> persistentCategories = recipeCreateDTO.categoryIds() != null
-                ? recipeCreateDTO.categoryIds().stream()
-                        .map(categoryId -> categoryService.getCategoryEntityById(UUID.fromString(categoryId)))
-                        .toList()
-                : new ArrayList<>();
-
         recipe.setName(recipeDTO.name());
         recipe.setAuthor(author);
         recipe.setPreparationMethods(recipeDTO.preparationMethods());
         recipe.setRating(0.0);
-        recipe.setIngredients(persistentIngredients);
-        recipe.setCategories(recipeDTO.categories() != null
-                ? recipeDTO.categories()
-                : new ArrayList<>());
-        recipe.setComments(recipeDTO.comments());
         recipe.setCreatedAt(new Date());
 
-        recipeRepository.save(recipe);
+        if (recipeDTO.ingredients() != null) {
+            for (RecipeIngredientDTO ingredientData : recipeDTO.ingredients()) {
 
-        return RecipeDTO.fromRecipe(recipe);
+                Ingredient persistentIngredient = ingredientRepository.findByName(ingredientData.ingredientName())
+                        .orElseThrow(() -> new IllegalArgumentException("Ingrediente não cadastrado no sistema: " + ingredientData.ingredientName()));
+                
+                RecipeIngredient newRecipeIngredient = new RecipeIngredient();
+                
+                newRecipeIngredient.setRecipe(recipe); 
+                newRecipeIngredient.setIngredient(persistentIngredient);
+                newRecipeIngredient.setQuantity(ingredientData.quantity());
+                newRecipeIngredient.setUnit(ingredientData.unit());
+
+                recipe.getIngredients().add(newRecipeIngredient);
+            }
+        }
+        
+        if (recipeDTO.categories() != null) {
+            List<Category> persistentCategories = new ArrayList<>();
+            
+            for (CategoryDTO categoryData : recipeDTO.categories()) {
+                
+                Category category = categoryRepository.findByName(categoryData.name())
+                    .orElseGet(() -> {
+                        Category newCategory = new Category();
+                        newCategory.setName(categoryData.name());
+                        return categoryRepository.save(newCategory);
+                    });
+                
+                if (!persistentCategories.contains(category)) {
+                    persistentCategories.add(category);
+                }
+            }
+            recipe.setCategories(persistentCategories);
     }
 
+        Recipe savedRecipe = recipeRepository.save(recipe);
+
+        return RecipeDTO.fromRecipe(savedRecipe);
+}
     @Override
     public RecipeDTO updateRecipe(UUID recipeId, RecipeDTO recipeDTO) {
 
@@ -86,12 +117,48 @@ public class RecipeService implements IRecipeService {
         recipe.setName(recipeDTO.name());
         recipe.setAuthor(author);
         recipe.setPreparationMethods(recipeDTO.preparationMethods());
-        recipe.setIngredients(recipeDTO.ingredients());
-        recipe.setCategories(recipeDTO.categories() != null
-                ? recipeDTO.categories()
-                : new ArrayList<>());
-        recipe.setComments(recipeDTO.comments());
         recipeRepository.save(recipe);
+
+        if (recipeDTO.ingredients() != null) {
+            for (RecipeIngredientDTO ingredientData : recipeDTO.ingredients()) {
+
+                Ingredient persistentIngredient = ingredientRepository.findByName(ingredientData.ingredientName())
+                        .orElseThrow(() -> new IllegalArgumentException("Ingrediente não cadastrado no sistema: " + ingredientData.ingredientName()));
+                
+                RecipeIngredient newRecipeIngredient = new RecipeIngredient();
+                
+                newRecipeIngredient.setRecipe(recipe); 
+                newRecipeIngredient.setIngredient(persistentIngredient);
+                newRecipeIngredient.setQuantity(ingredientData.quantity());
+                newRecipeIngredient.setUnit(ingredientData.unit());
+
+                recipe.getIngredients().add(newRecipeIngredient);
+            }
+        }
+
+        if (recipeDTO.categories() != null) {
+            for (CategoryDTO categoryData : recipeDTO.categories()) {
+
+                Category newCategory = new Category();
+                
+                newCategory.setName(categoryData.name());
+
+                recipe.getCategories().add(newCategory);
+            }
+        }
+
+        if (recipeDTO.comments() != null) {
+            for (CommentDTO commentData : recipeDTO.comments()) {
+
+                Comment newComment = new Comment();
+                
+                newComment.setAuthor(author);
+                newComment.setContent(commentData.content());
+                newComment.setRecipe(recipe);
+
+                recipe.getComments().add(newComment);
+            }
+        }
 
         return RecipeDTO.fromRecipe(recipe);
     }
@@ -179,6 +246,7 @@ public class RecipeService implements IRecipeService {
     }
 
     @Override
+    @Transactional
     public List<RecipeDTO> getAllRecipes() {
         List<Recipe> recipes = recipeRepository.findAll();
 

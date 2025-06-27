@@ -7,14 +7,14 @@ import java.util.UUID;
 public record RecipeIngredientDetailDTO(
     UUID id,
     @NotNull UUID recipeId,
-    @NotNull String ingredientId,
+    @NotBlank String ingredientName,
     @NotNull Float quantity,
     @NotBlank String unit
 ) {
-    public RecipeIngredientDetailDTO(UUID id, UUID recipeId, String ingredientId, Float quantity, String unit) {
+    public RecipeIngredientDTO(UUID id, UUID recipeId, String ingredientName, Float quantity, String unit) {
         this.id = id;
         this.recipeId = recipeId;   
-        this.ingredientId = ingredientId;
+        this.ingredientName = ingredientName;
         this.quantity = quantity;
         this.unit = unit;
     }

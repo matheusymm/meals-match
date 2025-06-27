@@ -11,12 +11,9 @@ public class RecipeIngredient {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-   /*  @ManyToOne(optional = false)
+    @ManyToOne(optional = false)
     @JoinColumn(name = "ingredient_id")
-    private Ingredient ingredient;*/
-
-    @Column(nullable = false)
-    private String ingredient;
+    private Ingredient ingredient;
 
     @Column(nullable = false)
     private float quantity;
@@ -24,14 +21,14 @@ public class RecipeIngredient {
     @Column(nullable = false)
     private String unit;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "recipe_id")
+    @ManyToOne(fetch = FetchType.LAZY) 
+    @JoinColumn(name = "recipe_id") 
     private Recipe recipe;
 
     public RecipeIngredient() {
     }
 
-    public RecipeIngredient(Recipe recipe, String ingredient, float quantity, String unit) {
+    public RecipeIngredient(Recipe recipe, Ingredient ingredient, float quantity, String unit) {
         this.recipe = recipe;
         this.ingredient = ingredient;
         this.quantity = quantity;
@@ -46,11 +43,11 @@ public class RecipeIngredient {
         this.id = id;
     }
 
-    public String getIngredient() {
+    public Ingredient getIngredient() {
         return ingredient;
     }
 
-    public void setIngredient(String ingredient) {
+    public void setIngredient(Ingredient ingredient) {
         this.ingredient = ingredient;
     }
 
