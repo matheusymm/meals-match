@@ -7,9 +7,9 @@ public class UserDTOFactory {
     public static UserDetailDTO toDetailDTO(User user) {
         return new UserDetailDTO(
             user.getId(),
-            null,
-            user.getEmail(),
             user.getName(),
+            user.getEmail(),
+            null,
             user.getPhone(),
             user.getRole()
         );
