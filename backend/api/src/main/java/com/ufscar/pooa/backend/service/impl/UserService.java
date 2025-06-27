@@ -23,16 +23,15 @@ public class UserService implements IUserService {
     public UserDTO createUser(UserDTO userDTO) {
         User user = new User();
 
-        user.setUsername(userDTO.username());
-        user.setPassword(userDTO.password());
-        user.setEmail(userDTO.email());
         user.setName(userDTO.name());
+        user.setEmail(userDTO.email());
+        user.setPassword(userDTO.password());
         user.setPhone(userDTO.phone());
         user.setRole(UserEnum.COMMON);
         user.setCreatedAt(new Date());
 
         userRepository.save(user);
-        return new UserDTO(user.getId(), user.getUsername(), null, user.getEmail(), user.getName(), user.getPhone(),
+        return new UserDTO(user.getId(), user.getName(), user.getEmail(), user.getPassword(), user.getPhone(),
                 user.getRole());
     }
 
@@ -40,13 +39,12 @@ public class UserService implements IUserService {
     public UserDTO updateUser(UUID userId, UserDTO userDTO) {
         User user = userRepository.findById(userId).orElse(null);
 
-        user.setUsername(userDTO.username());
         user.setEmail(userDTO.email());
         user.setName(userDTO.name());
         user.setPhone(userDTO.phone());
         userRepository.save(user);
 
-        return new UserDTO(user.getId(), user.getUsername(), null, user.getEmail(), user.getName(), user.getPhone(),
+        return new UserDTO(user.getId(), user.getName(), user.getEmail(), user.getPassword(), user.getPhone(),
                 user.getRole());
     }
 
@@ -58,18 +56,14 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDTO getUserByUsername(String username) {
-        User user = userRepository.findByUsername(username);
-
-        return new UserDTO(user.getId(), user.getUsername(), null, user.getEmail(), user.getName(), user.getPhone(),
-                user.getRole());
-    }
-
-    @Override
     public UserDTO getUserByEmail(String email) {
         User user = userRepository.findByEmail(email);
 
-        return new UserDTO(user.getId(), user.getUsername(), null, user.getEmail(), user.getName(), user.getPhone(),
+        if (user == null) {
+            return null;
+        }
+
+        return new UserDTO(user.getId(), user.getName(), user.getEmail(), user.getPassword(), user.getPhone(),
                 user.getRole());
     }
 
@@ -78,7 +72,7 @@ public class UserService implements IUserService {
         List<User> users = userRepository.findAll();
 
         return new ArrayList<>(users.stream()
-                .map(user -> new UserDTO(user.getId(), user.getUsername(), null, user.getEmail(), user.getName(),
+                .map(user -> new UserDTO(user.getId(), user.getName(), user.getEmail(), user.getPassword(),
                         user.getPhone(),
                         user.getRole()))
                 .toList());

@@ -1,6 +1,5 @@
 package com.ufscar.pooa.backend.dto;
 
-
 import com.ufscar.pooa.backend.enums.UserEnum;
 import com.ufscar.pooa.backend.model.User;
 
@@ -10,18 +9,16 @@ import java.util.UUID;
 
 public record UserDTO(
         UUID id,
-        @NotBlank String username,
-        @NotBlank String password,
-        @Email String email,
         @NotBlank String name,
+        @Email String email,
+        @NotBlank String password,
         @NotBlank String phone,
         @NotBlank UserEnum role) {
-    public UserDTO(UUID id, String username, String password, String email, String name, String phone, UserEnum role) {
+    public UserDTO(UUID id, String name, String email, String password, String phone, UserEnum role) {
         this.id = id;
-        this.username = username;
-        this.password = password;
-        this.email = email;
         this.name = name;
+        this.email = email;
+        this.password = password;
         this.phone = phone;
         this.role = role;
     }
@@ -29,9 +26,8 @@ public record UserDTO(
     public static UserDTO fromEntity(User entity) {
         return new UserDTO(
                 entity.getId(),
-                entity.getUsername(),
-                entity.getEmail(),
                 entity.getName(),
+                entity.getEmail(),
                 entity.getPhone(),
                 entity.getPassword(),
                 entity.getRole());

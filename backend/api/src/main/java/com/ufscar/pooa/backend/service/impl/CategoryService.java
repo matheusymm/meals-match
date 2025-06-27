@@ -15,7 +15,7 @@ import com.ufscar.pooa.backend.service.interfaces.ICategoryService;
 
 @Service
 public class CategoryService implements ICategoryService {
-    
+
     @Autowired
     private CategoryRepository categoryRepository;
 
@@ -46,17 +46,17 @@ public class CategoryService implements ICategoryService {
     @Override
     public CategoryDTO getCategoryById(UUID id) {
         var category = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+                .orElse(null);
         return CategoryDTO.fromCategory(category);
     }
 
     @Override
     public CategoryDTO getCategoryByName(String name) {
-         Optional<Category> categoryOptional = categoryRepository.findByName(name);
-        
+        Optional<Category> categoryOptional = categoryRepository.findByName(name);
+
         return categoryOptional
-                .map(category -> CategoryDTO.fromCategory(category)) 
-                .orElseThrow(() -> new RuntimeException("Category not found: " + name)); 
+                .map(category -> CategoryDTO.fromCategory(category))
+                .orElse(null);
     }
 
     @Override
@@ -70,8 +70,8 @@ public class CategoryService implements ICategoryService {
     public List<Category> getCategoriesByNameOrCreate(List<String> names) {
         List<Category> categories = new ArrayList<>();
         for (String name : names) {
-            Category category = categoryRepository.findByName(name) 
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+            Category category = categoryRepository.findByName(name)
+                    .orElse(null);
             if (category == null) {
                 category = new Category();
                 category.setName(name);

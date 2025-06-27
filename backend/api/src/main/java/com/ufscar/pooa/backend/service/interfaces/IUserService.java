@@ -12,8 +12,6 @@ public interface IUserService {
 
     void deleteUser(UUID userId);
 
-    UserDTO getUserByUsername(String username);
-
     UserDTO getUserByEmail(String email);
 
     List<UserDTO> getAllUsers();

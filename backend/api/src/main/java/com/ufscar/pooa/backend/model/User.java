@@ -22,17 +22,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @Column(unique = true, nullable = false)
-    private String username;
-
     @Column(nullable = false)
-    private String password;
+    private String name;
 
     @Column(unique = true, nullable = false)
     private String email;
 
     @Column(nullable = false)
-    private String name;
+    private String password;
 
     @Column(nullable = false)
     private String phone;
@@ -46,11 +43,10 @@ public class User {
     public User() {
     }
 
-    public User(String username, String password, String email, String name, String phone, UserEnum role) {
-        this.username = username;
-        this.password = password;
-        this.email = email;
+    public User(String password, String email, String name, String phone, UserEnum role) {
         this.name = name;
+        this.email = email;
+        this.password = password;
         this.phone = phone;
         this.createdAt = new Date();
         this.role = role;
@@ -64,20 +60,12 @@ public class User {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getEmail() {
@@ -88,12 +76,12 @@ public class User {
         this.email = email;
     }
 
-    public String getName() {
-        return name;
+    public String getPassword() {
+        return password;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getPhone() {

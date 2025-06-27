@@ -6,9 +6,7 @@ import java.util.UUID;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-import com.ufscar.pooa.backend.model.Comment;
 import com.ufscar.pooa.backend.model.Recipe;
-import com.ufscar.pooa.backend.model.RecipeIngredient;
 
 public record RecipeDTO(
         UUID id,
@@ -34,34 +32,31 @@ public record RecipeDTO(
 
     public static RecipeDTO fromRecipe(Recipe recipe) {
         List<RecipeIngredientDTO> ingredientDTOs = recipe.getIngredients()
-            .stream()
-            .map(recipeIngredient -> new RecipeIngredientDTO(
-                    recipeIngredient.getId(),
-                    recipeIngredient.getRecipe().getId(),
-                    recipeIngredient.getIngredient().getName(), 
-                    recipeIngredient.getQuantity(),
-                    recipeIngredient.getUnit()
-            ))
-            .toList();
+                .stream()
+                .map(recipeIngredient -> new RecipeIngredientDTO(
+                        recipeIngredient.getId(),
+                        recipeIngredient.getRecipe().getId(),
+                        recipeIngredient.getIngredient().getName(),
+                        recipeIngredient.getQuantity(),
+                        recipeIngredient.getUnit()))
+                .toList();
 
         List<CategoryDTO> categoriesDTO = recipe.getCategories()
-            .stream()
-            .map(category -> new CategoryDTO(
-                    category.getId(),
-                    category.getName()
-            ))
-            .toList();
+                .stream()
+                .map(category -> new CategoryDTO(
+                        category.getId(),
+                        category.getName()))
+                .toList();
 
         List<CommentDTO> commentsDTO = recipe.getComments()
-            .stream()
-            .map(comment -> new CommentDTO(
-                    comment.getId(),
-                    comment.getContent(),
-                    comment.getAuthor().getId(),
-                    comment.getRecipe().getId(),
-                    comment.getCreatedAt()
-            ))
-            .toList();
+                .stream()
+                .map(comment -> new CommentDTO(
+                        comment.getId(),
+                        comment.getContent(),
+                        comment.getAuthor().getId(),
+                        comment.getRecipe().getId(),
+                        comment.getCreatedAt()))
+                .toList();
 
         return new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getAuthor().getId(),
                 recipe.getPreparationMethods(), recipe.getRating(), ingredientDTOs, categoriesDTO,

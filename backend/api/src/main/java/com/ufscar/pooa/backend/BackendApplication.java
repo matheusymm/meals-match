@@ -30,12 +30,14 @@ public class BackendApplication {
             try {
                 // Criar usuários
                 try {
-                    if (userService.getUserByUsername("john_doe") == null) {
-                        UserDTO user1 = new UserDTO(null, "john_doe", "password123", "john@example.com", "John Doe", "123456789", UserEnum.COMMON);
+                    if (userService.getUserByEmail("john@example.com") == null) {
+                        UserDTO user1 = new UserDTO(null, "John Doe", "john@example.com", "password123",
+                                "123456789", UserEnum.COMMON);
                         userService.createUser(user1);
                     }
-                    if (userService.getUserByUsername("jane_doe") == null) {
-                        UserDTO user2 = new UserDTO(null, "jane_doe", "password456", "jane@example.com", "Jane Doe", "987654321", UserEnum.COMMON);
+                    if (userService.getUserByEmail("jane@example.com") == null) {
+                        UserDTO user2 = new UserDTO(null, "Jane Doe", "jane@example.com", "password456",
+                                "987654321", UserEnum.COMMON);
                         userService.createUser(user2);
                     }
                 } catch (Exception e) {
@@ -75,13 +77,12 @@ public class BackendApplication {
                         RecipeDTO recipe1 = new RecipeDTO(
                                 null,
                                 "Chocolate Cake",
-                                userService.getUserByUsername("john_doe").id(),
+                                userService.getUserByEmail("john@example.com").id(),
                                 "Mix ingredients and bake.",
                                 5.0,
                                 new ArrayList<>(),
-                                List.of("Dessert"),
-                                new ArrayList<>()
-                        );
+                                new ArrayList<>(),
+                                new ArrayList<>());
                         recipeService.createRecipe(recipe1);
                     }
                 } catch (Exception e) {
@@ -95,10 +96,9 @@ public class BackendApplication {
                         CommentDTO comment1 = new CommentDTO(
                                 null,
                                 "Looks delicious!",
-                                userService.getUserByUsername("jane_doe").id(),
+                                userService.getUserByEmail("jane@example.com").id(),
                                 recipe.id(),
-                                null
-                        );
+                                null);
                         commentService.createComment(comment1);
                     }
                 } catch (Exception e) {
@@ -111,11 +111,10 @@ public class BackendApplication {
                     if (recipe != null && ratingService.getRatingsByRecipeId(recipe.id()).isEmpty()) {
                         RatingDTO rating1 = new RatingDTO(
                                 null,
-                                userService.getUserByUsername("jane_doe").id(),
+                                userService.getUserByEmail("jane@example.com").id(),
                                 recipe.id(),
                                 5,
-                                "Amazing recipe!"
-                        );
+                                "Amazing recipe!");
                         ratingService.createRating(rating1);
                     }
                 } catch (Exception e) {

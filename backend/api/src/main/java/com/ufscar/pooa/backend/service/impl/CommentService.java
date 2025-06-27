@@ -98,7 +98,7 @@ public class CommentService implements ICommentService {
     @Override
     public CommentDTO getCommentById(UUID commentId) {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new RuntimeException("Comment not found"));
+                .orElse(null);
         return CommentDTO.fromEntity(comment);
     }
 
