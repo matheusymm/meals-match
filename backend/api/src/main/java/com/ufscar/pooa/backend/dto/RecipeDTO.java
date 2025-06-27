@@ -18,10 +18,10 @@ public record RecipeDTO(
         Double rating,
         @NotNull List<RecipeIngredientDTO> ingredients,
         List<CategoryDTO> categories,
-        List<Comment> comments) {
+        List<CommentDTO> comments) {
     public RecipeDTO(UUID id, String name, UUID authorId, String preparationMethods, Double rating,
             List<RecipeIngredientDTO> ingredients,
-            List<CategoryDTO> categories, List<Comment> comments) {
+            List<CategoryDTO> categories, List<CommentDTO> comments) {
         this.id = id;
         this.name = name;
         this.authorId = authorId;
@@ -51,8 +51,20 @@ public record RecipeDTO(
                     category.getName()
             ))
             .toList();
+
+        List<CommentDTO> commentsDTO = recipe.getComments()
+            .stream()
+            .map(comment -> new CommentDTO(
+                    comment.getId(),
+                    comment.getContent(),
+                    comment.getAuthor().getId(),
+                    comment.getRecipe().getId(),
+                    comment.getCreatedAt()
+            ))
+            .toList();
+
         return new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getAuthor().getId(),
                 recipe.getPreparationMethods(), recipe.getRating(), ingredientDTOs, categoriesDTO,
-                recipe.getComments());
+                commentsDTO);
     }
 }

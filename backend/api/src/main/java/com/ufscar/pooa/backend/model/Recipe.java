@@ -42,8 +42,11 @@ public class Recipe {
     )
     private List<RecipeIngredient> ingredients = new ArrayList<>();
 
-    @OneToMany(fetch = FetchType.EAGER)
-    private List<Comment> comments;
+    @OneToMany(
+    mappedBy = "recipe",
+    fetch = FetchType.EAGER
+    )
+     private List<Comment> comments = new ArrayList<>();
 
     public Recipe() {
     }

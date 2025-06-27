@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ufscar.pooa.backend.dto.CategoryDTO;
+import com.ufscar.pooa.backend.dto.CommentDTO;
 import com.ufscar.pooa.backend.dto.RatingDTO;
 import com.ufscar.pooa.backend.dto.RecipeDTO;
 import com.ufscar.pooa.backend.dto.RecipeIngredientDTO;
@@ -17,6 +18,7 @@ import com.ufscar.pooa.backend.model.Ingredient;
 import com.ufscar.pooa.backend.model.Rating;
 import com.ufscar.pooa.backend.model.Recipe;
 import com.ufscar.pooa.backend.model.Category;
+import com.ufscar.pooa.backend.model.Comment;
 import com.ufscar.pooa.backend.model.RecipeIngredient;
 import com.ufscar.pooa.backend.model.User;
 import com.ufscar.pooa.backend.repository.CategoryRepository;
@@ -26,6 +28,8 @@ import com.ufscar.pooa.backend.repository.RecipeRepository;
 import com.ufscar.pooa.backend.repository.UserRepository;
 import com.ufscar.pooa.backend.service.interfaces.ICategoryService;
 import com.ufscar.pooa.backend.service.interfaces.IRecipeService;
+
+import jakarta.transaction.Transactional;
 
 @Service
 public class RecipeService implements IRecipeService {
@@ -77,12 +81,10 @@ public class RecipeService implements IRecipeService {
         }
         
         if (recipeDTO.categories() != null) {
-            // 1. A lista local agora é um ArrayList, correspondendo ao tipo na entidade Recipe.
             List<Category> persistentCategories = new ArrayList<>();
             
             for (CategoryDTO categoryData : recipeDTO.categories()) {
                 
-                // 2. A lógica "Find or Create" para cada categoria continua a mesma.
                 Category category = categoryRepository.findByName(categoryData.name())
                     .orElseGet(() -> {
                         Category newCategory = new Category();
@@ -90,12 +92,10 @@ public class RecipeService implements IRecipeService {
                         return categoryRepository.save(newCategory);
                     });
                 
-                // 3. (OPCIONAL, MAS RECOMENDADO) Adiciona uma verificação para não inserir categorias duplicadas.
                 if (!persistentCategories.contains(category)) {
                     persistentCategories.add(category);
                 }
             }
-            // 4. Atribui a lista de categorias persistentes à receita.
             recipe.setCategories(persistentCategories);
     }
 
@@ -118,7 +118,6 @@ public class RecipeService implements IRecipeService {
         recipe.setName(recipeDTO.name());
         recipe.setAuthor(author);
         recipe.setPreparationMethods(recipeDTO.preparationMethods());
-        recipe.setComments(recipeDTO.comments());
         recipeRepository.save(recipe);
 
         if (recipeDTO.ingredients() != null) {
@@ -146,6 +145,19 @@ public class RecipeService implements IRecipeService {
                 newCategory.setName(categoryData.name());
 
                 recipe.getCategories().add(newCategory);
+            }
+        }
+
+        if (recipeDTO.comments() != null) {
+            for (CommentDTO commentData : recipeDTO.comments()) {
+
+                Comment newComment = new Comment();
+                
+                newComment.setAuthor(author);
+                newComment.setContent(commentData.content());
+                newComment.setRecipe(recipe);
+
+                recipe.getComments().add(newComment);
             }
         }
 
@@ -235,6 +247,7 @@ public class RecipeService implements IRecipeService {
     }
 
     @Override
+    @Transactional
     public List<RecipeDTO> getAllRecipes() {
         List<Recipe> recipes = recipeRepository.findAll();
 
