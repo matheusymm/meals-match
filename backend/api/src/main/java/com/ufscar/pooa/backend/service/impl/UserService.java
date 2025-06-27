@@ -25,7 +25,6 @@ public class UserService implements IUserService {
     public UserDetailDTO createUser(UserCreateDTO userCreateDTO) {
         User user = new User();
 
-        user.setUsername(userCreateDTO.username());
         user.setPassword(userCreateDTO.password());
         user.setEmail(userCreateDTO.email());
         user.setName(userCreateDTO.name());
@@ -33,10 +32,8 @@ public class UserService implements IUserService {
         user.setRole(UserEnum.COMMON);
         user.setCreatedAt(new Date());
 
-        System.out.println("creating user: 1");
         var newUser = userRepository.save(user);
-        System.out.println("creating user: 2");
-        System.out.println("User created: " + newUser.getUsername() + " with ID: " + newUser.getId());
+
         return UserDTOFactory.toDetailDTO(newUser);
     }
 
@@ -45,7 +42,6 @@ public class UserService implements IUserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        user.setUsername(userCreateDTO.username());
         user.setEmail(userCreateDTO.email());
         user.setName(userCreateDTO.name());
         user.setPhone(userCreateDTO.phone());
@@ -59,15 +55,6 @@ public class UserService implements IUserService {
         userRepository.findById(userId).orElse(null);
 
         userRepository.deleteById(userId);
-    }
-
-    @Override
-    public UserDetailDTO getUserByUsername(String username) {
-        User user = userRepository.findByUsername(username);
-        if (user == null) {
-            return null;
-        }
-        return UserDTOFactory.toDetailDTO(user);
     }
 
     @Override

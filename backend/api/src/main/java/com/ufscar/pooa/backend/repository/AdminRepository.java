@@ -9,7 +9,6 @@ import com.ufscar.pooa.backend.model.Admin;
 
 @Repository
 public interface AdminRepository extends JpaRepository<Admin, UUID> {
-    Admin findByUsername(String username);
 
     Admin findByEmail(String email);
 

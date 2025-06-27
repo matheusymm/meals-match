@@ -65,7 +65,7 @@ public class IngredientService implements IIngredientService {
     public List<IngredientDetailDTO> getAllIngredients() {
         List<Ingredient> ingredients = IngredientRepository.findAll();
         if (ingredients.isEmpty()) {
-            throw new RuntimeException("No ingredients found");
+            return List.of();
         }
 
         return ingredients.stream()

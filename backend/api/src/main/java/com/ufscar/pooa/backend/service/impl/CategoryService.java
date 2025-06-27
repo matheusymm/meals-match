@@ -16,7 +16,7 @@ import com.ufscar.pooa.backend.service.interfaces.ICategoryService;
 
 @Service
 public class CategoryService implements ICategoryService {
-    
+
     @Autowired
     private CategoryRepository categoryRepository;
 

@@ -10,8 +10,6 @@ import com.ufscar.pooa.backend.model.User;
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
 
-    User findByUsername(String username);
-
     User findByEmail(String email);
 
 }

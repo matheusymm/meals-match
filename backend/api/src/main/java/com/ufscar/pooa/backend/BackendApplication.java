@@ -36,12 +36,14 @@ public class BackendApplication {
                 // Criar usuários
                 try {
                     System.out.println("Populando o banco de dados com usuários, categorias, ingredientes, receitas, comentários e avaliações...");
-                    if (userService.getUserByUsername("john_doe") == null) {
+                    if (userService.getUserByEmail("john@example.com") == null) {
                         System.out.println("Creating user: john_doe");
-                        userService.createUser(new UserCreateDTO("john_doe", "password123", "john@example.com", "John Doe", "123456789", UserEnum.COMMON));
+                        userService.createUser(new UserCreateDTO("John Doe", "john@example.com", "password123",
+                                "123456789", UserEnum.COMMON));
                     }
-                    if (userService.getUserByUsername("jane_doe") == null) {
-                        userService.createUser(new UserCreateDTO("jane_doe", "password456", "jane@example.com", "Jane Doe", "987654321", UserEnum.COMMON));
+                    if (userService.getUserByEmail("jane@example.com") == null) {
+                        userService.createUser(new UserCreateDTO("Jane Doe", "jane@example.com", "password456",
+                                "987654321", UserEnum.COMMON));
                     }
                 } catch (Exception e) {
                     System.err.println("Erro ao criar usuários: " + e.getMessage());
@@ -79,7 +81,7 @@ public class BackendApplication {
                     if (recipeService.getRecipeByName("Chocolate Cake") == null) {
                         recipeService.createRecipe(new RecipeCreateDTO(
                                 "Chocolate Cake",
-                                userService.getUserByUsername("john_doe").id(),
+                                userService.getUserByEmail("john@example.com").id(),
                                 "Mix ingredients and bake.",
                                 List.of(
                                     new RecipeIngredientCreateDTO("Sugar", 200.0f, "grams"),
@@ -99,9 +101,8 @@ public class BackendApplication {
                     if (recipe != null && commentService.getCommentsByRecipeId(recipe.id()).isEmpty()) {
                         commentService.createComment(new CommentCreateDTO(
                                 "Looks delicious!",
-                                userService.getUserByUsername("jane_doe").id(),
-                                recipe.id()
-                        ));
+                                userService.getUserByEmail("jane@example.com").id(),
+                                recipe.id()));
                     }
                 } catch (Exception e) {
                     System.err.println("Erro ao criar comentários: " + e.getMessage());
@@ -112,11 +113,10 @@ public class BackendApplication {
                     RecipeDetailDTO recipe = recipeService.getRecipeByName("Chocolate Cake");
                     if (recipe != null && ratingService.getRatingsByRecipeId(recipe.id()).isEmpty()) {
                         ratingService.createRating(new RatingCreateDTO(
-                                userService.getUserByUsername("jane_doe").id(),
+                                userService.getUserByEmail("jane@example.com").id(),
                                 recipe.id(),
                                 5,
-                                "Amazing recipe!"
-                        ));
+                                "Amazing recipe!"));
                     }
                 } catch (Exception e) {
                     System.err.println("Erro ao criar avaliações: " + e.getMessage());

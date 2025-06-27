@@ -35,19 +35,11 @@ public class Recipe {
     @JoinTable(name = "recipe_categories", joinColumns = @JoinColumn(name = "recipe_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
     private List<Category> categories = new ArrayList<>();
 
-    @OneToMany(
-    mappedBy = "recipe",
-    cascade = CascadeType.ALL, 
-    orphanRemoval = true ,
-    fetch = FetchType.EAGER
-    )
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<RecipeIngredient> ingredients = new ArrayList<>();
 
-    @OneToMany(
-    mappedBy = "recipe",
-    fetch = FetchType.EAGER
-    )
-     private List<Comment> comments = new ArrayList<>();
+    @OneToMany(mappedBy = "recipe", fetch = FetchType.EAGER)
+    private List<Comment> comments = new ArrayList<>();
 
     public Recipe() {
     }

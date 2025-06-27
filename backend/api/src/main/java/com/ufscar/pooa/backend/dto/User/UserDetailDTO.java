@@ -10,18 +10,16 @@ import java.util.UUID;
 
 public record UserDetailDTO(
         UUID id,
-        @NotBlank String username,
-        @NotBlank String password,
-        @Email String email,
         @NotBlank String name,
+        @Email String email,
+        @NotBlank String password,
         @NotBlank String phone,
         @NotBlank UserEnum role) {
-    public UserDetailDTO(UUID id, String username, String password, String email, String name, String phone, UserEnum role) {
+    public UserDetailDTO(UUID id, String name, String email, String password, String phone, UserEnum role) {
         this.id = id;
-        this.username = username;
-        this.password = password;
-        this.email = email;
         this.name = name;
+        this.email = email;
+        this.password = password;
         this.phone = phone;
         this.role = role;
     }
@@ -29,9 +27,8 @@ public record UserDetailDTO(
     public static UserDetailDTO fromEntity(User entity) {
         return new UserDetailDTO(
                 entity.getId(),
-                entity.getUsername(),
-                entity.getEmail(),
                 entity.getName(),
+                entity.getEmail(),
                 entity.getPhone(),
                 entity.getPassword(),
                 entity.getRole());

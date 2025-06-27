@@ -56,7 +56,8 @@ public class RecipeService implements IRecipeService {
             List<RecipeIngredient> persistentIngredients = recipeCreateDTO.ingredients().stream()
                     .map(ingredientData -> {
                         Ingredient persistentIngredient = ingredientRepository.findByName(ingredientData.ingredientName())
-                                .orElseThrow(() -> new IllegalArgumentException("Ingredient not found: " + ingredientData.ingredientName()));
+                                .orElseThrow(() -> new IllegalArgumentException(
+                                "Ingrediente não cadastrado no sistema: " + ingredientData.ingredientName()));
 
                         RecipeIngredient newRecipeIngredient = new RecipeIngredient();
                         newRecipeIngredient.setRecipe(recipe);
@@ -105,7 +106,7 @@ public class RecipeService implements IRecipeService {
             List<RecipeIngredient> persistentIngredients = recipeCreateDTO.ingredients().stream()
                     .map(ingredientData -> {
                         Ingredient persistentIngredient = ingredientRepository.findByName(ingredientData.ingredientName())
-                                .orElseThrow(() -> new IllegalArgumentException("Ingredient not found: " + ingredientData.ingredientName()));
+                                .orElseThrow(() -> new IllegalArgumentException("Ingrediente não cadastrado no sistema: " + ingredientData.ingredientName()));
 
                         RecipeIngredient newRecipeIngredient = new RecipeIngredient();
                         newRecipeIngredient.setRecipe(recipe);
@@ -213,7 +214,7 @@ public class RecipeService implements IRecipeService {
         List<Recipe> recipes = recipeRepository.findByAuthorId(authorId);
 
         if (recipes.isEmpty()) {
-            throw new RuntimeException("No recipes found");
+            return List.of();
         }
 
         return recipes.stream()
@@ -226,6 +227,9 @@ public class RecipeService implements IRecipeService {
     public List<RecipeDetailDTO> getAllRecipes() {
         List<Recipe> recipes = recipeRepository.findAll();
 
+        if (recipes.isEmpty()) {
+            return List.of();
+        }
         return recipes.stream()
                 .map(recipe -> {
                     Double avg = ratingRepository.findAverageGradeByRecipeId(recipe.getId());
