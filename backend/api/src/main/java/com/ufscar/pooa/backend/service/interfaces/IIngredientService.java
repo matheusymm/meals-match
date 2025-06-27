@@ -3,19 +3,20 @@ package com.ufscar.pooa.backend.service.interfaces;
 import java.util.List;
 import java.util.UUID;
 
-import com.ufscar.pooa.backend.dto.IngredientDTO;
+import com.ufscar.pooa.backend.dto.Ingredient.IngredientCreateDTO;
+import com.ufscar.pooa.backend.dto.Ingredient.IngredientDetailDTO;
 
 public interface IIngredientService {
 
-    IngredientDTO createIngredient(IngredientDTO IngredientDTO);
+    IngredientDetailDTO createIngredient(IngredientCreateDTO ingredientCreateDTO);
 
-    IngredientDTO updateIngredient(UUID IngredientId, IngredientDTO IngredientDTO);
+    IngredientDetailDTO updateIngredient(UUID ingredientId, IngredientCreateDTO ingredientCreateDTO);
 
-    void deleteIngredient(UUID IngredientId);
+    void deleteIngredient(UUID ingredientId);
 
-    IngredientDTO getIngredientById(UUID id);
+    IngredientDetailDTO getIngredientById(UUID id);
 
-    IngredientDTO getIngredientByName(String name);
+    IngredientDetailDTO getIngredientByName(String name);
 
-    List<IngredientDTO> getAllIngredients();
+    List<IngredientDetailDTO> getAllIngredients();
 }

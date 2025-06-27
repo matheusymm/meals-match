@@ -8,7 +8,9 @@ import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ufscar.pooa.backend.dto.UserDTO;
+import com.ufscar.pooa.backend.dto.User.UserDTOFactory;
+import com.ufscar.pooa.backend.dto.User.UserCreateDTO;
+import com.ufscar.pooa.backend.dto.User.UserDetailDTO;
 import com.ufscar.pooa.backend.enums.UserEnum;
 import com.ufscar.pooa.backend.model.User;
 import com.ufscar.pooa.backend.repository.UserRepository;
@@ -20,34 +22,33 @@ public class UserService implements IUserService {
     private UserRepository userRepository;
 
     @Override
-    public UserDTO createUser(UserDTO userDTO) {
+    public UserDetailDTO createUser(UserCreateDTO userCreateDTO) {
         User user = new User();
 
-        user.setUsername(userDTO.username());
-        user.setPassword(userDTO.password());
-        user.setEmail(userDTO.email());
-        user.setName(userDTO.name());
-        user.setPhone(userDTO.phone());
+        user.setUsername(userCreateDTO.username());
+        user.setPassword(userCreateDTO.password());
+        user.setEmail(userCreateDTO.email());
+        user.setName(userCreateDTO.name());
+        user.setPhone(userCreateDTO.phone());
         user.setRole(UserEnum.COMMON);
         user.setCreatedAt(new Date());
 
         userRepository.save(user);
-        return new UserDTO(user.getId(), user.getUsername(), null, user.getEmail(), user.getName(), user.getPhone(),
-                user.getRole());
+        return UserDTOFactory.toDetailDTO(user);
     }
 
     @Override
-    public UserDTO updateUser(UUID userId, UserDTO userDTO) {
-        User user = userRepository.findById(userId).orElse(null);
+    public UserDetailDTO updateUser(UUID userId, UserCreateDTO userCreateDTO) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-        user.setUsername(userDTO.username());
-        user.setEmail(userDTO.email());
-        user.setName(userDTO.name());
-        user.setPhone(userDTO.phone());
+        user.setUsername(userCreateDTO.username());
+        user.setEmail(userCreateDTO.email());
+        user.setName(userCreateDTO.name());
+        user.setPhone(userCreateDTO.phone());
+
         userRepository.save(user);
-
-        return new UserDTO(user.getId(), user.getUsername(), null, user.getEmail(), user.getName(), user.getPhone(),
-                user.getRole());
+        return UserDTOFactory.toDetailDTO(user);
     }
 
     @Override
@@ -58,29 +59,25 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public UserDTO getUserByUsername(String username) {
+    public UserDetailDTO getUserByUsername(String username) {
         User user = userRepository.findByUsername(username);
 
-        return new UserDTO(user.getId(), user.getUsername(), null, user.getEmail(), user.getName(), user.getPhone(),
-                user.getRole());
+        return UserDTOFactory.toDetailDTO(user);
     }
 
     @Override
-    public UserDTO getUserByEmail(String email) {
+    public UserDetailDTO getUserByEmail(String email) {
         User user = userRepository.findByEmail(email);
 
-        return new UserDTO(user.getId(), user.getUsername(), null, user.getEmail(), user.getName(), user.getPhone(),
-                user.getRole());
+        return UserDTOFactory.toDetailDTO(user);
     }
 
     @Override
-    public List<UserDTO> getAllUsers() {
+    public List<UserDetailDTO> getAllUsers() {
         List<User> users = userRepository.findAll();
 
         return new ArrayList<>(users.stream()
-                .map(user -> new UserDTO(user.getId(), user.getUsername(), null, user.getEmail(), user.getName(),
-                        user.getPhone(),
-                        user.getRole()))
+                .map(UserDTOFactory::toDetailDTO)
                 .toList());
     }
 }

@@ -1,6 +1,7 @@
 package com.ufscar.pooa.backend.controller;
 
-import com.ufscar.pooa.backend.dto.RecipeIngredientDTO;
+import com.ufscar.pooa.backend.dto.RecipeIngredient.RecipeIngredientCreateDTO;
+import com.ufscar.pooa.backend.dto.RecipeIngredient.RecipeIngredientDetailDTO;
 import com.ufscar.pooa.backend.service.interfaces.IRecipeIngredientService;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -24,8 +25,8 @@ public class RecipeIngredientController {
             @ApiResponse(responseCode = "201", description = "RecipeIngredients created successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
-    public ResponseEntity<Void> createRecipeIngredients(@RequestBody RecipeIngredientDTO recipeIngredientDTO) {
-        recipeIngredientService.createRecipeIngredient(recipeIngredientDTO);
+    public ResponseEntity<Void> createRecipeIngredients(@RequestBody RecipeIngredientCreateDTO recipeIngredientCreateDTO) {
+        recipeIngredientService.createRecipeIngredient(recipeIngredientCreateDTO);
         return ResponseEntity.status(201).build();
     }
 
@@ -34,8 +35,8 @@ public class RecipeIngredientController {
             @ApiResponse(responseCode = "200", description = "RecipeIngredientss retrieved successfully for the recipe"),
             @ApiResponse(responseCode = "204", description = "No recipe ingredients found for this recipe")
     })
-    public ResponseEntity<List<RecipeIngredientDTO>> getAllRecipeIngredients() {
-        List<RecipeIngredientDTO> recipeIngredient = recipeIngredientService.getAllRecipeIngredients();
+    public ResponseEntity<List<RecipeIngredientDetailDTO>> getAllRecipeIngredients() {
+        List<RecipeIngredientDetailDTO> recipeIngredient = recipeIngredientService.getAllRecipeIngredients();
 
         if (recipeIngredient.isEmpty()) {
             return ResponseEntity.noContent().build();

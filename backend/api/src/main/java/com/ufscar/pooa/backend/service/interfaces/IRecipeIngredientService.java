@@ -3,17 +3,18 @@ package com.ufscar.pooa.backend.service.interfaces;
 import java.util.List;
 import java.util.UUID;
 
-import com.ufscar.pooa.backend.dto.RecipeIngredientDTO;
+import com.ufscar.pooa.backend.dto.RecipeIngredient.RecipeIngredientCreateDTO;
+import com.ufscar.pooa.backend.dto.RecipeIngredient.RecipeIngredientDetailDTO;
 
 public interface IRecipeIngredientService {
 
-    RecipeIngredientDTO createRecipeIngredient(RecipeIngredientDTO recipeIngredientDTO);
+    RecipeIngredientDetailDTO createRecipeIngredient(RecipeIngredientCreateDTO recipeIngredientCreateDTO);
 
-    RecipeIngredientDTO updateRecipeIngredient(UUID recipeIngredientId, RecipeIngredientDTO recipeIngredientDTO);
+    RecipeIngredientDetailDTO updateRecipeIngredient(UUID recipeIngredientId, RecipeIngredientCreateDTO recipeIngredientCreateDTO);
 
     void deleteRecipeIngredient(UUID recipeIngredientId);
 
-    RecipeIngredientDTO getRecipeIngredientById(UUID id);
+    RecipeIngredientDetailDTO getRecipeIngredientById(UUID id);
 
-    List<RecipeIngredientDTO> getAllRecipeIngredients();
+    List<RecipeIngredientDetailDTO> getAllRecipeIngredients();
 }

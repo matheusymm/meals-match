@@ -1,4 +1,4 @@
-package com.ufscar.pooa.backend.dto;
+package com.ufscar.pooa.backend.dto.User;
 
 
 import com.ufscar.pooa.backend.enums.UserEnum;
@@ -8,7 +8,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import java.util.UUID;
 
-public record UserDTO(
+public record UserDetailDTO(
         UUID id,
         @NotBlank String username,
         @NotBlank String password,
@@ -16,7 +16,7 @@ public record UserDTO(
         @NotBlank String name,
         @NotBlank String phone,
         @NotBlank UserEnum role) {
-    public UserDTO(UUID id, String username, String password, String email, String name, String phone, UserEnum role) {
+    public UserDetailDTO(UUID id, String username, String password, String email, String name, String phone, UserEnum role) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -26,8 +26,8 @@ public record UserDTO(
         this.role = role;
     }
 
-    public static UserDTO fromEntity(User entity) {
-        return new UserDTO(
+    public static UserDetailDTO fromEntity(User entity) {
+        return new UserDetailDTO(
                 entity.getId(),
                 entity.getUsername(),
                 entity.getEmail(),

@@ -3,23 +3,25 @@ package com.ufscar.pooa.backend.service.interfaces;
 import java.util.List;
 import java.util.UUID;
 
-import com.ufscar.pooa.backend.dto.CategoryDTO;
+import com.ufscar.pooa.backend.dto.Category.CategoryDetailDTO;
+import com.ufscar.pooa.backend.dto.Category.CategoryCreateDTO;
 import com.ufscar.pooa.backend.model.Category;
 
 public interface ICategoryService {
 
-    CategoryDTO createCategory(CategoryDTO categoryDTO);
+    CategoryDetailDTO createCategory(CategoryCreateDTO categoryCreateDTO);
 
-    CategoryDTO updateCategory(CategoryDTO categoryDTO);
+    CategoryDetailDTO updateCategory(CategoryDetailDTO categoryDetailDTO);
 
-    void deleteCategory(CategoryDTO categoryDTO);
+    void deleteCategory(UUID id);
 
-    CategoryDTO getCategoryById(UUID id);
+    CategoryDetailDTO getCategoryById(UUID id);
 
-    CategoryDTO getCategoryByName(String name);
+    CategoryDetailDTO getCategoryByName(String name);
 
-    List<CategoryDTO> getAllCategories();
+    List<CategoryDetailDTO> getAllCategories();
 
-    List<Category> getCategoriesByNameOrCreate(List<String> names);
+    List<CategoryDetailDTO> getCategoriesByNameOrCreate(List<String> names);
 
+    Category getCategoryEntityById(UUID id);
 }

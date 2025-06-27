@@ -1,6 +1,7 @@
 package com.ufscar.pooa.backend.controller;
 
-import com.ufscar.pooa.backend.dto.IngredientDTO;
+import com.ufscar.pooa.backend.dto.Ingredient.IngredientCreateDTO;
+import com.ufscar.pooa.backend.dto.Ingredient.IngredientDetailDTO;
 import com.ufscar.pooa.backend.service.interfaces.IIngredientService;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -17,15 +18,15 @@ import java.util.List;
 public class IngredientController {
 
     @Autowired
-    private IIngredientService IngredientService;
+    private IIngredientService ingredientService;
 
     @PostMapping
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Ingredient created successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
-    public ResponseEntity<Void> createRecipeIngredients(@RequestBody IngredientDTO IngredientDTO) {
-        IngredientService.createIngredient(IngredientDTO);
+    public ResponseEntity<Void> createIngredient(@RequestBody IngredientCreateDTO ingredientCreateDTO) {
+        ingredientService.createIngredient(ingredientCreateDTO);
         return ResponseEntity.status(201).build();
     }
 
@@ -34,13 +35,13 @@ public class IngredientController {
             @ApiResponse(responseCode = "200", description = "Ingredients retrieved successfully"),
             @ApiResponse(responseCode = "204", description = "No ingredients found")
     })
-    public ResponseEntity<List<IngredientDTO>> getAllRecipeIngredients() {
-        List<IngredientDTO> recipeIngredient = IngredientService.getAllIngredients();
+    public ResponseEntity<List<IngredientDetailDTO>> getAllIngredients() {
+        List<IngredientDetailDTO> ingredients = ingredientService.getAllIngredients();
 
-        if (recipeIngredient.isEmpty()) {
+        if (ingredients.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
 
-        return ResponseEntity.ok(recipeIngredient);
+        return ResponseEntity.ok(ingredients);
     }
 }

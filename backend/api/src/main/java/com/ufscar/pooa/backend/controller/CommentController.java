@@ -1,6 +1,7 @@
 package com.ufscar.pooa.backend.controller;
 
-import com.ufscar.pooa.backend.dto.CommentDTO;
+import com.ufscar.pooa.backend.dto.Comment.CommentCreateDTO;
+import com.ufscar.pooa.backend.dto.Comment.CommentDetailDTO;
 import com.ufscar.pooa.backend.service.interfaces.ICommentService;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -25,8 +26,8 @@ public class CommentController {
             @ApiResponse(responseCode = "201", description = "Comment created successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
-    public ResponseEntity<Void> createComment(@RequestBody CommentDTO commentDTO) {
-        commentService.createComment(commentDTO);
+    public ResponseEntity<Void> createComment(@RequestBody CommentCreateDTO commentCreateDTO) {
+        commentService.createComment(commentCreateDTO);
         return ResponseEntity.status(201).build();
     }
 
@@ -35,8 +36,8 @@ public class CommentController {
             @ApiResponse(responseCode = "200", description = "Comments retrieved successfully for the recipe"),
             @ApiResponse(responseCode = "204", description = "No Comments found for this recipe")
     })
-    public ResponseEntity<List<CommentDTO>> getCommentsByRecipeId(@PathVariable UUID recipeId) {
-        List<CommentDTO> comments = commentService.getCommentsByRecipeId(recipeId);
+    public ResponseEntity<List<CommentDetailDTO>> getCommentsByRecipeId(@PathVariable UUID recipeId) {
+        List<CommentDetailDTO> comments = commentService.getCommentsByRecipeId(recipeId);
 
         if (comments.isEmpty()) {
             return ResponseEntity.noContent().build();

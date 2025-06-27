@@ -6,8 +6,9 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
-import com.ufscar.pooa.backend.dto.IngredientDTO;
+import com.ufscar.pooa.backend.dto.Ingredient.IngredientCreateDTO;
+import com.ufscar.pooa.backend.dto.Ingredient.IngredientDTOFactory;
+import com.ufscar.pooa.backend.dto.Ingredient.IngredientDetailDTO;
 import com.ufscar.pooa.backend.model.Ingredient;
 import com.ufscar.pooa.backend.repository.IngredientRepository;
 import com.ufscar.pooa.backend.service.interfaces.IIngredientService;
@@ -19,77 +20,56 @@ public class IngredientService implements IIngredientService {
     private IngredientRepository IngredientRepository;
 
     @Override
-    public IngredientDTO createIngredient(IngredientDTO IngredientDTO) {
-
-        Ingredient Ingredient = new Ingredient();
-
-        Ingredient.setName(IngredientDTO.name());
-
-        IngredientRepository.save(Ingredient);
-
-        return new IngredientDTO(Ingredient.getId(), Ingredient.getName());
+    public IngredientDetailDTO createIngredient(IngredientCreateDTO ingredientCreateDTO) {
+        Ingredient ingredient = new Ingredient();
+        ingredient.setName(ingredientCreateDTO.name());
+        IngredientRepository.save(ingredient);
+        return IngredientDTOFactory.toDetailDTO(ingredient);
     }
 
     @Override
-    public IngredientDTO updateIngredient(UUID IngredientId,
-            IngredientDTO IngredientDTO) {
-
-        Ingredient Ingredient = IngredientRepository.findById(IngredientId).orElse(null);
-
-        if (Ingredient == null) {
-            throw new RuntimeException(" not found");
-        }
-        Ingredient.setName(IngredientDTO.name());
-
-        IngredientRepository.save(Ingredient);
-
-        return new IngredientDTO(Ingredient.getId(), Ingredient.getName());
+    public IngredientDetailDTO updateIngredient(UUID ingredientId, IngredientCreateDTO ingredientCreateDTO) {
+        Ingredient ingredient = IngredientRepository.findById(ingredientId)
+            .orElseThrow(() -> new RuntimeException("Ingredient not found"));
+        ingredient.setName(ingredientCreateDTO.name());
+        IngredientRepository.save(ingredient);
+        return IngredientDTOFactory.toDetailDTO(ingredient);
     }
 
     @Override
-    public void deleteIngredient(UUID IngredientId) {
-        Ingredient Ingredient = IngredientRepository.findById(IngredientId).orElse(null);
-
-        if (Ingredient == null) {
-            throw new RuntimeException(" not found");
-        }
-        IngredientRepository.deleteById(IngredientId);
+    public void deleteIngredient(UUID ingredientId) {
+        IngredientRepository.findById(ingredientId)
+            .orElseThrow(() -> new RuntimeException("Ingredient not found"));
+        IngredientRepository.deleteById(ingredientId);
     }
 
     @Override
-    public IngredientDTO getIngredientById(UUID id) {
-        Ingredient Ingredient = IngredientRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException(" Ingredient not found"));
-
-       return new IngredientDTO(Ingredient.getId(), Ingredient.getName());
-
+    public IngredientDetailDTO getIngredientById(UUID id) {
+        Ingredient ingredient = IngredientRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Ingredient not found"));
+        return IngredientDTOFactory.toDetailDTO(ingredient);
     }
 
     @Override
-    public IngredientDTO getIngredientByName(String name){
-        Ingredient Ingredient = IngredientRepository.findByName(name);
-
-        if (Ingredient == null) {
-            throw new RuntimeException("Recipe not found");
+    public IngredientDetailDTO getIngredientByName(String name) {
+        Ingredient ingredient = IngredientRepository.findByName(name);
+        if (ingredient == null) {
+            throw new RuntimeException("Ingredient not found");
         }
 
-       return new IngredientDTO(Ingredient.getId(), Ingredient.getName());
+       return IngredientDTOFactory.toDetailDTO(ingredient);
 
     }
 
     @Override
-    public List<IngredientDTO> getAllIngredients() {
-        List<Ingredient> Ingredients = IngredientRepository.findAll();
-
-        if (Ingredients.isEmpty()) {
-            throw new RuntimeException("No  ingredients found");
+    public List<IngredientDetailDTO> getAllIngredients() {
+        List<Ingredient> ingredients = IngredientRepository.findAll();
+        if (ingredients.isEmpty()) {
+            throw new RuntimeException("No ingredients found");
         }
 
-        return Ingredients.stream().map(Ingredient -> {
-
-            return new IngredientDTO(Ingredient.getId(), Ingredient.getName());
-
-        }).toList();
+        return ingredients.stream()
+            .map(IngredientDTOFactory::toDetailDTO)
+            .toList();
     }
-
 }

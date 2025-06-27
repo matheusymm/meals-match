@@ -8,7 +8,7 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ufscar.pooa.backend.dto.RecipeDTO;
+import com.ufscar.pooa.backend.dto.Recipe.RecipeDTO;
 import com.ufscar.pooa.backend.model.Ingredient;
 import com.ufscar.pooa.backend.model.Recipe;
 import com.ufscar.pooa.backend.model.User;
@@ -38,26 +38,22 @@ public class RecipeService implements IRecipeService {
     private ICategoryService categoryService;
 
     @Override
-    public RecipeDTO createRecipe(RecipeDTO recipeDTO) {
-
-        User author = userRepository.findById(recipeDTO.authorId())
+    public RecipeDetailDTO createRecipe(RecipeCreateDTO recipeCreateDTO) {
+        User author = userRepository.findById(recipeCreateDTO.authorId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Recipe recipe = new Recipe();
-        List<Ingredient> persistentIngredients = new ArrayList<>();
 
-        for (Ingredient ingredientFromDto : recipeDTO.ingredients()) {
-            // Busca o ingrediente pelo nome
-            Ingredient foundIngredient = ingredientRepository.findByName(ingredientFromDto.getName());
+        List<Ingredient> persistentIngredients = recipeCreateDTO.ingredientIds().stream()
+                .map(ingredientId -> ingredientRepository.findById(UUID.fromString(ingredientId))
+                        .orElseThrow(() -> new RuntimeException("Ingredient not found: " + ingredientId)))
+                .toList();
 
-            if (foundIngredient != null) {
-                // Se encontrou, adiciona a instância gerenciada pelo Hibernate na lista
-                persistentIngredients.add(foundIngredient);
-            } else {
-                // Se não encontrou, lança uma exceção. O ingrediente DEVE existir.
-                throw new RuntimeException("Ingredient not found in database: " + ingredientFromDto.getName());
-            }
-        }
+        List<Category> persistentCategories = recipeCreateDTO.categoryIds() != null
+                ? recipeCreateDTO.categoryIds().stream()
+                        .map(categoryId -> categoryService.getCategoryEntityById(UUID.fromString(categoryId)))
+                        .toList()
+                : new ArrayList<>();
 
         recipe.setName(recipeDTO.name());
         recipe.setAuthor(author);

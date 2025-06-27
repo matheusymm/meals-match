@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
-import com.ufscar.pooa.backend.dto.CommentDTO;
+import com.ufscar.pooa.backend.dto.Comment.CommentDTOFactory;
+import com.ufscar.pooa.backend.dto.Comment.CommentCreateDTO;
+import com.ufscar.pooa.backend.dto.Comment.CommentDetailDTO;
 import com.ufscar.pooa.backend.events.NewCommentEvent;
 import com.ufscar.pooa.backend.repository.CommentRepository;
 import com.ufscar.pooa.backend.repository.UserRepository;
@@ -34,15 +36,15 @@ public class CommentService implements ICommentService {
     private ApplicationEventPublisher eventPublisher;
 
     @Override
-    public CommentDTO createComment(CommentDTO commentDTO) {
-        Recipe recipe = recipeRepository.findById(commentDTO.recipeId())
+    public CommentDetailDTO createComment(CommentCreateDTO commentCreateDTO) {
+        Recipe recipe = recipeRepository.findById(commentCreateDTO.recipeId())
                 .orElseThrow(() -> new RuntimeException("Recipe not found"));
-        User author = userRepository.findById(commentDTO.authorId())
+        User author = userRepository.findById(commentCreateDTO.authorId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Comment newComment = new Comment();
         newComment.setAuthor(author);
-        newComment.setContent(commentDTO.content());
+        newComment.setContent(commentCreateDTO.content());
         newComment.setRecipe(recipe);
         newComment.setCreatedAt(new Date());
 
@@ -50,25 +52,25 @@ public class CommentService implements ICommentService {
 
         eventPublisher.publishEvent(new NewCommentEvent(this, saved));
 
-        return CommentDTO.fromEntity(saved);
+        return CommentDTOFactory.toDetailDTO(saved);
     }
 
     @Override
-    public CommentDTO updateComment(UUID commentId, CommentDTO commentDTO) {
+    public CommentDetailDTO updateComment(UUID commentId, CommentCreateDTO commentCreateDTO) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new RuntimeException("Comment not found"));
-        Recipe recipe = recipeRepository.findById(commentDTO.recipeId())
+        Recipe recipe = recipeRepository.findById(commentCreateDTO.recipeId())
                 .orElseThrow(() -> new RuntimeException("Recipe not found"));
-        User author = userRepository.findById(commentDTO.authorId())
+        User author = userRepository.findById(commentCreateDTO.authorId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         comment.setAuthor(author);
-        comment.setContent(commentDTO.content());
+        comment.setContent(commentCreateDTO.content());
         comment.setRecipe(recipe);
-        comment.setCreatedAt(commentDTO.createdAt());
+        comment.setCreatedAt(new Date());
 
         Comment updated = commentRepository.save(comment);
-        return CommentDTO.fromEntity(updated);
+        return CommentDTOFactory.toDetailDTO(updated);
     }
 
     @Override
@@ -80,26 +82,26 @@ public class CommentService implements ICommentService {
     }
 
     @Override
-    public List<CommentDTO> getCommentsByRecipeId(UUID recipeId) {
+    public List<CommentDetailDTO> getCommentsByRecipeId(UUID recipeId) {
         List<Comment> comments = commentRepository.findByRecipeId(recipeId);
         return comments.stream()
-                .map(CommentDTO::fromEntity)
+                .map(CommentDTOFactory::toDetailDTO)
                 .toList();
     }
 
     @Override
-    public List<CommentDTO> getCommentsByUserId(UUID authorId) {
+    public List<CommentDetailDTO> getCommentsByUserId(UUID authorId) {
         List<Comment> comments = commentRepository.findByAuthorId(authorId);
         return comments.stream()
-                .map(CommentDTO::fromEntity)
+                .map(CommentDTOFactory::toDetailDTO)
                 .toList();
     }
 
     @Override
-    public CommentDTO getCommentById(UUID commentId) {
+    public CommentDetailDTO getCommentById(UUID commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new RuntimeException("Comment not found"));
-        return CommentDTO.fromEntity(comment);
+        return CommentDTOFactory.toDetailDTO(comment);
     }
 
 }

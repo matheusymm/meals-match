@@ -6,12 +6,14 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ufscar.pooa.backend.dto.RecipeIngredientDTO;
 import com.ufscar.pooa.backend.model.RecipeIngredient;
+import com.ufscar.pooa.backend.dto.RecipeIngredient.RecipeIngredientCreateDTO;
+import com.ufscar.pooa.backend.dto.RecipeIngredient.RecipeIngredientDetailDTO;
 import com.ufscar.pooa.backend.model.Recipe;
 import com.ufscar.pooa.backend.repository.RecipeIngredientRepository;
 import com.ufscar.pooa.backend.repository.RecipeRepository;
 import com.ufscar.pooa.backend.service.interfaces.IRecipeIngredientService;
+import com.ufscar.pooa.backend.dto.RecipeIngredient.RecipeIngredientDTOFactory;
 
 @Service
 public class RecipeIngredientService implements IRecipeIngredientService {
@@ -23,83 +25,59 @@ public class RecipeIngredientService implements IRecipeIngredientService {
     private RecipeIngredientRepository recipeIngredientRepository;
 
     @Override
-    public RecipeIngredientDTO createRecipeIngredient(RecipeIngredientDTO recipeIngredientDTO) {
-
-        Recipe recipe = recipeRepository.findById(recipeIngredientDTO.recipeId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+    public RecipeIngredientDetailDTO createRecipeIngredient(RecipeIngredientCreateDTO recipeIngredientCreateDTO) {
+        Recipe recipe = recipeRepository.findById(recipeIngredientCreateDTO.recipeId())
+                .orElseThrow(() -> new RuntimeException("Recipe not found"));
 
         RecipeIngredient recipeIngredient = new RecipeIngredient();
-
         recipeIngredient.setRecipe(recipe);
-        recipeIngredient.setIngredient(recipeIngredientDTO.ingredientId());
-        recipeIngredient.setQuantity(recipeIngredientDTO.quantity());
-        recipeIngredient.setUnit(recipeIngredientDTO.unit());
+        recipeIngredient.setIngredient(recipeIngredientCreateDTO.ingredientId());
+        recipeIngredient.setQuantity(recipeIngredientCreateDTO.quantity());
+        recipeIngredient.setUnit(recipeIngredientCreateDTO.unit());
 
-        recipeIngredientRepository.save(recipeIngredient);
+        RecipeIngredient savedRecipeIngredient = recipeIngredientRepository.save(recipeIngredient);
 
-        return new RecipeIngredientDTO(recipeIngredient.getId(), recipeIngredient.getRecipe().getId(),
-                recipeIngredient.getIngredient(), recipeIngredient.getQuantity(), recipeIngredient.getUnit());
+        return RecipeIngredientDTOFactory.toDetailDTO(savedRecipeIngredient);
     }
 
     @Override
-    public RecipeIngredientDTO updateRecipeIngredient(UUID recipeIngredientId,
-            RecipeIngredientDTO recipeIngredientDTO) {
+    public RecipeIngredientDetailDTO updateRecipeIngredient(UUID recipeIngredientId, RecipeIngredientCreateDTO recipeIngredientCreateDTO) {
+        RecipeIngredient recipeIngredient = recipeIngredientRepository.findById(recipeIngredientId)
+                .orElseThrow(() -> new RuntimeException("Recipe Ingredient not found"));
 
-        RecipeIngredient recipeIngredient = recipeIngredientRepository.findById(recipeIngredientId).orElse(null);
-
-        if (recipeIngredient == null) {
-            throw new RuntimeException("Recipe not found");
-        }
-
-        Recipe recipe = recipeRepository.findById(recipeIngredientDTO.recipeId())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+        Recipe recipe = recipeRepository.findById(recipeIngredientCreateDTO.recipeId())
+                .orElseThrow(() -> new RuntimeException("Recipe not found"));
 
         recipeIngredient.setRecipe(recipe);
-        recipeIngredient.setIngredient(recipeIngredientDTO.ingredientId());
-        recipeIngredient.setQuantity(recipeIngredientDTO.quantity());
-        recipeIngredient.setUnit(recipeIngredientDTO.unit());
+        recipeIngredient.setIngredient(recipeIngredientCreateDTO.ingredientId());
+        recipeIngredient.setQuantity(recipeIngredientCreateDTO.quantity());
+        recipeIngredient.setUnit(recipeIngredientCreateDTO.unit());
 
-        recipeIngredientRepository.save(recipeIngredient);
+        RecipeIngredient savedRecipeIngredient = recipeIngredientRepository.save(recipeIngredient);
 
-        return new RecipeIngredientDTO(recipeIngredient.getId(), recipeIngredient.getRecipe().getId(),
-                recipeIngredient.getIngredient(), recipeIngredient.getQuantity(), recipeIngredient.getUnit());
-
+        return RecipeIngredientDTOFactory.toDetailDTO(savedRecipeIngredient);
     }
 
     @Override
     public void deleteRecipeIngredient(UUID recipeIngredientId) {
-        RecipeIngredient recipeIngredient = recipeIngredientRepository.findById(recipeIngredientId).orElse(null);
-
-        if (recipeIngredient == null) {
-            throw new RuntimeException("Recipe not found");
-        }
+        recipeIngredientRepository.findById(recipeIngredientId)
+                .orElseThrow(() -> new RuntimeException("Recipe Ingredient not found"));
         recipeIngredientRepository.deleteById(recipeIngredientId);
     }
 
     @Override
-    public RecipeIngredientDTO getRecipeIngredientById(UUID id) {
+    public RecipeIngredientDetailDTO getRecipeIngredientById(UUID id) {
         RecipeIngredient recipeIngredient = recipeIngredientRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Recipe Ingredient not found"));
-
-        return new RecipeIngredientDTO(recipeIngredient.getId(), recipeIngredient.getRecipe().getId(),
-                recipeIngredient.getIngredient(), recipeIngredient.getQuantity(), recipeIngredient.getUnit());
-
+        return RecipeIngredientDTOFactory.toDetailDTO(recipeIngredient);
     }
 
     @Override
-    public List<RecipeIngredientDTO> getAllRecipeIngredients() {
+    public List<RecipeIngredientDetailDTO> getAllRecipeIngredients() {
         List<RecipeIngredient> recipeIngredients = recipeIngredientRepository.findAll();
-
         if (recipeIngredients.isEmpty()) {
             throw new RuntimeException("No recipe ingredients found");
         }
-
-        return recipeIngredients.stream().map(recipeIngredient -> {
-
-            return new RecipeIngredientDTO(recipeIngredient.getId(), recipeIngredient.getRecipe().getId(),
-                    recipeIngredient.getIngredient(), recipeIngredient.getQuantity(), recipeIngredient.getUnit());
-
-        }).toList();
+        return recipeIngredients.stream().map(RecipeIngredientDTOFactory::toDetailDTO).toList();
     }
-
 }

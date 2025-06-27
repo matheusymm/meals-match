@@ -1,6 +1,7 @@
 package com.ufscar.pooa.backend.controller;
 
-import com.ufscar.pooa.backend.dto.RatingDTO;
+import com.ufscar.pooa.backend.dto.Rating.RatingCreateDTO;
+import com.ufscar.pooa.backend.dto.Rating.RatingDetailDTO;
 import com.ufscar.pooa.backend.service.interfaces.IRatingService;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -25,8 +26,8 @@ public class RatingController {
             @ApiResponse(responseCode = "201", description = "Rating created successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
-    public ResponseEntity<Void> createRating(@RequestBody RatingDTO ratingDTO) {
-        ratingService.createRating(ratingDTO);
+    public ResponseEntity<Void> createRating(@RequestBody RatingCreateDTO ratingCreateDTO) {
+        ratingService.createRating(ratingCreateDTO);
         return ResponseEntity.status(201).build();
     }
 
@@ -35,8 +36,8 @@ public class RatingController {
             @ApiResponse(responseCode = "200", description = "Ratings retrieved successfully for the recipe"),
             @ApiResponse(responseCode = "204", description = "No ratings found for this recipe")
     })
-    public ResponseEntity<List<RatingDTO>> getRatingsByRecipeId(@PathVariable UUID recipeId) {
-        List<RatingDTO> ratings = ratingService.getRatingsByRecipeId(recipeId);
+    public ResponseEntity<List<RatingDetailDTO>> getRatingsByRecipeId(@PathVariable UUID recipeId) {
+        List<RatingDetailDTO> ratings = ratingService.getRatingsByRecipeId(recipeId);
 
         if (ratings.isEmpty()) {
             return ResponseEntity.noContent().build();

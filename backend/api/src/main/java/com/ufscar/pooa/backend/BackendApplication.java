@@ -4,6 +4,12 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.ufscar.pooa.backend.dto.*;
+import com.ufscar.pooa.backend.dto.Category.CategoryDTO;
+import com.ufscar.pooa.backend.dto.Comment.CommentDTO;
+import com.ufscar.pooa.backend.dto.Ingredient.IngredientDTO;
+import com.ufscar.pooa.backend.dto.Rating.RatingDTO;
+import com.ufscar.pooa.backend.dto.Recipe.RecipeDTO;
+import com.ufscar.pooa.backend.dto.User.UserDTO;
 import com.ufscar.pooa.backend.enums.UserEnum;
 import com.ufscar.pooa.backend.service.interfaces.*;
 import org.springframework.boot.CommandLineRunner;
@@ -79,7 +85,7 @@ public class BackendApplication {
                                 "Mix ingredients and bake.",
                                 5.0,
                                 new ArrayList<>(),
-                                List.of("Dessert"),
+                                List.of(categoryService.getCategoryByName("Dessert")),
                                 new ArrayList<>()
                         );
                         recipeService.createRecipe(recipe1);
