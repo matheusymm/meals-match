@@ -3,16 +3,17 @@ package com.ufscar.pooa.backend.service.interfaces;
 import java.util.List;
 import java.util.UUID;
 
-import com.ufscar.pooa.backend.dto.UserDTO;
+import com.ufscar.pooa.backend.dto.User.UserCreateDTO;
+import com.ufscar.pooa.backend.dto.User.UserDetailDTO;
 
 public interface IUserService {
-    UserDTO createUser(UserDTO userDTO);
+    UserDetailDTO createUser(UserCreateDTO userCreateDTO);
 
-    UserDTO updateUser(UUID userId, UserDTO userDTO);
+    UserDetailDTO updateUser(UUID userId, UserCreateDTO userCreateDTO);
 
     void deleteUser(UUID userId);
 
-    UserDTO getUserByEmail(String email);
+    UserDetailDTO getUserByEmail(String email);
 
-    List<UserDTO> getAllUsers();
+    List<UserDetailDTO> getAllUsers();
 }

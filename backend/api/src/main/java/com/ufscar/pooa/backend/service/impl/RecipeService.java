@@ -1,6 +1,5 @@
 package com.ufscar.pooa.backend.service.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -8,14 +7,10 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.ufscar.pooa.backend.dto.CategoryDTO;
-import com.ufscar.pooa.backend.dto.CommentDTO;
-import com.ufscar.pooa.backend.dto.RecipeDTO;
-import com.ufscar.pooa.backend.dto.RecipeIngredientDTO;
+import com.ufscar.pooa.backend.dto.Recipe.*;
 import com.ufscar.pooa.backend.model.Ingredient;
 import com.ufscar.pooa.backend.model.Recipe;
 import com.ufscar.pooa.backend.model.Category;
-import com.ufscar.pooa.backend.model.Comment;
 import com.ufscar.pooa.backend.model.RecipeIngredient;
 import com.ufscar.pooa.backend.model.User;
 import com.ufscar.pooa.backend.repository.CategoryRepository;
@@ -44,123 +39,104 @@ public class RecipeService implements IRecipeService {
 
     @Autowired
     private CategoryRepository categoryRepository;
-
     @Override
-    public RecipeDTO createRecipe(RecipeDTO recipeDTO) {
-
-        User author = userRepository.findById(recipeDTO.authorId())
+    public RecipeDetailDTO createRecipe(RecipeCreateDTO recipeCreateDTO) {
+        User author = userRepository.findById(recipeCreateDTO.authorId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
         Recipe recipe = new Recipe();
 
-        recipe.setName(recipeDTO.name());
+        recipe.setName(recipeCreateDTO.name());
         recipe.setAuthor(author);
-        recipe.setPreparationMethods(recipeDTO.preparationMethods());
+        recipe.setPreparationMethods(recipeCreateDTO.preparationMethods());
         recipe.setRating(0.0);
         recipe.setCreatedAt(new Date());
 
-        if (recipeDTO.ingredients() != null) {
-            for (RecipeIngredientDTO ingredientData : recipeDTO.ingredients()) {
-
-                Ingredient persistentIngredient = ingredientRepository.findByName(ingredientData.ingredientName())
-                        .orElseThrow(() -> new IllegalArgumentException(
+        if (recipeCreateDTO.ingredients() != null) {
+            List<RecipeIngredient> persistentIngredients = recipeCreateDTO.ingredients().stream()
+                    .map(ingredientData -> {
+                        Ingredient persistentIngredient = ingredientRepository.findByName(ingredientData.ingredientName())
+                                .orElseThrow(() -> new IllegalArgumentException(
                                 "Ingrediente não cadastrado no sistema: " + ingredientData.ingredientName()));
 
-                RecipeIngredient newRecipeIngredient = new RecipeIngredient();
+                        RecipeIngredient newRecipeIngredient = new RecipeIngredient();
+                        newRecipeIngredient.setRecipe(recipe);
+                        newRecipeIngredient.setIngredient(persistentIngredient);
+                        newRecipeIngredient.setQuantity(ingredientData.quantity());
+                        newRecipeIngredient.setUnit(ingredientData.unit());
 
-                newRecipeIngredient.setRecipe(recipe);
-                newRecipeIngredient.setIngredient(persistentIngredient);
-                newRecipeIngredient.setQuantity(ingredientData.quantity());
-                newRecipeIngredient.setUnit(ingredientData.unit());
+                        return newRecipeIngredient;
+                    })
+                    .toList();
 
-                recipe.getIngredients().add(newRecipeIngredient);
-            }
+            recipe.setIngredients(persistentIngredients);
         }
 
-        if (recipeDTO.categories() != null) {
-            List<Category> persistentCategories = new ArrayList<>();
+        if (recipeCreateDTO.categories() != null) {
+            List<Category> persistentCategories = recipeCreateDTO.categories().stream()
+                    .map(categoryName -> categoryRepository.findByName(categoryName)
+                            .orElseGet(() -> {
+                                Category newCategory = new Category();
+                                newCategory.setName(categoryName);
+                                return categoryRepository.save(newCategory);
+                            }))
+                    .toList();
 
-            for (CategoryDTO categoryData : recipeDTO.categories()) {
-
-                Category category = categoryRepository.findByName(categoryData.name())
-                        .orElseGet(() -> {
-                            Category newCategory = new Category();
-                            newCategory.setName(categoryData.name());
-                            return categoryRepository.save(newCategory);
-                        });
-
-                if (!persistentCategories.contains(category)) {
-                    persistentCategories.add(category);
-                }
-            }
             recipe.setCategories(persistentCategories);
         }
 
         Recipe savedRecipe = recipeRepository.save(recipe);
 
-        return RecipeDTO.fromRecipe(savedRecipe);
+        return RecipeDTOFactory.toDetailDTO(savedRecipe);
     }
 
     @Override
-    public RecipeDTO updateRecipe(UUID recipeId, RecipeDTO recipeDTO) {
+    public RecipeDetailDTO updateRecipe(UUID recipeId, RecipeCreateDTO recipeCreateDTO) {
+        Recipe recipe = recipeRepository.findById(recipeId)
+                .orElseThrow(() -> new RuntimeException("Recipe not found"));
 
-        User author = userRepository.findById(recipeDTO.authorId())
+        User author = userRepository.findById(recipeCreateDTO.authorId())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        Recipe recipe = recipeRepository.findById(recipeId).orElse(null);
-
-        if (recipe == null) {
-            throw new RuntimeException("Recipe not found");
-        }
-
-        recipe.setName(recipeDTO.name());
+        recipe.setName(recipeCreateDTO.name());
         recipe.setAuthor(author);
-        recipe.setPreparationMethods(recipeDTO.preparationMethods());
-        recipeRepository.save(recipe);
+        recipe.setPreparationMethods(recipeCreateDTO.preparationMethods());
 
-        if (recipeDTO.ingredients() != null) {
-            for (RecipeIngredientDTO ingredientData : recipeDTO.ingredients()) {
+        if (recipeCreateDTO.ingredients() != null) {
+            List<RecipeIngredient> persistentIngredients = recipeCreateDTO.ingredients().stream()
+                    .map(ingredientData -> {
+                        Ingredient persistentIngredient = ingredientRepository.findByName(ingredientData.ingredientName())
+                                .orElseThrow(() -> new IllegalArgumentException("Ingrediente não cadastrado no sistema: " + ingredientData.ingredientName()));
 
-                Ingredient persistentIngredient = ingredientRepository.findByName(ingredientData.ingredientName())
-                        .orElseThrow(() -> new IllegalArgumentException(
-                                "Ingrediente não cadastrado no sistema: " + ingredientData.ingredientName()));
+                        RecipeIngredient newRecipeIngredient = new RecipeIngredient();
+                        newRecipeIngredient.setRecipe(recipe);
+                        newRecipeIngredient.setIngredient(persistentIngredient);
+                        newRecipeIngredient.setQuantity(ingredientData.quantity());
+                        newRecipeIngredient.setUnit(ingredientData.unit());
 
-                RecipeIngredient newRecipeIngredient = new RecipeIngredient();
+                        return newRecipeIngredient;
+                    })
+                    .toList();
 
-                newRecipeIngredient.setRecipe(recipe);
-                newRecipeIngredient.setIngredient(persistentIngredient);
-                newRecipeIngredient.setQuantity(ingredientData.quantity());
-                newRecipeIngredient.setUnit(ingredientData.unit());
-
-                recipe.getIngredients().add(newRecipeIngredient);
-            }
+            recipe.setIngredients(persistentIngredients);
         }
 
-        if (recipeDTO.categories() != null) {
-            for (CategoryDTO categoryData : recipeDTO.categories()) {
+        if (recipeCreateDTO.categories() != null) {
+            List<Category> persistentCategories = recipeCreateDTO.categories().stream()
+                    .map(categoryName -> categoryRepository.findByName(categoryName)
+                            .orElseGet(() -> {
+                                Category newCategory = new Category();
+                                newCategory.setName(categoryName);
+                                return categoryRepository.save(newCategory);
+                            }))
+                    .toList();
 
-                Category newCategory = new Category();
-
-                newCategory.setName(categoryData.name());
-
-                recipe.getCategories().add(newCategory);
-            }
+            recipe.setCategories(persistentCategories);
         }
 
-        if (recipeDTO.comments() != null) {
-            for (CommentDTO commentData : recipeDTO.comments()) {
+        Recipe updatedRecipe = recipeRepository.save(recipe);
 
-                Comment newComment = new Comment();
-
-                newComment.setAuthor(author);
-                newComment.setContent(commentData.content());
-                newComment.setRecipe(recipe);
-
-                recipe.getComments().add(newComment);
-            }
-        }
-
-        return RecipeDTO.fromRecipe(recipe);
+        return RecipeDTOFactory.toDetailDTO(updatedRecipe);
     }
 
     @Override
@@ -175,7 +151,7 @@ public class RecipeService implements IRecipeService {
     }
 
     @Override
-    public RecipeDTO getRecipeByName(String name) {
+    public RecipeDetailDTO getRecipeByName(String name) {
         Recipe recipe = recipeRepository.findByName(name);
 
         if (recipe == null) {
@@ -185,19 +161,20 @@ public class RecipeService implements IRecipeService {
         Double avg = ratingRepository.findAverageGradeByRecipeId(recipe.getId());
         recipe.setRating(avg != null ? avg : 0.0);
 
-        return RecipeDTO.fromRecipe(recipe);
+        return RecipeDTOFactory.toDetailDTO(recipe);
     }
 
     @Override
-    public RecipeDTO getRecipeById(UUID id) {
-        Recipe recipe = recipeRepository.findById(id)
-                .orElse(null);
+    public RecipeDetailDTO getRecipeById(UUID id) {
+        Recipe recipe = recipeRepository.findById(id).orElse(null);
+        if (recipe == null) {
+            return null;
+        }
 
         Double avg = ratingRepository.findAverageGradeByRecipeId(recipe.getId());
         recipe.setRating(avg != null ? avg : 0.0);
 
-        return RecipeDTO.fromRecipe(recipe);
-
+        return RecipeDTOFactory.toDetailDTO(recipe);
     }
 
     // @Override
@@ -233,32 +210,33 @@ public class RecipeService implements IRecipeService {
     // }
 
     @Override
-    public List<RecipeDTO> getRecipesByUserId(UUID authorId) {
+    public List<RecipeDetailDTO> getRecipesByUserId(UUID authorId) {
         List<Recipe> recipes = recipeRepository.findByAuthorId(authorId);
 
         if (recipes.isEmpty()) {
             return List.of();
         }
 
-        return new ArrayList<>(recipes.stream()
-                .map(RecipeDTO::fromRecipe)
-                .toList());
+        return recipes.stream()
+                .map(RecipeDTOFactory::toDetailDTO)
+                .toList();
     }
 
     @Override
     @Transactional
-    public List<RecipeDTO> getAllRecipes() {
+    public List<RecipeDetailDTO> getAllRecipes() {
         List<Recipe> recipes = recipeRepository.findAll();
 
         if (recipes.isEmpty()) {
             return List.of();
         }
+        return recipes.stream()
+                .map(recipe -> {
+                    Double avg = ratingRepository.findAverageGradeByRecipeId(recipe.getId());
+                    recipe.setRating(avg != null ? avg : 0.0);
 
-        return recipes.stream().map(recipe -> {
-            Double avg = ratingRepository.findAverageGradeByRecipeId(recipe.getId());
-            recipe.setRating(avg != null ? avg : 0.0);
-
-            return RecipeDTO.fromRecipe(recipe);
-        }).toList();
+                    return RecipeDTOFactory.toDetailDTO(recipe);
+                })
+                .toList();
     }
 }

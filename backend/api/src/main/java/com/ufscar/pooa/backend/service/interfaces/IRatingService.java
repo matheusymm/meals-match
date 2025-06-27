@@ -3,19 +3,20 @@ package com.ufscar.pooa.backend.service.interfaces;
 import java.util.List;
 import java.util.UUID;
 
-import com.ufscar.pooa.backend.dto.RatingDTO;
+import com.ufscar.pooa.backend.dto.Rating.RatingCreateDTO;
+import com.ufscar.pooa.backend.dto.Rating.RatingDetailDTO;
 
 public interface IRatingService {
 
-    RatingDTO createRating(RatingDTO ratingDTO);
+    RatingDetailDTO createRating(RatingCreateDTO ratingCreateDTO);
 
-    RatingDTO updateRating(UUID ratingId, RatingDTO ratingDTO);
+    RatingDetailDTO updateRating(UUID ratingId, RatingCreateDTO ratingCreateDTO);
 
     void deleteRating(UUID ratingId);
 
-    List<RatingDTO> getRatingsByRecipeId(UUID recipeId);
+    List<RatingDetailDTO> getRatingsByRecipeId(UUID recipeId);
 
-    List<RatingDTO> getRatingsByUserId(UUID authorId);
+    List<RatingDetailDTO> getRatingsByUserId(UUID authorId);
 
     Double getAverageRatingOfRecipe(UUID recipeId);
 

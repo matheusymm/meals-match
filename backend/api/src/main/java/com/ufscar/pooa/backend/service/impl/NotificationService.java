@@ -2,12 +2,12 @@ package com.ufscar.pooa.backend.service.impl;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import com.persistence.PersistenceFramework;
-import com.ufscar.pooa.backend.dto.NotificationDTO;
+import com.ufscar.pooa.backend.dto.Notification.NotificationDTOFactory;
+import com.ufscar.pooa.backend.dto.Notification.NotificationDetailDTO;
 import com.ufscar.pooa.backend.events.NewCommentEvent;
 import com.ufscar.pooa.backend.events.NewRatingEvent;
 import com.ufscar.pooa.backend.model.Notification;
@@ -86,19 +86,16 @@ public class NotificationService implements INotificationService {
     }
 
     @Override
-    public List<NotificationDTO> getAllNotifications() {
+    public List<NotificationDetailDTO> getAllNotifications() {
         List<Object> objectList = notificationPersistence.findAll();
 
         List<Notification> notifications = objectList.stream()
                 .map(obj -> (Notification) obj)
-                .collect(Collectors.toList());
+                .toList();
+                
 
         return notifications.stream()
-                .map(notification -> new NotificationDTO(
-                        notification.getId(),
-                        notification.getMessage(),
-                        notification.getRecipientId(),
-                        notification.isRead()))
+                .map(NotificationDTOFactory::toDetailDTO)
                 .toList();
     }
 }

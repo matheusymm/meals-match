@@ -10,7 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ufscar.pooa.backend.dto.CategoryDTO;
+import com.ufscar.pooa.backend.dto.Category.CategoryDetailDTO;
+import com.ufscar.pooa.backend.dto.Category.CategoryCreateDTO;
 import com.ufscar.pooa.backend.service.interfaces.ICategoryService;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -28,8 +29,8 @@ public class CategoryController {
             @ApiResponse(responseCode = "201", description = "Category created successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid input data")
     })
-    public ResponseEntity<Void> createRecipe(@RequestBody CategoryDTO categoryDTO) {
-        categoryService.createCategory(categoryDTO);
+    public ResponseEntity<Void> createCategory(@RequestBody CategoryCreateDTO categoryCreateDTO) {
+        categoryService.createCategory(categoryCreateDTO);
         return ResponseEntity.status(201).build();
     }
 
@@ -38,8 +39,8 @@ public class CategoryController {
             @ApiResponse(responseCode = "200", description = "Categories retrieved successfully"),
             @ApiResponse(responseCode = "204", description = "No categories found")
     })
-    public ResponseEntity<List<CategoryDTO>> getAllCategories() {
-        List<CategoryDTO> categories = categoryService.getAllCategories();
+    public ResponseEntity<List<CategoryDetailDTO>> getAllCategories() {
+        List<CategoryDetailDTO> categories = categoryService.getAllCategories();
 
         if (categories.isEmpty()) {
             return ResponseEntity.noContent().build();

@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ufscar.pooa.backend.dto.Notification.NotificationDetailDTO;
 import com.ufscar.pooa.backend.service.interfaces.INotificationService;
-import com.ufscar.pooa.backend.dto.NotificationDTO;
 
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -26,13 +26,13 @@ public class NotificationController {
             @ApiResponse(responseCode = "200", description = "Notifications retrieved successfully"),
             @ApiResponse(responseCode = "204", description = "No notifications found")
     })
-    public ResponseEntity<List<NotificationDTO>> getAllNotifications() {
-        List<NotificationDTO> Notifications = notificationService.getAllNotifications();
+    public ResponseEntity<List<NotificationDetailDTO>> getAllNotifications() {
+        List<NotificationDetailDTO> notifications = notificationService.getAllNotifications();
 
-        if (Notifications.isEmpty()) {
+        if (notifications.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
 
-        return ResponseEntity.ok(Notifications);
+        return ResponseEntity.ok(notifications);
     }
 }

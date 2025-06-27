@@ -3,19 +3,20 @@ package com.ufscar.pooa.backend.service.interfaces;
 import java.util.List;
 import java.util.UUID;
 
-import com.ufscar.pooa.backend.dto.CommentDTO;
+import com.ufscar.pooa.backend.dto.Comment.CommentCreateDTO;
+import com.ufscar.pooa.backend.dto.Comment.CommentDetailDTO;
 
 public interface ICommentService {
-    CommentDTO createComment(CommentDTO commentDTO);
+    CommentDetailDTO createComment(CommentCreateDTO commentCreateDTO);
 
-    CommentDTO updateComment(UUID commentId, CommentDTO commentDTO);
+    CommentDetailDTO updateComment(UUID commentId, CommentCreateDTO commentCreateDTO);
 
     void deleteComment(UUID commentId);
 
-    List<CommentDTO> getCommentsByRecipeId(UUID recipeId);
+    List<CommentDetailDTO> getCommentsByRecipeId(UUID recipeId);
 
-    List<CommentDTO> getCommentsByUserId(UUID authorId);
+    List<CommentDetailDTO> getCommentsByUserId(UUID authorId);
 
-    CommentDTO getCommentById(UUID commentId);
+    CommentDetailDTO getCommentById(UUID commentId);
 
 }
