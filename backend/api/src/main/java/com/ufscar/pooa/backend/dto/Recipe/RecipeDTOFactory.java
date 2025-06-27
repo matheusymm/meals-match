@@ -2,7 +2,7 @@ package com.ufscar.pooa.backend.dto.Recipe;
 
 import com.ufscar.pooa.backend.model.Recipe;
 import com.ufscar.pooa.backend.dto.Category.CategoryDTOFactory;
-import com.ufscar.pooa.backend.dto.Ingredient.IngredientDTOFactory;
+import com.ufscar.pooa.backend.dto.RecipeIngredient.RecipeIngredientDTOFactory;
 import com.ufscar.pooa.backend.dto.Comment.CommentDTOFactory;
 
 public class RecipeDTOFactory {
@@ -15,13 +15,13 @@ public class RecipeDTOFactory {
             recipe.getPreparationMethods(),
             recipe.getRating(),
             recipe.getIngredients().stream()
-                .map(ingredient -> IngredientDTOFactory.toDetailDTO(ingredient))
+                .map(RecipeIngredientDTOFactory::toDetailDTO)
                 .toList(),
             recipe.getCategories().stream()
-                .map(category -> CategoryDTOFactory.toDetailDTO(category))
+                .map(CategoryDTOFactory::toDetailDTO)
                 .toList(),
             recipe.getComments().stream()
-                .map(comment -> CommentDTOFactory.toDetailDTO(comment))
+                .map(CommentDTOFactory::toDetailDTO)
                 .toList()
         );
     }

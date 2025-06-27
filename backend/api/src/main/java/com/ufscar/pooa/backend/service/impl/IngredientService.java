@@ -23,8 +23,8 @@ public class IngredientService implements IIngredientService {
     public IngredientDetailDTO createIngredient(IngredientCreateDTO ingredientCreateDTO) {
         Ingredient ingredient = new Ingredient();
         ingredient.setName(ingredientCreateDTO.name());
-        IngredientRepository.save(ingredient);
-        return IngredientDTOFactory.toDetailDTO(ingredient);
+        Ingredient savedIngredient = IngredientRepository.save(ingredient);
+        return IngredientDTOFactory.toDetailDTO(savedIngredient);
     }
 
     @Override
@@ -32,8 +32,8 @@ public class IngredientService implements IIngredientService {
         Ingredient ingredient = IngredientRepository.findById(ingredientId)
             .orElseThrow(() -> new RuntimeException("Ingredient not found"));
         ingredient.setName(ingredientCreateDTO.name());
-        IngredientRepository.save(ingredient);
-        return IngredientDTOFactory.toDetailDTO(ingredient);
+        Ingredient updatedIngredient = IngredientRepository.save(ingredient);
+        return IngredientDTOFactory.toDetailDTO(updatedIngredient);
     }
 
     @Override
@@ -45,21 +45,20 @@ public class IngredientService implements IIngredientService {
 
     @Override
     public IngredientDetailDTO getIngredientById(UUID id) {
-        Ingredient ingredient = IngredientRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Ingredient not found"));
+        Ingredient ingredient = IngredientRepository.findById(id).orElse(null);
+        if (ingredient == null) {
+            return null;
+        }
         return IngredientDTOFactory.toDetailDTO(ingredient);
     }
 
     @Override
     public IngredientDetailDTO getIngredientByName(String name) {
-        Ingredient ingredient = IngredientRepository.findByName(name)
-            .orElseThrow(() -> new RuntimeException("Ingredient not found: " + name));
+        Ingredient ingredient = IngredientRepository.findByName(name).orElse(null);
         if (ingredient == null) {
-            throw new RuntimeException("Ingredient not found");
+            return null;
         }
-
-       return IngredientDTOFactory.toDetailDTO(ingredient);
-
+        return IngredientDTOFactory.toDetailDTO(ingredient);
     }
 
     @Override

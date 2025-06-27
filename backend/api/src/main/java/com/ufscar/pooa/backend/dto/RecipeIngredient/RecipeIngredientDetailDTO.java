@@ -11,7 +11,7 @@ public record RecipeIngredientDetailDTO(
     @NotNull Float quantity,
     @NotBlank String unit
 ) {
-    public RecipeIngredientDTO(UUID id, UUID recipeId, String ingredientName, Float quantity, String unit) {
+    public RecipeIngredientDetailDTO(UUID id, UUID recipeId, String ingredientName, Float quantity, String unit) {
         this.id = id;
         this.recipeId = recipeId;   
         this.ingredientName = ingredientName;

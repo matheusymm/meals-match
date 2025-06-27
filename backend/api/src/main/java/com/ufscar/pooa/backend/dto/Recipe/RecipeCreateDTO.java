@@ -5,11 +5,13 @@ import jakarta.validation.constraints.NotNull;
 import java.util.List;
 import java.util.UUID;
 
+import com.ufscar.pooa.backend.dto.RecipeIngredient.RecipeIngredientCreateDTO;
+
 public record RecipeCreateDTO(
     @NotBlank String name,
     @NotNull UUID authorId,
     @NotBlank String preparationMethods,
-    @NotNull List<String> ingredientIds,
-    List<String> categoryIds
+    @NotNull List<RecipeIngredientCreateDTO> ingredients,
+    @NotNull List<String> categories
 ) {
 }

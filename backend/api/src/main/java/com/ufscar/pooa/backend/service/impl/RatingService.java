@@ -72,9 +72,9 @@ public class RatingService implements IRatingService {
         rating.setGrade(ratingCreateDTO.grade());
         rating.setContent(ratingCreateDTO.content());
 
-        Rating savedRating = ratingRepository.save(rating);
+        Rating updatedRating = ratingRepository.save(rating);
 
-        return RatingDTOFactory.toDetailDTO(savedRating);
+        return RatingDTOFactory.toDetailDTO(updatedRating);
     }
 
     @Override

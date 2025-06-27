@@ -9,7 +9,7 @@ import jakarta.validation.constraints.NotNull;
 
 import com.ufscar.pooa.backend.dto.Category.CategoryDetailDTO;
 import com.ufscar.pooa.backend.dto.Comment.CommentDetailDTO;
-import com.ufscar.pooa.backend.dto.Ingredient.IngredientDetailDTO;
+import com.ufscar.pooa.backend.dto.RecipeIngredient.RecipeIngredientDetailDTO;
 
 
 public record RecipeDetailDTO(
@@ -18,11 +18,11 @@ public record RecipeDetailDTO(
         @NotNull UUID authorId,
         @NotBlank String preparationMethods,
         Double rating,
-        @NotNull List<IngredientDetailDTO> ingredients,
+        @NotNull List<RecipeIngredientDetailDTO> ingredients,
         List<CategoryDetailDTO> categories,
         List<CommentDetailDTO> comments) {
     public RecipeDetailDTO(UUID id, String name, UUID authorId, String preparationMethods, Double rating,
-            List<IngredientDetailDTO> ingredients,
+            List<RecipeIngredientDetailDTO> ingredients,
             List<CategoryDetailDTO> categories, List<CommentDetailDTO> comments) {
         this.id = id;
         this.name = name;

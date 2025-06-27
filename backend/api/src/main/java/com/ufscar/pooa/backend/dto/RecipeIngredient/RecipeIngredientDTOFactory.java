@@ -8,7 +8,7 @@ public class RecipeIngredientDTOFactory {
         return new RecipeIngredientDetailDTO(
             recipeIngredient.getId(),
             recipeIngredient.getRecipe().getId(),
-            recipeIngredient.getIngredient(),
+            recipeIngredient.getIngredient().getName(),
             recipeIngredient.getQuantity(),
             recipeIngredient.getUnit()
         );

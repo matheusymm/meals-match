@@ -3,7 +3,6 @@ package com.ufscar.pooa.backend.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,8 +33,8 @@ public class CategoryService implements ICategoryService {
         var category = categoryRepository.findById(categoryDetailDTO.id())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
         category.setName(categoryDetailDTO.name());
-        categoryRepository.save(category);
-        return CategoryDTOFactory.toDetailDTO(category);
+        var updatedCategory = categoryRepository.save(category);
+        return CategoryDTOFactory.toDetailDTO(updatedCategory);
     }
 
     @Override
@@ -47,16 +46,19 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public CategoryDetailDTO getCategoryById(UUID id) {
-        var category = categoryRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+        var category = categoryRepository.findById(id).orElse(null);
+        if (category == null) {
+            return null;
+        }
         return CategoryDTOFactory.toDetailDTO(category);
     }
 
     @Override
     public CategoryDetailDTO getCategoryByName(String name) {
-        var category = categoryRepository.findByName(name)
-                .orElseThrow(() -> new RuntimeException("Category not found"));
-
+        var category = categoryRepository.findByName(name).orElse(null);
+        if (category == null) {
+            return null;
+        }
         return CategoryDTOFactory.toDetailDTO(category);
     }
 
@@ -72,7 +74,7 @@ public class CategoryService implements ICategoryService {
         List<CategoryDetailDTO> categories = new ArrayList<>();
         for (String name : names) {
             Category category = categoryRepository.findByName(name) 
-                .orElseThrow(() -> new RuntimeException("Category not found"));
+                .orElse(null);
             if (category == null) {
                 category = new Category();
                 category.setName(name);

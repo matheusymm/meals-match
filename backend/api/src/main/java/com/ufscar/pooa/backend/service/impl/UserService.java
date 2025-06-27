@@ -33,8 +33,11 @@ public class UserService implements IUserService {
         user.setRole(UserEnum.COMMON);
         user.setCreatedAt(new Date());
 
-        userRepository.save(user);
-        return UserDTOFactory.toDetailDTO(user);
+        System.out.println("creating user: 1");
+        var newUser = userRepository.save(user);
+        System.out.println("creating user: 2");
+        System.out.println("User created: " + newUser.getUsername() + " with ID: " + newUser.getId());
+        return UserDTOFactory.toDetailDTO(newUser);
     }
 
     @Override
@@ -47,8 +50,8 @@ public class UserService implements IUserService {
         user.setName(userCreateDTO.name());
         user.setPhone(userCreateDTO.phone());
 
-        userRepository.save(user);
-        return UserDTOFactory.toDetailDTO(user);
+        var updatedUser = userRepository.save(user);
+        return UserDTOFactory.toDetailDTO(updatedUser);
     }
 
     @Override
@@ -61,14 +64,18 @@ public class UserService implements IUserService {
     @Override
     public UserDetailDTO getUserByUsername(String username) {
         User user = userRepository.findByUsername(username);
-
+        if (user == null) {
+            return null;
+        }
         return UserDTOFactory.toDetailDTO(user);
     }
 
     @Override
     public UserDetailDTO getUserByEmail(String email) {
         User user = userRepository.findByEmail(email);
-
+        if (user == null) {
+            return null;
+        }
         return UserDTOFactory.toDetailDTO(user);
     }
 
