@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 import com.persistence.PersistenceFramework;
@@ -18,7 +17,6 @@ import com.ufscar.pooa.backend.service.interfaces.INotificationService;
 
 @Service
 public class NotificationService implements INotificationService {
-    @Autowired
     private final PersistenceFramework notificationPersistence;
 
     public NotificationService(PersistenceFramework notificationPersistenceFramework) {

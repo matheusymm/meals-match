@@ -9,6 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import com.ufscar.pooa.backend.model.Comment;
 import com.ufscar.pooa.backend.model.Recipe;
 import com.ufscar.pooa.backend.model.Ingredient;
+import com.ufscar.pooa.backend.model.Category;
 
 public record RecipeDTO(
         UUID id,
@@ -17,10 +18,11 @@ public record RecipeDTO(
         @NotBlank String preparationMethods,
         Double rating,
         @NotNull List<Ingredient> ingredients,
-        List<String> categories,
+        List<Category> categories,
         List<Comment> comments) {
-    public RecipeDTO(UUID id, String name, UUID authorId, String preparationMethods, Double rating, List<Ingredient> ingredients,
-            List<String> categories, List<Comment> comments) {
+    public RecipeDTO(UUID id, String name, UUID authorId, String preparationMethods, Double rating,
+            List<Ingredient> ingredients,
+            List<Category> categories, List<Comment> comments) {
         this.id = id;
         this.name = name;
         this.authorId = authorId;
@@ -30,11 +32,10 @@ public record RecipeDTO(
         this.categories = categories;
         this.comments = comments;
     }
+
     public static RecipeDTO fromRecipe(Recipe recipe) {
-        var categoryNames = recipe.getCategories().stream()
-                .map(category -> category.getName())
-                .toList();
         return new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getAuthor().getId(),
-                recipe.getPreparationMethods(), recipe.getRating(),recipe.getIngredients(), categoryNames, recipe.getComments());
+                recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getCategories(),
+                recipe.getComments());
     }
 }

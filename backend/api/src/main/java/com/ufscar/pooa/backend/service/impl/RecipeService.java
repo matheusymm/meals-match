@@ -45,7 +45,7 @@ public class RecipeService implements IRecipeService {
 
         Recipe recipe = new Recipe();
         List<Ingredient> persistentIngredients = new ArrayList<>();
-        
+
         for (Ingredient ingredientFromDto : recipeDTO.ingredients()) {
             // Busca o ingrediente pelo nome
             Ingredient foundIngredient = ingredientRepository.findByName(ingredientFromDto.getName());
@@ -64,7 +64,9 @@ public class RecipeService implements IRecipeService {
         recipe.setPreparationMethods(recipeDTO.preparationMethods());
         recipe.setRating(0.0);
         recipe.setIngredients(persistentIngredients);
-        recipe.setCategories(categoryService.getCategoriesByNameOrCreate(recipeDTO.categories()));
+        recipe.setCategories(recipeDTO.categories() != null
+                ? recipeDTO.categories()
+                : new ArrayList<>());
         recipe.setComments(recipeDTO.comments());
         recipe.setCreatedAt(new Date());
 
@@ -89,7 +91,9 @@ public class RecipeService implements IRecipeService {
         recipe.setAuthor(author);
         recipe.setPreparationMethods(recipeDTO.preparationMethods());
         recipe.setIngredients(recipeDTO.ingredients());
-        recipe.setCategories(categoryService.getCategoriesByNameOrCreate(recipeDTO.categories()));
+        recipe.setCategories(recipeDTO.categories() != null
+                ? recipeDTO.categories()
+                : new ArrayList<>());
         recipe.setComments(recipeDTO.comments());
         recipeRepository.save(recipe);
 
@@ -149,17 +153,20 @@ public class RecipeService implements IRecipeService {
     // }
 
     // @Override
-    // public List<RecipeDTO> getRecipesByIngredients(List<Ingredient> ingredients) {
-    //     List<Recipe> recipes = recipeRepository.findByIngredientsIn(ingredients);
+    // public List<RecipeDTO> getRecipesByIngredients(List<Ingredient> ingredients)
+    // {
+    // List<Recipe> recipes = recipeRepository.findByIngredientsIn(ingredients);
 
-    //     if (recipes.isEmpty()) {
-    //         throw new RuntimeException("No recipes found");
-    //     }
+    // if (recipes.isEmpty()) {
+    // throw new RuntimeException("No recipes found");
+    // }
 
-    //     return new ArrayList<>(recipes.stream()
-    //         .map(recipe -> new RecipeDTO(recipe.getId(), recipe.getName(), recipe.getAuthor().getId(),
-    //         recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(), recipe.getComments()))
-    //         .toList());
+    // return new ArrayList<>(recipes.stream()
+    // .map(recipe -> new RecipeDTO(recipe.getId(), recipe.getName(),
+    // recipe.getAuthor().getId(),
+    // recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(),
+    // recipe.getComments()))
+    // .toList());
     // }
 
     @Override

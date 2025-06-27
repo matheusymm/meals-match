@@ -7,11 +7,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.ArrayList;
 import java.util.Collections;
 
 import com.persistence.annotation.Entity;
@@ -71,7 +71,7 @@ public class PersistenceFramework {
                     .collect(Collectors.joining(", "));
 
             String sql = "INSERT INTO " + tableName + " (" + columns + ") VALUES (" + placeholders + ")";
-            pStmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+            pStmt = conn.prepareStatement(sql);
 
             int paramIndex = 1;
             for (Field field : fieldsForInsert) {
@@ -167,7 +167,7 @@ public class PersistenceFramework {
             pStmt = conn.prepareStatement(sql);
 
             resultSet = pStmt.executeQuery();
-            List<Object> entities = new java.util.ArrayList<>();
+            List<Object> entities = new ArrayList<>();
             while (resultSet.next()) {
                 Constructor<?> constructor = entityClass.getDeclaredConstructor();
                 constructor.setAccessible(true);
