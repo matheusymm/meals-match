@@ -10,7 +10,5 @@ import com.ufscar.pooa.backend.model.Category;
 
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, UUID> {
-
     Optional<Category> findByName(String name);
-
 }

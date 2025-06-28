@@ -10,9 +10,7 @@ import com.ufscar.pooa.backend.model.Comment;
 
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, UUID> {
-    
     List<Comment> findByRecipeId(UUID recipeId);
 
     List<Comment> findByAuthorId(UUID authorId);
-
 }

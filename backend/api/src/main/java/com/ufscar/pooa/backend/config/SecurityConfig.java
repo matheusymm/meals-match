@@ -2,24 +2,32 @@ package com.ufscar.pooa.backend.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import com.ufscar.pooa.backend.component.JwtRequestFilter;
+import com.ufscar.pooa.backend.enums.UserEnum;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+    private final JwtRequestFilter jwtRequestFilter;
+
+    public SecurityConfig(JwtRequestFilter jwtRequestFilter) {
+        this.jwtRequestFilter = jwtRequestFilter;
+    }
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/users/**").permitAll()
-                        .requestMatchers("/recipes/**").permitAll()
-                        .requestMatchers("/ratings/**").permitAll()
-                        .requestMatchers("/comments/**").permitAll()
-                        .requestMatchers("/recipeIngredient/**").permitAll()
-                        .requestMatchers("/notifications/**").permitAll()
+        http.csrf(csrf -> csrf.disable())
+                .authorizeHttpRequests(authorize -> authorize.requestMatchers("/auth/login").permitAll()
+                        .requestMatchers("/auth/signup").permitAll()
                         .requestMatchers(
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**",
@@ -27,8 +35,23 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/webjars/**")
                         .permitAll()
-                        .anyRequest().permitAll());
+                        .requestMatchers("/users").hasAnyAuthority(UserEnum.ROLE_ADMIN.toString())
+                        .requestMatchers("/notifications/**").hasAnyAuthority(UserEnum.ROLE_ADMIN.toString())
+                        .anyRequest().authenticated());
 
+        http.addFilterBefore(jwtRequestFilter,
+                UsernamePasswordAuthenticationFilter.class);
         return http.build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
+            throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 }

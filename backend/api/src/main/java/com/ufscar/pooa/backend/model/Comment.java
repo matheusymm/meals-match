@@ -22,10 +22,9 @@ public class Comment {
     @Column(nullable = false)
     private Date createdAt;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "recipe_id", nullable = false)
     private Recipe recipe;
-
 
     public Comment(UUID id, String content, User author, Date createdAt, Recipe recipe) {
         this.id = id;
@@ -84,5 +83,5 @@ public class Comment {
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
-    
+
 }

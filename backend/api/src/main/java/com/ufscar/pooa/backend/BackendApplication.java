@@ -17,6 +17,7 @@ import com.ufscar.pooa.backend.service.interfaces.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import java.util.List;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @SpringBootApplication
 public class BackendApplication {
@@ -31,20 +32,30 @@ public class BackendApplication {
             IIngredientService ingredientService,
             IRecipeService recipeService,
             ICommentService commentService,
-            IRatingService ratingService) {
+            IRatingService ratingService,
+            PasswordEncoder passwordEncoder) {
         return args -> {
             try {
                 // Criar usuários
                 try {
-                    System.out.println("Populando o banco de dados com usuários, categorias, ingredientes, receitas, comentários e avaliações...");
+                    System.out.println(
+                            "Populando o banco de dados com usuários, categorias, ingredientes, receitas, comentários e avaliações...");
+                    if (userService.getUserByEmail("admin@example.com") == null) {
+                        System.out.println("Criando usuário: admin");
+                        userService.createUser(
+                                new UserCreateDTO("Admin", "admin@example.com", passwordEncoder.encode("admin"),
+                                        "", UserEnum.ROLE_ADMIN));
+                    }
                     if (userService.getUserByEmail("john@example.com") == null) {
                         System.out.println("Creating user: john_doe");
-                        userService.createUser(new UserCreateDTO("John Doe", "john@example.com", "password123",
-                                "123456789", UserEnum.COMMON));
+                        userService.createUser(
+                                new UserCreateDTO("John Doe", "john@example.com", passwordEncoder.encode("password123"),
+                                        "123456789", UserEnum.ROLE_COMMON));
                     }
                     if (userService.getUserByEmail("jane@example.com") == null) {
-                        userService.createUser(new UserCreateDTO("Jane Doe", "jane@example.com", "password456",
-                                "987654321", UserEnum.COMMON));
+                        userService.createUser(
+                                new UserCreateDTO("Jane Doe", "jane@example.com", passwordEncoder.encode("password456"),
+                                        "987654321", UserEnum.ROLE_COMMON));
                     }
                 } catch (Exception e) {
                     System.err.println("Erro ao criar usuários: " + e.getMessage());
@@ -85,12 +96,10 @@ public class BackendApplication {
                                 userService.getUserByEmail("john@example.com").id(),
                                 "Mix ingredients and bake.",
                                 List.of(
-                                    new RecipeIngredientCreateDTO("Sugar", 200.0f, "grams"),
-                                    new RecipeIngredientCreateDTO("Flour", 300.0f, "grams"),
-                                    new RecipeIngredientCreateDTO("Eggs", 3.0f, "units")
-                                ),
-                                List.of("Dessert")
-                        ));
+                                        new RecipeIngredientCreateDTO("Sugar", 200.0f, "grams"),
+                                        new RecipeIngredientCreateDTO("Flour", 300.0f, "grams"),
+                                        new RecipeIngredientCreateDTO("Eggs", 3.0f, "units")),
+                                List.of("Dessert")));
                     }
                 } catch (Exception e) {
                     System.err.println("Erro ao criar receitas: " + e.getMessage());
