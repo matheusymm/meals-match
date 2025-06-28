@@ -1,5 +1,6 @@
 package com.ufscar.pooa.backend.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -177,37 +178,35 @@ public class RecipeService implements IRecipeService {
         return RecipeDTOFactory.toDetailDTO(recipe);
     }
 
-    // @Override
-    // public List<RecipeDTO> getRecipesByCategory(String category) {
-    // List<Recipe> recipes = recipeRepository.findByCategoriesContaining(category);
+    @Override
+    public List<RecipeDetailDTO> getRecipesByCategories(List<String> categoryNames)
+    {   
+        List<Recipe> recipes = recipeRepository.findRecipesByCategoryNames(categoryNames,  (long) categoryNames.size());
 
-    // if (recipes.isEmpty()) {
-    // throw new RuntimeException("No recipes found");
-    // }
+        if (recipes.isEmpty()) {
+            System.out.println("No Recipe found with these categories.");
+            return List.of();
+        }
 
-    // return new ArrayList<>(recipes.stream()
-    // .map(recipe -> new RecipeDTO(recipe.getId(), recipe.getName(),
-    // recipe.getAuthor().getId(),
-    // recipe.getPreparationMethods(), recipe.getRating(), recipe.getComments()))
-    // .toList());
-    // }
+        return recipes.stream()
+                .map(RecipeDTOFactory::toDetailDTO)
+                .toList();
+    }
 
-    // @Override
-    // public List<RecipeDTO> getRecipesByIngredients(List<Ingredient> ingredients)
-    // {
-    // List<Recipe> recipes = recipeRepository.findByIngredientsIn(ingredients);
+    @Override
+    public List<RecipeDetailDTO> getRecipesByIngredients(List<String> ingredientNames)
+    {   
+        List<Recipe> recipes = recipeRepository.findRecipesByIngredientNames(ingredientNames,  (long) ingredientNames.size());
 
-    // if (recipes.isEmpty()) {
-    // throw new RuntimeException("No recipes found");
-    // }
+        if (recipes.isEmpty()) {
+            System.out.println("No Recipe found with these ingredients.");
+            return List.of();
+        }
 
-    // return new ArrayList<>(recipes.stream()
-    // .map(recipe -> new RecipeDTO(recipe.getId(), recipe.getName(),
-    // recipe.getAuthor().getId(),
-    // recipe.getPreparationMethods(), recipe.getRating(), recipe.getIngredients(),
-    // recipe.getComments()))
-    // .toList());
-    // }
+        return recipes.stream()
+                .map(RecipeDTOFactory::toDetailDTO)
+                .toList();
+    }
 
     @Override
     public List<RecipeDetailDTO> getRecipesByUserId(UUID authorId) {
