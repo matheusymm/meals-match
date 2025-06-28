@@ -22,7 +22,7 @@ public class Comment {
     @Column(nullable = false)
     private Date createdAt;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "recipe_id", nullable = false)
     private Recipe recipe;
 

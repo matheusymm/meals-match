@@ -1,6 +1,5 @@
 package com.ufscar.pooa.backend.service.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -40,6 +39,7 @@ public class RecipeService implements IRecipeService {
 
     @Autowired
     private CategoryRepository categoryRepository;
+
     @Override
     public RecipeDetailDTO createRecipe(RecipeCreateDTO recipeCreateDTO) {
         User author = userRepository.findById(recipeCreateDTO.authorId())
@@ -56,9 +56,10 @@ public class RecipeService implements IRecipeService {
         if (recipeCreateDTO.ingredients() != null) {
             List<RecipeIngredient> persistentIngredients = recipeCreateDTO.ingredients().stream()
                     .map(ingredientData -> {
-                        Ingredient persistentIngredient = ingredientRepository.findByName(ingredientData.ingredientName())
+                        Ingredient persistentIngredient = ingredientRepository
+                                .findByName(ingredientData.ingredientName())
                                 .orElseThrow(() -> new IllegalArgumentException(
-                                "Ingrediente não cadastrado no sistema: " + ingredientData.ingredientName()));
+                                        "Ingrediente não cadastrado no sistema: " + ingredientData.ingredientName()));
 
                         RecipeIngredient newRecipeIngredient = new RecipeIngredient();
                         newRecipeIngredient.setRecipe(recipe);
@@ -106,8 +107,10 @@ public class RecipeService implements IRecipeService {
         if (recipeCreateDTO.ingredients() != null) {
             List<RecipeIngredient> persistentIngredients = recipeCreateDTO.ingredients().stream()
                     .map(ingredientData -> {
-                        Ingredient persistentIngredient = ingredientRepository.findByName(ingredientData.ingredientName())
-                                .orElseThrow(() -> new IllegalArgumentException("Ingrediente não cadastrado no sistema: " + ingredientData.ingredientName()));
+                        Ingredient persistentIngredient = ingredientRepository
+                                .findByName(ingredientData.ingredientName())
+                                .orElseThrow(() -> new IllegalArgumentException(
+                                        "Ingrediente não cadastrado no sistema: " + ingredientData.ingredientName()));
 
                         RecipeIngredient newRecipeIngredient = new RecipeIngredient();
                         newRecipeIngredient.setRecipe(recipe);
@@ -179,9 +182,8 @@ public class RecipeService implements IRecipeService {
     }
 
     @Override
-    public List<RecipeDetailDTO> getRecipesByCategories(List<String> categoryNames)
-    {   
-        List<Recipe> recipes = recipeRepository.findRecipesByCategoryNames(categoryNames,  (long) categoryNames.size());
+    public List<RecipeDetailDTO> getRecipesByCategories(List<String> categoryNames) {
+        List<Recipe> recipes = recipeRepository.findRecipesByCategoryNames(categoryNames, (long) categoryNames.size());
 
         if (recipes.isEmpty()) {
             System.out.println("No Recipe found with these categories.");
@@ -194,9 +196,9 @@ public class RecipeService implements IRecipeService {
     }
 
     @Override
-    public List<RecipeDetailDTO> getRecipesByIngredients(List<String> ingredientNames)
-    {   
-        List<Recipe> recipes = recipeRepository.findRecipesByIngredientNames(ingredientNames,  (long) ingredientNames.size());
+    public List<RecipeDetailDTO> getRecipesByIngredients(List<String> ingredientNames) {
+        List<Recipe> recipes = recipeRepository.findRecipesByIngredientNames(ingredientNames,
+                (long) ingredientNames.size());
 
         if (recipes.isEmpty()) {
             System.out.println("No Recipe found with these ingredients.");

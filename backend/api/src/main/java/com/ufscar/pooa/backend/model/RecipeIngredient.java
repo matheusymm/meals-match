@@ -21,8 +21,8 @@ public class RecipeIngredient {
     @Column(nullable = false)
     private String unit;
 
-    @ManyToOne(fetch = FetchType.LAZY) 
-    @JoinColumn(name = "recipe_id") 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "recipe_id")
     private Recipe recipe;
 
     public RecipeIngredient() {

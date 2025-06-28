@@ -2,6 +2,7 @@ package com.ufscar.pooa.backend.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -35,6 +36,11 @@ public class SecurityConfig {
                                 "/swagger-ui.html",
                                 "/webjars/**")
                         .permitAll()
+                        .requestMatchers(HttpMethod.GET, "/recipes/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/ingredients/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/categories/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/comments/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/ratings/**").permitAll()
                         .requestMatchers("/users").hasAnyAuthority(UserEnum.ROLE_ADMIN.toString())
                         .requestMatchers("/notifications/**").hasAnyAuthority(UserEnum.ROLE_ADMIN.toString())
                         .anyRequest().authenticated());

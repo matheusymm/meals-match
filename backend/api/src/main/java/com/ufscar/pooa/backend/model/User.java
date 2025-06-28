@@ -47,7 +47,7 @@ public class User {
     @Column(nullable = false)
     private UserEnum role;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Recipe> recipes;
 
     public User() {

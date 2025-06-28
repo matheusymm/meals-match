@@ -5,7 +5,6 @@ import java.util.UUID;
 
 import com.ufscar.pooa.backend.dto.Recipe.RecipeCreateDTO;
 import com.ufscar.pooa.backend.dto.Recipe.RecipeDetailDTO;
-import com.ufscar.pooa.backend.model.Ingredient;
 
 public interface IRecipeService {
 

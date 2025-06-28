@@ -101,6 +101,15 @@ public class BackendApplication {
                                         new RecipeIngredientCreateDTO("Eggs", 3.0f, "units")),
                                 List.of("Dessert")));
                     }
+                    if (recipeService.getRecipeByName("Omelette") == null) {
+                        recipeService.createRecipe(new RecipeCreateDTO(
+                                "Omelette",
+                                userService.getUserByEmail("jane@example.com").id(),
+                                "Mix eggs and pour it in the pan.",
+                                List.of(
+                                        new RecipeIngredientCreateDTO("Eggs", 4.0f, "units")),
+                                List.of("Main Course")));
+                    }
                 } catch (Exception e) {
                     System.err.println("Erro ao criar receitas: " + e.getMessage());
                 }
