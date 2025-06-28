@@ -42,7 +42,7 @@ public class UserController {
         List<UserDetailDTO> users = userService.getAllUsers();
 
         if (users.isEmpty()) {
-            return ResponseEntity.noContent().build();
+            return ResponseEntity.ok().body(null);
         }
 
         return ResponseEntity.ok(users);

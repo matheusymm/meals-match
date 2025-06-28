@@ -6,13 +6,12 @@ public class UserDTOFactory {
 
     public static UserDetailDTO toDetailDTO(User user) {
         return new UserDetailDTO(
-            user.getId(),
-            user.getName(),
-            user.getEmail(),
-            null,
-            user.getPhone(),
-            user.getRole()
-        );
+                user.getId(),
+                user.getName(),
+                user.getEmail(),
+                user.getPassword(),
+                user.getPhone(),
+                user.getRole());
     }
 
 }

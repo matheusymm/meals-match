@@ -10,13 +10,11 @@ import com.ufscar.pooa.backend.model.Recipe;
 
 @Repository
 public interface RecipeRepository extends JpaRepository<Recipe, UUID> {
-
     Recipe findByName(String name);
 
     List<Recipe> findByAuthorId(UUID authorId);
 
     List<Recipe> findByCategoriesName(String categoryName);
 
-
-    //List<Recipe> findByIngredientsIn(List<Ingredient> ingredients);
+    // List<Recipe> findByIngredientsIn(List<Ingredient> ingredients);
 }

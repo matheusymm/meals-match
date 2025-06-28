@@ -29,8 +29,8 @@ public record UserDetailDTO(
                 entity.getId(),
                 entity.getName(),
                 entity.getEmail(),
-                entity.getPhone(),
                 entity.getPassword(),
+                entity.getPhone(),
                 entity.getRole());
     }
 }

@@ -1,17 +1,23 @@
 package com.ufscar.pooa.backend.model;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 import com.ufscar.pooa.backend.enums.UserEnum;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -37,8 +43,12 @@ public class User {
     @Column(nullable = false)
     private Date createdAt;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserEnum role;
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Recipe> recipes;
 
     public User() {
     }

@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import com.ufscar.pooa.backend.dto.User.UserDTOFactory;
 import com.ufscar.pooa.backend.dto.User.UserCreateDTO;
 import com.ufscar.pooa.backend.dto.User.UserDetailDTO;
-import com.ufscar.pooa.backend.enums.UserEnum;
 import com.ufscar.pooa.backend.model.User;
 import com.ufscar.pooa.backend.repository.UserRepository;
 import com.ufscar.pooa.backend.service.interfaces.IUserService;
@@ -29,7 +28,7 @@ public class UserService implements IUserService {
         user.setEmail(userCreateDTO.email());
         user.setName(userCreateDTO.name());
         user.setPhone(userCreateDTO.phone());
-        user.setRole(UserEnum.COMMON);
+        user.setRole(userCreateDTO.role());
         user.setCreatedAt(new Date());
 
         var newUser = userRepository.save(user);
@@ -55,6 +54,16 @@ public class UserService implements IUserService {
         userRepository.findById(userId).orElse(null);
 
         userRepository.deleteById(userId);
+    }
+
+    @Override
+    public UserDetailDTO getUserById(UUID userId) {
+        User user = userRepository.findById(userId)
+                .orElse(null);
+        if (user == null) {
+            return null;
+        }
+        return UserDTOFactory.toDetailDTO(user);
     }
 
     @Override
