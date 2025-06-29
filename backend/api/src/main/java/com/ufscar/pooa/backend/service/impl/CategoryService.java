@@ -22,31 +22,31 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public CategoryDetailDTO createCategory(CategoryCreateDTO categoryCreateDTO) {
-        var category = new Category();
+        Category category = new Category();
         category.setName(categoryCreateDTO.name());
-        var newCategory = categoryRepository.save(category);
+        Category newCategory = categoryRepository.save(category);
         return CategoryDTOFactory.toDetailDTO(newCategory);
     }
 
     @Override
     public CategoryDetailDTO updateCategory(CategoryDetailDTO categoryDetailDTO) {
-        var category = categoryRepository.findById(categoryDetailDTO.id())
+        Category category = categoryRepository.findById(categoryDetailDTO.id())
                 .orElseThrow(() -> new RuntimeException("Category not found"));
         category.setName(categoryDetailDTO.name());
-        var updatedCategory = categoryRepository.save(category);
+        Category updatedCategory = categoryRepository.save(category);
         return CategoryDTOFactory.toDetailDTO(updatedCategory);
     }
 
     @Override
     public void deleteCategory(UUID id) {
-        var category = categoryRepository.findById(id)
+        Category category = categoryRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Category not found"));
         categoryRepository.delete(category);
     }
 
     @Override
     public CategoryDetailDTO getCategoryById(UUID id) {
-        var category = categoryRepository.findById(id).orElse(null);
+        Category category = categoryRepository.findById(id).orElse(null);
         if (category == null) {
             return null;
         }
@@ -55,7 +55,7 @@ public class CategoryService implements ICategoryService {
 
     @Override
     public CategoryDetailDTO getCategoryByName(String name) {
-        var category = categoryRepository.findByName(name).orElse(null);
+        Category category = categoryRepository.findByName(name).orElse(null);
         if (category == null) {
             return null;
         }
@@ -73,8 +73,8 @@ public class CategoryService implements ICategoryService {
     public List<CategoryDetailDTO> getCategoriesByNameOrCreate(List<String> names) {
         List<CategoryDetailDTO> categories = new ArrayList<>();
         for (String name : names) {
-            Category category = categoryRepository.findByName(name) 
-                .orElse(null);
+            Category category = categoryRepository.findByName(name)
+                    .orElse(null);
             if (category == null) {
                 category = new Category();
                 category.setName(name);

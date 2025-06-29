@@ -31,7 +31,7 @@ public class UserService implements IUserService {
         user.setRole(userCreateDTO.role());
         user.setCreatedAt(new Date());
 
-        var newUser = userRepository.save(user);
+        User newUser = userRepository.save(user);
 
         return UserDTOFactory.toDetailDTO(newUser);
     }
@@ -45,13 +45,13 @@ public class UserService implements IUserService {
         user.setName(userCreateDTO.name());
         user.setPhone(userCreateDTO.phone());
 
-        var updatedUser = userRepository.save(user);
+        User updatedUser = userRepository.save(user);
         return UserDTOFactory.toDetailDTO(updatedUser);
     }
 
     @Override
     public void deleteUser(UUID userId) {
-        userRepository.findById(userId).orElse(null);
+        userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
         userRepository.deleteById(userId);
     }

@@ -186,7 +186,6 @@ public class RecipeService implements IRecipeService {
         List<Recipe> recipes = recipeRepository.findRecipesByCategoryNames(categoryNames, (long) categoryNames.size());
 
         if (recipes.isEmpty()) {
-            System.out.println("No Recipe found with these categories.");
             return List.of();
         }
 
@@ -201,7 +200,6 @@ public class RecipeService implements IRecipeService {
                 (long) ingredientNames.size());
 
         if (recipes.isEmpty()) {
-            System.out.println("No Recipe found with these ingredients.");
             return List.of();
         }
 
