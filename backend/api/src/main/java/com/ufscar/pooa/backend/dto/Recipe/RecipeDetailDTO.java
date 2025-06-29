@@ -6,11 +6,9 @@ import java.util.UUID;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-
 import com.ufscar.pooa.backend.dto.Category.CategoryDetailDTO;
 import com.ufscar.pooa.backend.dto.Comment.CommentDetailDTO;
 import com.ufscar.pooa.backend.dto.RecipeIngredient.RecipeIngredientDetailDTO;
-
 
 public record RecipeDetailDTO(
         UUID id,

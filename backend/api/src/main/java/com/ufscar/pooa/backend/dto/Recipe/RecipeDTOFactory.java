@@ -6,24 +6,34 @@ import com.ufscar.pooa.backend.dto.RecipeIngredient.RecipeIngredientDTOFactory;
 import com.ufscar.pooa.backend.dto.Comment.CommentDTOFactory;
 
 public class RecipeDTOFactory {
-
     public static RecipeDetailDTO toDetailDTO(Recipe recipe) {
         return new RecipeDetailDTO(
-            recipe.getId(),
-            recipe.getName(),
-            recipe.getAuthor().getId(),
-            recipe.getPreparationMethods(),
-            recipe.getRating(),
-            recipe.getIngredients().stream()
-                .map(RecipeIngredientDTOFactory::toDetailDTO)
-                .toList(),
-            recipe.getCategories().stream()
-                .map(CategoryDTOFactory::toDetailDTO)
-                .toList(),
-            recipe.getComments().stream()
-                .map(CommentDTOFactory::toDetailDTO)
-                .toList()
-        );
+                recipe.getId(),
+                recipe.getName(),
+                recipe.getAuthor().getId(),
+                recipe.getPreparationMethods(),
+                recipe.getRating(),
+                recipe.getIngredients().stream()
+                        .map(RecipeIngredientDTOFactory::toDetailDTO)
+                        .toList(),
+                recipe.getCategories().stream()
+                        .map(CategoryDTOFactory::toDetailDTO)
+                        .toList(),
+                recipe.getComments().stream()
+                        .map(CommentDTOFactory::toDetailDTO)
+                        .toList());
     }
 
+    public static RecipeCreateDTO toCreateDTO(Recipe recipe) {
+        return new RecipeCreateDTO(
+                recipe.getName(),
+                recipe.getAuthor().getId(),
+                recipe.getPreparationMethods(),
+                recipe.getIngredients().stream()
+                        .map(RecipeIngredientDTOFactory::toCreateDTO)
+                        .toList(),
+                recipe.getCategories().stream()
+                        .map(category -> category.getName())
+                        .toList());
+    }
 }

@@ -1,6 +1,5 @@
 package com.ufscar.pooa.backend.dto.User;
 
-
 import com.ufscar.pooa.backend.enums.UserEnum;
 import com.ufscar.pooa.backend.model.User;
 

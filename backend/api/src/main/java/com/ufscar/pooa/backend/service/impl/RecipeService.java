@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ufscar.pooa.backend.dto.Recipe.*;
+import com.ufscar.pooa.backend.dto.RecipeIngredient.RecipeIngredientCreateDTO;
 import com.ufscar.pooa.backend.model.Ingredient;
 import com.ufscar.pooa.backend.model.Recipe;
 import com.ufscar.pooa.backend.model.Category;
@@ -54,37 +55,11 @@ public class RecipeService implements IRecipeService {
         recipe.setCreatedAt(new Date());
 
         if (recipeCreateDTO.ingredients() != null) {
-            List<RecipeIngredient> persistentIngredients = recipeCreateDTO.ingredients().stream()
-                    .map(ingredientData -> {
-                        Ingredient persistentIngredient = ingredientRepository
-                                .findByName(ingredientData.ingredientName())
-                                .orElseThrow(() -> new IllegalArgumentException(
-                                        "Ingrediente não cadastrado no sistema: " + ingredientData.ingredientName()));
-
-                        RecipeIngredient newRecipeIngredient = new RecipeIngredient();
-                        newRecipeIngredient.setRecipe(recipe);
-                        newRecipeIngredient.setIngredient(persistentIngredient);
-                        newRecipeIngredient.setQuantity(ingredientData.quantity());
-                        newRecipeIngredient.setUnit(ingredientData.unit());
-
-                        return newRecipeIngredient;
-                    })
-                    .toList();
-
-            recipe.setIngredients(persistentIngredients);
+            recipe.setIngredients(mapIngredients(recipeCreateDTO.ingredients(), recipe));
         }
 
         if (recipeCreateDTO.categories() != null) {
-            List<Category> persistentCategories = recipeCreateDTO.categories().stream()
-                    .map(categoryName -> categoryRepository.findByName(categoryName)
-                            .orElseGet(() -> {
-                                Category newCategory = new Category();
-                                newCategory.setName(categoryName);
-                                return categoryRepository.save(newCategory);
-                            }))
-                    .toList();
-
-            recipe.setCategories(persistentCategories);
+            recipe.setCategories(mapCategories(recipeCreateDTO.categories()));
         }
 
         Recipe savedRecipe = recipeRepository.save(recipe);
@@ -105,37 +80,11 @@ public class RecipeService implements IRecipeService {
         recipe.setPreparationMethods(recipeCreateDTO.preparationMethods());
 
         if (recipeCreateDTO.ingredients() != null) {
-            List<RecipeIngredient> persistentIngredients = recipeCreateDTO.ingredients().stream()
-                    .map(ingredientData -> {
-                        Ingredient persistentIngredient = ingredientRepository
-                                .findByName(ingredientData.ingredientName())
-                                .orElseThrow(() -> new IllegalArgumentException(
-                                        "Ingrediente não cadastrado no sistema: " + ingredientData.ingredientName()));
-
-                        RecipeIngredient newRecipeIngredient = new RecipeIngredient();
-                        newRecipeIngredient.setRecipe(recipe);
-                        newRecipeIngredient.setIngredient(persistentIngredient);
-                        newRecipeIngredient.setQuantity(ingredientData.quantity());
-                        newRecipeIngredient.setUnit(ingredientData.unit());
-
-                        return newRecipeIngredient;
-                    })
-                    .toList();
-
-            recipe.setIngredients(persistentIngredients);
+            recipe.setIngredients(mapIngredients(recipeCreateDTO.ingredients(), recipe));
         }
 
         if (recipeCreateDTO.categories() != null) {
-            List<Category> persistentCategories = recipeCreateDTO.categories().stream()
-                    .map(categoryName -> categoryRepository.findByName(categoryName)
-                            .orElseGet(() -> {
-                                Category newCategory = new Category();
-                                newCategory.setName(categoryName);
-                                return categoryRepository.save(newCategory);
-                            }))
-                    .toList();
-
-            recipe.setCategories(persistentCategories);
+            recipe.setCategories(mapCategories(recipeCreateDTO.categories()));
         }
 
         Recipe updatedRecipe = recipeRepository.save(recipe);
@@ -236,6 +185,37 @@ public class RecipeService implements IRecipeService {
 
                     return RecipeDTOFactory.toDetailDTO(recipe);
                 })
+                .toList();
+    }
+
+    private List<RecipeIngredient> mapIngredients(List<RecipeIngredientCreateDTO> ingredientDataList,
+            Recipe recipe) {
+        return ingredientDataList.stream()
+                .map(ingredientData -> {
+                    Ingredient persistentIngredient = ingredientRepository
+                            .findByName(ingredientData.ingredientName())
+                            .orElseThrow(() -> new IllegalArgumentException(
+                                    "Ingrediente não cadastrado no sistema: " + ingredientData.ingredientName()));
+
+                    RecipeIngredient newRecipeIngredient = new RecipeIngredient();
+                    newRecipeIngredient.setRecipe(recipe);
+                    newRecipeIngredient.setIngredient(persistentIngredient);
+                    newRecipeIngredient.setQuantity(ingredientData.quantity());
+                    newRecipeIngredient.setUnit(ingredientData.unit());
+
+                    return newRecipeIngredient;
+                })
+                .toList();
+    }
+
+    private List<Category> mapCategories(List<String> categoryNames) {
+        return categoryNames.stream()
+                .map(categoryName -> categoryRepository.findByName(categoryName)
+                        .orElseGet(() -> {
+                            Category newCategory = new Category();
+                            newCategory.setName(categoryName);
+                            return categoryRepository.save(newCategory);
+                        }))
                 .toList();
     }
 }
