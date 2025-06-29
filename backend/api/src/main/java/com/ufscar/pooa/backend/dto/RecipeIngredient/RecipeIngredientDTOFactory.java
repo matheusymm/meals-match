@@ -6,11 +6,9 @@ public class RecipeIngredientDTOFactory {
 
     public static RecipeIngredientDetailDTO toDetailDTO(RecipeIngredient recipeIngredient) {
         return new RecipeIngredientDetailDTO(
-            recipeIngredient.getId(),
-            recipeIngredient.getRecipe().getId(),
-            recipeIngredient.getIngredient().getName(),
-            recipeIngredient.getQuantity(),
-            recipeIngredient.getUnit()
-        );
+                recipeIngredient.getId(),
+                recipeIngredient.getIngredient().getName(),
+                recipeIngredient.getQuantity(),
+                recipeIngredient.getUnit());
     }
 }

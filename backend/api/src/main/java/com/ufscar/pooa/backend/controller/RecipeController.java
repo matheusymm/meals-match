@@ -17,6 +17,9 @@ import com.ufscar.pooa.backend.dto.Recipe.RecipeCreateDTO;
 import com.ufscar.pooa.backend.dto.Recipe.RecipeDetailDTO;
 import com.ufscar.pooa.backend.service.interfaces.IRecipeService;
 
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
@@ -29,8 +32,10 @@ public class RecipeController {
 
     @PostMapping
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Recipe created successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid input data")
+            @ApiResponse(responseCode = "201", description = "Recipe created successfully", content = @Content),
+            @ApiResponse(responseCode = "400", description = "Invalid input data", content = {
+                    @Content(mediaType = "application/json", schema = @Schema(implementation = String.class)) }),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content),
     })
     public ResponseEntity<Void> createRecipe(@RequestBody RecipeCreateDTO recipeCreateDTO) {
         recipeService.createRecipe(recipeCreateDTO);
@@ -39,9 +44,9 @@ public class RecipeController {
 
     @GetMapping
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Recipes retrieved successfully"),
-            @ApiResponse(responseCode = "204", description = "No recipes found")
-    })
+            @ApiResponse(responseCode = "200", description = "Recipes retrieved successfully", content = {
+                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = RecipeDetailDTO.class))) }),
+            @ApiResponse(responseCode = "204", description = "No recipes found", content = @Content), })
     public ResponseEntity<List<RecipeDetailDTO>> getAllRecipes() {
         List<RecipeDetailDTO> recipes = recipeService.getAllRecipes();
 
@@ -54,9 +59,9 @@ public class RecipeController {
 
     @GetMapping("/{userId}")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Recipes retrieved successfully"),
-            @ApiResponse(responseCode = "204", description = "No recipes found")
-    })
+            @ApiResponse(responseCode = "200", description = "Recipes retrieved successfully", content = {
+                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = RecipeDetailDTO.class))) }),
+            @ApiResponse(responseCode = "204", description = "No recipes found", content = @Content), })
     public ResponseEntity<List<RecipeDetailDTO>> getRecipesByAuthorId(@PathVariable UUID userId) {
         List<RecipeDetailDTO> recipes = recipeService.getRecipesByUserId(userId);
 
@@ -69,9 +74,9 @@ public class RecipeController {
 
     @GetMapping("/categories")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Recipes retrieved successfully"),
-            @ApiResponse(responseCode = "204", description = "No recipes found")
-    })
+            @ApiResponse(responseCode = "200", description = "Recipes retrieved successfully", content = {
+                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = RecipeDetailDTO.class))) }),
+            @ApiResponse(responseCode = "204", description = "No recipes found", content = @Content), })
     public ResponseEntity<List<RecipeDetailDTO>> getRecipesByCategory(@RequestParam List<String> categoryNames) {
         List<RecipeDetailDTO> recipes = recipeService.getRecipesByCategories(categoryNames);
 

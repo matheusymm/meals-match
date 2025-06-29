@@ -12,7 +12,6 @@ import com.ufscar.pooa.backend.dto.Recipe.RecipeDetailDTO;
 import com.ufscar.pooa.backend.dto.RecipeIngredient.RecipeIngredientCreateDTO;
 import com.ufscar.pooa.backend.dto.User.UserCreateDTO;
 import com.ufscar.pooa.backend.enums.UserEnum;
-import com.ufscar.pooa.backend.model.Recipe;
 import com.ufscar.pooa.backend.service.interfaces.*;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;

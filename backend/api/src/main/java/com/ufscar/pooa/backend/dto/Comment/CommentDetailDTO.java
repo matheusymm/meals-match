@@ -7,22 +7,17 @@ import java.util.UUID;
 import com.ufscar.pooa.backend.model.Comment;
 
 public record CommentDetailDTO(
-    @NotBlank UUID id,  // Adicionar ID para facilitar atualizações
-    @NotBlank String content,
-    @NotBlank UUID authorId,  // ID do autor em vez da entidade
-    @NotBlank UUID recipeId,  // ID da receita
-    Date createdAt  // Data de criação
-) {
+        @NotBlank UUID id,
+        @NotBlank String content,
+        @NotBlank UUID authorId,
+        @NotBlank UUID recipeId,
+        Date createdAt) {
     public static CommentDetailDTO fromEntity(Comment comment) {
         return new CommentDetailDTO(
-            comment.getId(),
-            comment.getContent(),
-            comment.getAuthor().getId(),
-            comment.getRecipe().getId(),
-            comment.getCreatedAt()
-        );
+                comment.getId(),
+                comment.getContent(),
+                comment.getAuthor().getId(),
+                comment.getRecipe().getId(),
+                comment.getCreatedAt());
     }
 }
-
-
-

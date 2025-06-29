@@ -92,7 +92,6 @@ public class NotificationService implements INotificationService {
         List<Notification> notifications = objectList.stream()
                 .map(obj -> (Notification) obj)
                 .toList();
-                
 
         return notifications.stream()
                 .map(NotificationDTOFactory::toDetailDTO)

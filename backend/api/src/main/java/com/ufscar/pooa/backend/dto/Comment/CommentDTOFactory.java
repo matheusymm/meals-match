@@ -6,12 +6,11 @@ public class CommentDTOFactory {
 
     public static CommentDetailDTO toDetailDTO(Comment comment) {
         return new CommentDetailDTO(
-            comment.getId(),
-            comment.getContent(),
-            comment.getAuthor().getId(),
-            comment.getRecipe().getId(),
-            comment.getCreatedAt()
-        );
+                comment.getId(),
+                comment.getContent(),
+                comment.getAuthor().getId(),
+                comment.getRecipe().getId(),
+                comment.getCreatedAt());
     }
 
 }
