@@ -101,4 +101,19 @@ public class RecipeController {
 
         return ResponseEntity.ok(recipes);
     }
+
+    @GetMapping("/ingredients")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Recipes retrieved successfully", content = {
+                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = RecipeDetailDTO.class))) }),
+            @ApiResponse(responseCode = "204", description = "No recipes found", content = @Content), })
+    public ResponseEntity<List<RecipeDetailDTO>> getRecipesByIngredients(@RequestParam List<String> ingredientsNames) {
+        List<RecipeDetailDTO> recipes = recipeService.getRecipesByIngredients(ingredientsNames);
+
+        if (recipes.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(recipes);
+    }
 }
