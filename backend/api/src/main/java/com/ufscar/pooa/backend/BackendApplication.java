@@ -83,6 +83,9 @@ public class BackendApplication {
                     if (ingredientService.getIngredientByName("Eggs") == null) {
                         ingredientService.createIngredient(new IngredientCreateDTO("Eggs"));
                     }
+                    if (ingredientService.getIngredientByName("Chocolate") == null) {
+                        ingredientService.createIngredient(new IngredientCreateDTO("Chocolate"));
+                    }
                 } catch (Exception e) {
                     System.err.println("Erro ao criar ingredientes: " + e.getMessage());
                 }

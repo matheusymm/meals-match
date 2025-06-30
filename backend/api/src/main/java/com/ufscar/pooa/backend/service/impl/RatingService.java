@@ -1,27 +1,28 @@
 package com.ufscar.pooa.backend.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import com.ufscar.pooa.backend.dto.Rating.RatingCreateDTO;
 import com.ufscar.pooa.backend.dto.Rating.RatingDTOFactory;
 import com.ufscar.pooa.backend.dto.Rating.RatingDetailDTO;
-import com.ufscar.pooa.backend.events.NewRatingEvent;
 import com.ufscar.pooa.backend.model.Rating;
 import com.ufscar.pooa.backend.model.Recipe;
 import com.ufscar.pooa.backend.model.User;
+import com.ufscar.pooa.backend.observer.Observer;
+import com.ufscar.pooa.backend.observer.Subject;
 import com.ufscar.pooa.backend.repository.RatingRepository;
 import com.ufscar.pooa.backend.repository.RecipeRepository;
 import com.ufscar.pooa.backend.repository.UserRepository;
 import com.ufscar.pooa.backend.service.interfaces.IRatingService;
 
 @Service
-public class RatingService implements IRatingService {
+public class RatingService implements IRatingService, Subject {
 
     @Autowired
     private RatingRepository ratingRepository;
@@ -32,8 +33,10 @@ public class RatingService implements IRatingService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private ApplicationEventPublisher eventPublisher;
+    private final List<Observer> observers = new ArrayList<>();
+    
+    private Rating lastCreatedRating;
+
 
     @Override
     public RatingDetailDTO createRating(RatingCreateDTO ratingCreateDTO) {
@@ -50,10 +53,11 @@ public class RatingService implements IRatingService {
         rating.setContent(ratingCreateDTO.content());
         rating.setCreatedAt(new Date());
 
-        Rating savedRating = ratingRepository.save(rating);
+        this.lastCreatedRating = ratingRepository.save(rating);
+        
+        notifyObservers();
 
-        eventPublisher.publishEvent(new NewRatingEvent(this, savedRating));
-        return RatingDTOFactory.toDetailDTO(savedRating);
+        return RatingDTOFactory.toDetailDTO(lastCreatedRating);
     }
 
     @Override
@@ -103,5 +107,23 @@ public class RatingService implements IRatingService {
             return null;
         }
         return Math.floor(averageRating * 100) / 100;
+    }
+
+      @Override
+    public void registerObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        // Envia o último comentário criado como "dado" da notificação
+        for (Observer observer : observers) {
+            observer.update(this.lastCreatedRating);
+        }
     }
 }
