@@ -1,5 +1,6 @@
 package com.ufscar.pooa.backend.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -7,21 +8,22 @@ import java.util.UUID;
 import com.ufscar.pooa.backend.model.Comment;
 import com.ufscar.pooa.backend.model.Recipe;
 import com.ufscar.pooa.backend.model.User;
+import com.ufscar.pooa.backend.observer.Observer;
+import com.ufscar.pooa.backend.observer.Subject;
+
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import com.ufscar.pooa.backend.dto.Comment.CommentDTOFactory;
 import com.ufscar.pooa.backend.dto.Comment.CommentCreateDTO;
 import com.ufscar.pooa.backend.dto.Comment.CommentDetailDTO;
-import com.ufscar.pooa.backend.events.NewCommentEvent;
 import com.ufscar.pooa.backend.repository.CommentRepository;
 import com.ufscar.pooa.backend.repository.UserRepository;
 import com.ufscar.pooa.backend.service.interfaces.ICommentService;
 import com.ufscar.pooa.backend.repository.RecipeRepository;
 
 @Service
-public class CommentService implements ICommentService {
+public class CommentService implements Subject, ICommentService {
 
     @Autowired
     private CommentRepository commentRepository;
@@ -32,8 +34,9 @@ public class CommentService implements ICommentService {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private ApplicationEventPublisher eventPublisher;
+    private final List<Observer> observers = new ArrayList<>();
+    
+    private Comment lastCreatedComment;
 
     @Override
     public CommentDetailDTO createComment(CommentCreateDTO commentCreateDTO) {
@@ -48,11 +51,11 @@ public class CommentService implements ICommentService {
         newComment.setRecipe(recipe);
         newComment.setCreatedAt(new Date());
 
-        Comment saved = commentRepository.save(newComment);
+        this.lastCreatedComment = commentRepository.save(newComment);
+        
+        notifyObservers();
 
-        eventPublisher.publishEvent(new NewCommentEvent(this, saved));
-
-        return CommentDTOFactory.toDetailDTO(saved);
+        return CommentDTOFactory.toDetailDTO(lastCreatedComment);
     }
 
     @Override
@@ -104,6 +107,23 @@ public class CommentService implements ICommentService {
             return null;
         }
         return CommentDTOFactory.toDetailDTO(comment);
+    }
+
+     @Override
+    public void registerObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObserver(Observer observer) {
+        observers.remove(observer);
+    }
+
+    @Override
+    public void notifyObservers() {
+        for (Observer observer : observers) {
+            observer.update(this.lastCreatedComment);
+        }
     }
 
 }
