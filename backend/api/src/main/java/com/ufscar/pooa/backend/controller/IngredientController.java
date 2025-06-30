@@ -34,7 +34,7 @@ public class IngredientController {
         return ResponseEntity.status(201).build();
     }
 
-    @GetMapping("/")
+    @GetMapping
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Ingredients retrieved successfully", content = {
                     @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = IngredientDetailDTO.class))) }),

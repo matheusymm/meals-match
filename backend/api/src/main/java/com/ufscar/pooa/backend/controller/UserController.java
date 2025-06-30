@@ -1,13 +1,16 @@
 package com.ufscar.pooa.backend.controller;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ufscar.pooa.backend.dto.User.UserCreateDTO;
@@ -51,5 +54,20 @@ public class UserController {
         }
 
         return ResponseEntity.ok(users);
+    }
+
+    @GetMapping("/{userId}")
+    @ApiResponses(value = { @ApiResponse(responseCode = "200", description = "User retrieved successfully", content = {
+            @Content(mediaType = "application/json", schema = @Schema(implementation = UserDetailDTO.class)) }),
+            @ApiResponse(responseCode = "204", description = "User not found", content = @Content),
+            @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content), })
+    public ResponseEntity<UserDetailDTO> getUserById(@PathVariable UUID userId) {
+        UserDetailDTO user = userService.getUserById(userId);
+
+        if (user == null) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(user);
     }
 }

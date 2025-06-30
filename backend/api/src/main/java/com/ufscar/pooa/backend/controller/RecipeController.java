@@ -57,7 +57,22 @@ public class RecipeController {
         return ResponseEntity.ok(recipes);
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/{recipeId}")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Recipes retrieved successfully", content = {
+                    @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = RecipeDetailDTO.class))) }),
+            @ApiResponse(responseCode = "204", description = "No recipes found", content = @Content), })
+    public ResponseEntity<RecipeDetailDTO> getRecipeById(@PathVariable UUID recipeId) {
+        RecipeDetailDTO recipe = recipeService.getRecipeById(recipeId);
+
+        if (recipe == null) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity.ok(recipe);
+    }
+
+    @GetMapping("/user/{userId}")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Recipes retrieved successfully", content = {
                     @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = RecipeDetailDTO.class))) }),
